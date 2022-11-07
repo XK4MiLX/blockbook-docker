@@ -63,7 +63,7 @@ fi
 
 cd /
 sleep 5
-if [[ "$CONFIG" == "0" ]]; then
+if [[ "$CONFIG" == "0" || "$CONFIG" == "" ]]; then
   echo -e "Starting $COIN daemon (Config: Disabled)..."
   ${COIN}d -rpcuser="$RPC_USER" \
     -rpcpassword="$RPC_PASS" \
