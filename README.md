@@ -7,7 +7,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 
 | Variable       | Description                                  | Required   | Default |
 |----------------|----------------------------------------------|------------|---------|
-|`DAEMON`| Enable/Disable daemon luncher value = 1/0  | `NO` | `1 (ENABLED)` | 
+|`DAEMON`| Enable/Disable daemon luncher <br /> DISABLE=0, ENABLE=1  | `NO` | `1` | 
 |`RPC_PORT`| Listen for RPC connections on this TCP port | `YES when DAEMON=1` | `(unset)` |
 |`RPC_USER`| Listen for RPC connections on this TCP port | `YES when DAEMON=1` | `user` |
 |`RPC_PASS`| Listen for RPC connections on this TCP port | `YES when DAEMON=1` | `pass` |
