@@ -7,8 +7,8 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 
 | Variable       | Description                                  | Required   | Default |
 |----------------|----------------------------------------------|------------|---------|
-|`DAEMON`| Enable/Disable daemon luncher value = 1/0  | NO | 1 (ENABLED) | 
-|`RPC_PORT`| Listen for RPC connections on this TCP port | YES when DAEMON=1 | `(unset)` |
+|`DAEMON`| Enable/Disable daemon luncher value = 1/0  | `NO` | `1 (ENABLED)` | 
+|`RPC_PORT`| Listen for RPC connections on this TCP port | `YES when DAEMON=1` | `(unset)` |
 |`RPC_HOST`| Node hostname for blockbook | `YES` | `localhost` |
 
 
