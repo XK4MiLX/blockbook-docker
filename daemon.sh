@@ -60,7 +60,7 @@ if [[ ! -f /usr/local/bin/${COIN}d ]]; then
   fi
   
   echo -e "BINARY URL: $DAEMON_URL"
-  wget $DAEMON_URL
+  wget -q --show-progress -c -t 5 $DAEMON_URL
   strip_lvl=$(tar -tvf ${DAEMON_URL##*/} | grep ${COIN}d$ | awk '{ printf "%s\n", $6 }' | awk -F\/ '{print NF-1}')
   tar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/}
   echo -e "Installing daemon ($COIN)..."
