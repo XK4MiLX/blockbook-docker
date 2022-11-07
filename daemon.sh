@@ -56,7 +56,11 @@ if [[ ! -f /usr/local/bin/${COIN}d ]]; then
   
   if [[ "$DAEMON_URL" == "" ]]; then
     echo -e "Reading binary url from blockbook config..." 
-    DAEMON_URL=$(curl -sSL https://raw.githubusercontent.com/trezor/blockbook/master/configs/coins/${COIN}.json | jq -r .backend.binary_url)
+    if [[ "$ALIAS" == "" ]]; then
+      DAEMON_URL=$(curl -sSL https://raw.githubusercontent.com/trezor/blockbook/master/configs/coins/${COIN}.json | jq -r .backend.binary_url)
+    else
+      DAEMON_URL=$(curl -sSL https://raw.githubusercontent.com/trezor/blockbook/master/configs/coins/${ALIAS}.json | jq -r .backend.binary_url)
+    fi
   fi
   
   echo -e "BINARY URL: $DAEMON_URL"
