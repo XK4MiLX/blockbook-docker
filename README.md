@@ -7,12 +7,12 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 
 | Variable       | Description                                  | Required   | Default |
 |----------------|----------------------------------------------|------------|---------|
-|`DAEMON`| Enable/Disable daemon luncher <br /> DISABLE=0, ENABLE=1  | `NO` | `1` | 
+|`DAEMON`| Enable/Disable daemon luncher <br /> DISABLED=0, ENABLED=1  | `NO` | `1` | 
 |`RPC_PORT`| Listen for RPC connections on this TCP port | `YES when DAEMON=1` | `(unset)` |
-|`RPC_USER`| Listen for RPC connections on this TCP port | `YES when DAEMON=1` | `user` |
-|`RPC_PASS`| Listen for RPC connections on this TCP port | `YES when DAEMON=1` | `pass` |
+|`RPC_USER`| Usename for RPC connections | `YES when DAEMON=1` | `user` |
+|`RPC_PASS`| Password for RPC connections | `YES when DAEMON=1` | `pass` |
 |`RPC_HOST`| Node hostname for blockbook | `YES` | `localhost` |
-|`CONFIG`| Enable config file for daemon | `NO` | `1` |
+|`CONFIG`| Config file for daemon <br /> DISABLED=0, ENABLED=1| `NO` | `1` |
 |`EXTRACONFIG`| Additional config option. <br /> Example: "addnode=explorer.flux.zelcore.io\naddnode=explorer.runonflux.io" | `NO` | `(unset)` |
 
 
