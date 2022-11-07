@@ -18,6 +18,6 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`EXTRAFLAGS`| Additional config flage for daemon <br /> Example: "-testnet=1" | `NO` | `unset` |
 |`DAEMON_URL`| Download URL for daemon .tar.gz archive | `YES when DAEMON=1` | `unset` |
 |`FETCH_FILE`| Name of fetch parms script <br /> Example: "fetch-params.sh" | `NO` | `unset` |
-|`BLOCKBOOK_PORT`| Port for blockbook. To get correct port check: <br /> `https://github.com/trezor/blockbook/blob/master/docs/ports.md` | `YES` | `unset` |
+|`BLOCKBOOK_PORT`| Port for blockbook. To get correct port check: <br /> https://github.com/trezor/blockbook/blob/master/docs/ports.md | `YES` | `unset` |
 
 v1.0.0
