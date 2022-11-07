@@ -13,7 +13,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`RPC_PASS`| Listen for RPC connections on this TCP port | `YES when DAEMON=1` | `pass` |
 |`RPC_HOST`| Node hostname for blockbook | `YES` | `localhost` |
 |`CONFIG`| Enable config file for daemon | `NO` | `1` |
-|`EXTRACONFIG`| Additional config option. \n Example: "addnode=explorer.flux.zelcore.io\naddnode=explorer.runonflux.io" | `NO` | `(unset)` |
+|`EXTRACONFIG`| Additional config option. <br /> Example: "addnode=explorer.flux.zelcore.io\naddnode=explorer.runonflux.io" | `NO` | `(unset)` |
 
 
 v1.0.0
