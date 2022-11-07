@@ -37,8 +37,8 @@ fi
 #Enable fetch params
 if [[ "$FETCH_FILE" != "" ]]; then
   if [[ ! -d /root/.zcash-params ]]; then
-    echo -e "Creating fetch-params..."
-    bash $FETCH_FILE
+    echo -e "Installing fetch-params..."
+    bash $FETCH_FILE > /dev/null 2>&1 && sleep 2
   fi
 fi
 
