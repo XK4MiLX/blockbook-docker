@@ -3,7 +3,7 @@
 stop_script() {
   echo -e "Stopping daemon (EXIT)..."
   timeout 10 ${COIN}-cli -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
-  pkill -f ${COIN}d
+  pkill -9 ${COIN}d
   exit 0
 }
 
@@ -46,7 +46,7 @@ fi
 if [[ -f /usr/local/bin/${COIN}d ]]; then
   echo -e "Stopping daemon (START)..."
   timeout 10 ${COIN}-cli -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
-  pkill -f ${COIN}d
+  pkill -9 ${COIN}d
 fi
 
 if [[ ! -f /usr/local/bin/${COIN}d ]]; then
