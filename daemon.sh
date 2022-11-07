@@ -53,6 +53,13 @@ if [[ ! -f /usr/local/bin/${COIN}d ]]; then
   echo -e "Downloading daemon ($COIN)..."
   cd /tmp
   mkdir backend
+  
+  if [[ "$DAEMON_URL" == "" ]]; then
+    echo -e "Reading binary url from blockbook config..." 
+    DAEMON_URL=$(curl -sSL https://raw.githubusercontent.com/trezor/blockbook/master/configs/coins/${COIN}.json | jq -r .backend.binary_url)
+  fi
+  
+  echo -e "BINARY URL: $DAEMON_URL"
   wget $DAEMON_URL
   strip_lvl=$(tar -tvf ${DAEMON_URL##*/} | grep ${COIN}d$ | awk '{ printf "%s\n", $6 }' | awk -F\/ '{print NF-1}')
   tar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/}
