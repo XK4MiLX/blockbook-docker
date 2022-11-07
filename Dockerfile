@@ -12,9 +12,11 @@ RUN apt-get update && \
     m4 ncurses-dev pkg-config python3 python3-zmq zlib1g-dev
 
 ENV TAG=master
-ENV RPC_USER=user
-ENV RPC_PASS=pass
+ENV RPC_USER=${RPC_USER:-user}
+ENV RPC_PASS=${RPC_PASS:-pass}
 ENV HOME=/root
+ENV DAEMON=${DAEMON:-1}
+ENV CONFIG=${CONFIG:-1}
 ENV GOLANG_VERSION=go1.17.1.linux-amd64
 ENV ROCKSDB_VERSION=v6.22.1
 ENV GOPATH=$HOME/go
