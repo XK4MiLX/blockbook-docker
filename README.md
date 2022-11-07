@@ -1,4 +1,14 @@
 # Multicoin Blockbook Explorer
+
+### Pull latest image
+```shell script
+$ docker pull runonflux/blockbook-docker
+```
+### Deploy container
+```shell script
+docker run -d --restart=always --name fluxblockbook-flux -e COIN=flux -e DAEMON_URL=https://github.com/RunOnFlux/fluxd/releases/download/v6.0.0/Flux-amd64-v6.0.0.tar.gz -e FETCH_FILE="fetch-params.sh" -e EXTRACONFIG="addnode=explorer.flux.zelcore.io\naddnode=explorer.runonflux.io\naddnode=explorer.zelcash.online\naddnode=blockbook.runonflux.io" -e BLOCKBOOK_PORT=9158 -e RPC_PORT=16125 -p 9055:9158 -v /home/$USER/fluxdir:/root runonflux/blockbook-docker
+```
+
 ### Environment Variables
 
 To customize some properties of the container, the following environment
@@ -19,5 +29,6 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`DAEMON_URL`| Download URL for daemon .tar.gz archive | `YES when DAEMON=1` | `unset` |
 |`FETCH_FILE`| Name of fetch parms script <br /> Example: "fetch-params.sh" | `NO` | `unset` |
 |`BLOCKBOOK_PORT`| Port for blockbook. To get correct port check: <br /> https://github.com/trezor/blockbook/blob/master/docs/ports.md | `YES` | `unset` |
+
 
 v1.0.0
