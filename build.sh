@@ -24,7 +24,11 @@ if [[ ! -d /root/blockbook ]]; then
   echo -e "Build: $BUILDTIME, Commit: $GITCOMMIT, Version: $TAG"
   echo -e "Creating blockchaincfg.sh for $COIN..."
   cd /root/blockbook
-  ./contrib/scripts/build-blockchaincfg.sh $COIN
+  if [[ "$ALIAS" == "" ]]; then
+    ./contrib/scripts/build-blockchaincfg.sh $COIN
+  else
+    ./contrib/scripts/build-blockchaincfg.sh $ALIAS
+  fi
 else
   echo -e "Blockbook already installed.."
   sleep 5
