@@ -9,7 +9,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |----------------|----------------------------------------------|------------|---------|
 |`COIN`| Name of coin for blockbook  | `YES` | `unset` | 
 |`DAEMON`| Enable/Disable daemon luncher <br /> DISABLED=0, ENABLED=1  | `NO` | `1` | 
-|`RPC_PORT`| Listen for RPC connections on this TCP port | `YES when DAEMON=1` | `unset` |
+|`RPC_PORT`| Listen for RPC connections on this TCP port | `YES` | `unset` |
 |`RPC_USER`| Usename for RPC connections | `NO` | `user` |
 |`RPC_PASS`| Password for RPC connections | `NO` | `pass` |
 |`RPC_HOST`| Node hostname for blockbook | `NO` | `localhost` |
