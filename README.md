@@ -17,6 +17,6 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`EXTRACONFIG`| Additional config option for daemon <br /> Example: "addnode=explorer.flux.zelcore.io\naddnode=explorer.runonflux.io" | `NO` | `unset` |
 |`EXTRAFLAGS`| Additional config flage for daemon <br /> Example: "-testnet=1" | `NO` | `unset` |
 |`DAEMON_URL`| Download URL for daemon .tar.gz archive | `YES when DAEMON=1` | `unset` |
-|`BLOCKBOOK_PORT`| Port for blockbook <br /> Example: <br /> ```curl -sSL https://raw.githubusercontent.com/trezor/blockbook/master/configs/coins/flux.json \| jq .ports.blockbook_public``` | `YES` | `unset` |
+|`BLOCKBOOK_PORT`| Port for blockbook <br /> To get correct port use: <br /> ```curl -sSL https://raw.githubusercontent.com/trezor/blockbook/master/configs/coins/flux.json \| jq .ports.blockbook_public``` | `YES` | `unset` |
 
 v1.0.0
