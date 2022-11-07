@@ -13,7 +13,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`RPC_USER`| Usename for RPC connections | `NO` | `user` |
 |`RPC_PASS`| Password for RPC connections | `NO` | `pass` |
 |`RPC_HOST`| Node hostname for blockbook | `YES` | `localhost` |
-|`CONFIG`| Use Config file for daemon <br /> DISABLED=0, ENABLED=1 <br /> Info: when DISABLED using cli | `NO` | `1` |
+|`CONFIG`| Use Config file for daemon <br /> DISABLED=0, ENABLED=1 <br /> Info: DISABLED using cli | `NO` | `1` |
 |`EXTRACONFIG`| Additional config option <br /> Example: "addnode=explorer.flux.zelcore.io\naddnode=explorer.runonflux.io" | `NO` | `(unset)` |
 
 
