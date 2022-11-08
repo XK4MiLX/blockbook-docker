@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 TRY=1
-echo -e
+echo -e ""
 echo -e "Blockbook Luncher v1.0 $(date '+%Y-%m-%d %H:%M:%S')"
 echo -e "---------------------------------------------------------------------------"
 echo -e "Blockbook Settings: COIN=$COIN, RPC_USER=$RPC_USER, RPC_PASS=$RPC_PASS, RPC_PORT=$RPC_PORT, BLOCKBOOK_PORT=$BLOCKBOOK_PORT"
