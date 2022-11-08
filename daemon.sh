@@ -143,7 +143,7 @@ EOF
 fi
 
 #ONLY FLUX
-if [[ "$BOOTSTRAP" == "1" && "$COIN" == "flux" ]]; then
+if [[ "$BOOTSTRAP" == "1" && "$COIN" == "flux" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
     echo -e ""
     cdn_speedtest "0" "6"
     if [[ "$server_offline" == "1" ]]; then
@@ -153,6 +153,7 @@ if [[ "$BOOTSTRAP" == "1" && "$COIN" == "flux" ]]; then
       echo -e "${ARROW} ${YELLOW}Downloading File: ${GREEN}$DOWNLOAD_URL ${NC}"
       wget --tries 5 -O $BOOTSTRAP_FILE $DOWNLOAD_URL -q --no-verbose --show-progress --progress=dot:giga > /dev/null 2>&1
       tar_file_unpack "/root/$BOOTSTRAP_FILE" "/root/.flux"
+      echo -e "Bootstrap [LOCKED]" > BOOTSTRAP_LOCKED
       rm -rf /root/$BOOTSTRAP_FILE
       sleep 2
    fi
