@@ -10,8 +10,9 @@ stop_script() {
 trap stop_script SIGINT SIGTERM
 
 if [[ "$DAEMON" == "1" ]]; then
-echo -e "Daemon Luncher v1.0"
-echo -e "-----------------------------------------------------------------------------"
+echo -e ""
+echo -e "Daemon Luncher v1.0 $(date '+%Y-%m-%d %H:%M:%S')"
+echo -e "---------------------------------------------------------------------------"
 #Enable Config file
 if [[ "$CONFIG" == "1" ]]; then
   if [[ ! -f /root/.$COIN/$COIN.conf ]]; then
