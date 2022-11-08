@@ -19,7 +19,7 @@ if [[ ! -f /root/config_created ]]; then
   echo -e "Updating blockchaincfg.json..."
   RPC_HOST="${RPC_HOST:-localhost}"
   MQ_PORT="${MQ_URL:-29000}"
-  RPC_URL_PROTOCOL="${RPC_URL_PROTOCOL:-http}
+  RPC_URL_PROTOCOL="${RPC_URL_PROTOCOL:-http}"
   echo "$(jq -r --arg key "rpc_user" --arg value "$RPC_USER" '.[$key]=$value' $CFG_FILE)" > $CFG_FILE
   echo "$(jq -r --arg key "rpc_pass" --arg value "$RPC_PASS" '.[$key]=$value' $CFG_FILE)" > $CFG_FILE
   echo "$(jq -r --arg key "rpc_timeout" --argjson value 50 '.[$key]=$value' $CFG_FILE)" > $CFG_FILE
