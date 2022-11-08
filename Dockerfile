@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y git wget autoconf automake jq supervisor procps curl \
+    apt-get install -y git wget autoconf automake jq bc supervisor procps curl \
     graphviz libsnappy-dev zlib1g-dev libbz2-dev liblz4-dev libunwind-dev \
     bsdmainutils build-essential g++-multilib libc6-dev libtool \
     m4 ncurses-dev pkg-config python3 python3-zmq zlib1g-dev libzmq3-dev
