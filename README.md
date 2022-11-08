@@ -14,10 +14,11 @@ docker run -d --restart=always --name fluxblockbook-flux -e COIN=flux -e DAEMON_
 To customize some properties of the container, the following environment
 variables can be passed via the `-e` parameter (one for each variable).  Value
 of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
-
+ 
 | Variable       | Description                                  | Required   | Default |
 |----------------|----------------------------------------------|------------|---------|
-|`COIN`| Name of coin for blockbook  | `YES` | `unset` | 
+|`COIN`| Name of coin for blockbook | `YES` | `unset` | 
+|`ALIAS`| Name of coin config on blockbook github <br /> Set only if config name is diffrent then COIN | `NO` | `unset` | 
 |`DAEMON`| Enable/Disable daemon luncher <br /> DISABLED=0, ENABLED=1  | `NO` | `1` | 
 |`RPC_PORT`| Listen for RPC connections on this TCP port | `YES` | `unset` |
 |`RPC_USER`| Usename for RPC connections | `NO` | `user` |
