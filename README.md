@@ -32,6 +32,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`DAEMON_URL`| Download URL for daemon .tar.gz archive | `NO` | `AUTO` <br />from blockbook config |
 |`FETCH_FILE`| Name of fetch parms script <br /> Example: "fetch-params.sh" | `NO` | `unset` |
 |`BLOCKBOOK_PORT`| Port for blockbook. To get correct port check: <br /> https://github.com/trezor/blockbook/blob/master/docs/ports.md | `YES` | `unset` |
+|`BOOTSTRAP`| Enable flux daemon bootstrapping < br /> DISABLED=0, ENABLED=1 | `NO` | `unset` |
 
 
 v1.0.0
