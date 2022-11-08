@@ -10,13 +10,14 @@ if ! egrep -o "^[0-9]+$" <<< "$CURRENT_NODE_HEIGHT" &>/dev/null; then
 else
   bloks=$(curl -sSL  http://localhost:$BLOCKBOOK_PORT/api 2>/dev/null | jq -r .backend.blocks)
   headers=$(curl -sSL  http://localhost:$BLOCKBOOK_PORT/api 2>/dev/null | jq -r .backend.headers)
+  blockbook=$(curl -sSL  http://localhost:$BLOCKBOOK_PORT/api 2>/dev/null | jq -r .blockbook.bestHeight)
   if [[ $bloks != "" && $headers != "" ]]; then
-    progress=$(awk 'BEGIN {total=ARGV[1] / ARGV[2]; printf("%.2f", total*100)}' $bloks $headers)
-    echo -e "Blockbook = [OK], Daemon = [OK], Sync progress: $progress%"
+    progress1=$(awk 'BEGIN {total=ARGV[1] / ARGV[2]; printf("%.2f", total*100)}' $bloks $headers)
+    progress2=$(awk 'BEGIN {total=ARGV[1] / ARGV[2]; printf("%.2f", total*100)}' $blockbook $headers)
+    echo -e "Blockbook = [OK], Daemon = [OK], Daemon Sync: $progress1%, Blockbook Sync: $progress2%"
   else
     echo -e "Blockbook = [FAILED], Daemon = [OK]"
     exit 1
   fi
   exit
 fi
-
