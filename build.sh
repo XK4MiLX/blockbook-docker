@@ -22,6 +22,16 @@ if [[ ! -d /root/blockbook ]]; then
   LDFLAGS="-X github.com/trezor/blockbook/common.version=${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}" && \
   go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
   echo -e "Build: $BUILDTIME, Commit: $GITCOMMIT, Version: $TAG"
+  if [[ -f /root/blockbook/blockbook ]]; then
+    echo -e "Blockbook build [OK]..."
+  else
+    echo -e "Blockbook build [FAILED]..."
+    echo -e "Cleaning..."
+    rm -rf /root/blockbook
+    rm -rf /root/libzmq
+    rm -rf /root/rocksdb
+    exit 1
+  fi
   echo -e "Creating blockchaincfg.sh for $COIN..."
   cd /root/blockbook
   if [[ "$ALIAS" == "" ]]; then
