@@ -8,8 +8,8 @@ GREEN='\033[1;32m'
 CYAN='\033[1;36m'
 NC='\033[0m'
 #emoji codes
-CHECK_MARK="${GREEN}\xE2\x9C\x94${NC}"
-X_MARK="${RED}\xE2\x9C\x96${NC}"
+#CHECK_MARK="${GREEN}\xE2\x9C\x94${NC}"
+#X_MARK="${RED}\xE2\x9C\x96${NC}"
 #PIN="${RED}\xF0\x9F\x93\x8C${NC}"
 #CLOCK="${GREEN}\xE2\x8C\x9B${NC}"
 #ARROW="${SEA}\xE2\x96\xB6${NC}"
@@ -22,7 +22,7 @@ failed_counter="0"
 
 function tar_file_unpack()
 {
-    echo -e "${ARROW} ${CYAN}Unpacking bootstrap archive file...${NC}"
+    echo -e "${CYAN}Unpacking bootstrap archive file...${NC}"
     pv $1 | tar -zx -C $2
 }
 
@@ -144,7 +144,6 @@ fi
 
 #ONLY FLUX
 if [[ "$BOOTSTRAP" == "1" && "$COIN" == "flux" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
-    echo -e ""
     cdn_speedtest "0" "6"
     if [[ "$server_offline" == "1" ]]; then
       echo -e "${WORNING} ${CYAN}All Bootstrap server offline, operation aborted.. ${NC}" && sleep 1
