@@ -10,13 +10,13 @@ NC='\033[0m'
 #emoji codes
 CHECK_MARK="${GREEN}\xE2\x9C\x94${NC}"
 X_MARK="${RED}\xE2\x9C\x96${NC}"
-PIN="${RED}\xF0\x9F\x93\x8C${NC}"
-CLOCK="${GREEN}\xE2\x8C\x9B${NC}"
-ARROW="${SEA}\xE2\x96\xB6${NC}"
-BOOK="${RED}\xF0\x9F\x93\x8B${NC}"
-HOT="${ORANGE}\xF0\x9F\x94\xA5${NC}"
-WORNING="${RED}\xF0\x9F\x9A\xA8${NC}"
-RIGHT_ANGLE="${GREEN}\xE2\x88\x9F${NC}"
+#PIN="${RED}\xF0\x9F\x93\x8C${NC}"
+#CLOCK="${GREEN}\xE2\x8C\x9B${NC}"
+#ARROW="${SEA}\xE2\x96\xB6${NC}"
+#BOOK="${RED}\xF0\x9F\x93\x8B${NC}"
+#HOT="${ORANGE}\xF0\x9F\x94\xA5${NC}"
+#WORNING="${RED}\xF0\x9F\x9A\xA8${NC}"
+#RIGHT_ANGLE="${GREEN}\xE2\x88\x9F${NC}"
 server_offline="0"
 failed_counter="0"
 
@@ -73,7 +73,7 @@ function cdn_speedtest() {
 		i=$(($i+1))
 	done
 	rServerList=$((${#size_list[@]}-$failed_counter))
-	echo -e "${ARROW} ${CYAN}Valid servers: ${GREEN}${rServerList} ${CYAN}- Duration: ${GREEN}$((($(date +%s)-$start_test)/60)) min. $((($(date +%s)-$start_test) % 60)) sec.${NC}"
+	echo -e "${CYAN}Valid servers: ${GREEN}${rServerList} ${CYAN}- Duration: ${GREEN}$((($(date +%s)-$start_test)/60)) min. $((($(date +%s)-$start_test) % 60)) sec.${NC}"
 	rm -rf testspeed > /dev/null 2>&1
 	if [[ "$rServerList" == "0" ]]; then
 	server_offline="1"
@@ -95,9 +95,9 @@ function cdn_speedtest() {
 	mb=$(bc <<<"scale=2; $arr_max / 1048576 / $dTime" | awk '{printf "%2.2f\n", $1}')
 	if [[ "$custom_url" == "1" ]]; then
 		domain=$(sed -e 's|^[^/]*//||' -e 's|/.*$||' <<< ${server_index})
-		echo -e "${ARROW} ${CYAN}Best server is: ${YELLOW}${domain} ${GREEN}Average speed: ${YELLOW}$mb ${GREEN}MB/s${NC}"
+		echo -e "${CYAN}Best server is: ${YELLOW}${domain} ${GREEN}Average speed: ${YELLOW}$mb ${GREEN}MB/s${NC}"
 	else
-		echo -e "${ARROW} ${CYAN}Best server is: ${GREEN}cdn-${YELLOW}${rand_by_domain[${max_indexes[0]}]} ${GREEN}Average speed: ${YELLOW}$mb ${GREEN}MB/s${NC}"
+		echo -e "${CYAN}Best server is: ${GREEN}cdn-${YELLOW}${rand_by_domain[${max_indexes[0]}]} ${GREEN}Average speed: ${YELLOW}$mb ${GREEN}MB/s${NC}"
 	fi
 }
 
