@@ -55,7 +55,7 @@ if [[ -f /usr/local/bin/${COIN}d ]]; then
   if [[ "$BINARY_NAME" == "${COIN}d" ]]; then
     timeout 10 ${COIN}-cli -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
   fi
-  pkill -9 ${BINARY_NAME}d
+  pkill -9 ${BINARY_NAME}
 fi
 
 if [[ ! -f /usr/local/bin/${COIN}d ]]; then
