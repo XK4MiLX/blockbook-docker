@@ -24,6 +24,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`RPC_USER`| Usename for RPC connections | `NO` | `user` |
 |`RPC_PASS`| Password for RPC connections | `NO` | `pass` |
 |`RPC_HOST`| Node hostname for blockbook | `NO` | `localhost` |
+|`RPC_URL_PROTOCOL`| Protocol for RPC calls <br /> Info: ETH, ETC using ws | `NO` | `http` |
 |`CONFIG`| Use Config file for daemon <br /> DISABLED=0, ENABLED=1 <br /> Info: DISABLED using cli | `NO` | `1` |
 |`EXTRACONFIG`| Additional config option for daemon <br /> Example: "addnode=explorer.flux.zelcore.io\naddnode=explorer.runonflux.io" | `NO` | `unset` |
 |`EXTRAFLAGS`| Additional config flage for daemon <br /> Example: "-testnet=1" | `NO` | `unset` |
