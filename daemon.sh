@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$BINARY_NAME" == "" ]; then
+if [[ "$BINARY_NAME" == "" ]]; then
   BINARY_NAME="${COIN}d"
 fi
 
