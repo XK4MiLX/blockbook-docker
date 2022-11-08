@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ "$BINARY_NAME" == "" ]; then
-  BINARY_NAME = ${COIN}d
+  BINARY_NAME="${COIN}d"
 fi
 
 stop_script() {
