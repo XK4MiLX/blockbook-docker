@@ -1,9 +1,15 @@
 #!/bin/bash
 
+if [[ "$BINARY_NAME" == "" ]; then
+  BINARY_NAME = ${COIN}d
+fi
+
 stop_script() {
   echo -e "Stopping daemon (EXIT)..."
-  timeout 10 ${COIN}-cli -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
-  pkill -9 ${COIN}d
+  if [[ "$BINARY_NAME" == "${COIN}d" ]]; then
+    timeout 10 ${COIN}-cli -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
+  fi
+  pkill -9 $BINARY_NAME
   exit 0
 }
 
@@ -46,8 +52,10 @@ fi
 
 if [[ -f /usr/local/bin/${COIN}d ]]; then
   echo -e "Stopping daemon (START)..."
-  timeout 10 ${COIN}-cli -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
-  pkill -9 ${COIN}d
+  if [[ "$BINARY_NAME" == "${COIN}d" ]]; then
+    timeout 10 ${COIN}-cli -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
+  fi
+  pkill -9 ${BINARY_NAME}d
 fi
 
 if [[ ! -f /usr/local/bin/${COIN}d ]]; then
@@ -66,7 +74,7 @@ if [[ ! -f /usr/local/bin/${COIN}d ]]; then
   
   echo -e "BINARY URL: $DAEMON_URL"
   wget -q --show-progress -c -t 5 $DAEMON_URL
-  strip_lvl=$(tar -tvf ${DAEMON_URL##*/} | grep ${COIN}d$ | awk '{ printf "%s\n", $6 }' | awk -F\/ '{print NF-1}')
+  strip_lvl=$(tar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $6 }' | awk -F\/ '{print NF-1}')
   tar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/}
   echo -e "Installing daemon ($COIN)..."
   install -m 0755 -o root -g root -t /usr/local/bin backend/*
@@ -77,14 +85,10 @@ cd /
 sleep 5
 if [[ "$CONFIG" == "0" || "$CONFIG" == "" ]]; then
   echo -e "Starting $COIN daemon (Config: Disabled)..."
-  ${COIN}d -rpcuser="$RPC_USER" \
-    -rpcpassword="$RPC_PASS" \
-    -rpcport="$RPC_PORT" \
-    -server \
-    ${EXTRAFLAGS}
+  ${BINARY_NAME} ${CLIFLAGS}
 else
   echo -e "Starting $COIN daemon (Config: Enabled)..."
-  ${COIN}d
+  ${BINARY_NAME}
 fi
 else
   echo -e "Daemon Luncher is disabled..."
