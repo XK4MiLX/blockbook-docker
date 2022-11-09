@@ -20,13 +20,13 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`COIN`| Name of coin for blockbook | `YES` | `unset` | 
 |`ALIAS`| Name of coin config on blockbook github <br /> Set only if config name is diffrent then COIN | `NO` | `unset` | 
 |`DAEMON`| Enable/Disable daemon luncher <br /> DISABLED=0, ENABLED=1  | `NO` | `1` | 
-|`BINARY_NAME`| Name of daemon binary <br /> Use it when binary name is diffrent then <$COIN>d | `NO` | `unset` | 
+|`BINARY_NAME`| Name of daemon binary <br /> Use it when binary name is diffrent then ${COIN}d | `NO` | `unset` | 
 |`RPC_PORT`| Listen for RPC connections on this TCP port | `YES` | `unset` |
 |`RPC_USER`| Usename for RPC connections | `NO` | `user` |
 |`RPC_PASS`| Password for RPC connections | `NO` | `pass` |
 |`RPC_HOST`| Node hostname for blockbook | `NO` | `localhost` |
 |`RPC_URL_PROTOCOL`| Protocol for RPC calls <br /> Info: ETH, ETC using ws | `NO` | `http` |
-|`CONFIG_DIR`| Set daemon config dirname when diffrent then .$COIN | `NO` | `unset` |
+|`CONFIG_DIR`| Set daemon config dirname when diffrent then .${COIN} | `NO` | `unset` |
 |`CONFIG`| Use Config file for daemon <br /> DISABLED=0, ENABLED=1 <br /> Info: DISABLED using cli | `NO` | `1` |
 |`EXTRACONFIG`| Additional config option for daemon <br /> Example: "addnode=explorer.flux.zelcore.io\naddnode=explorer.runonflux.io" | `NO` | `unset` |
 |`CLIFLAGS`| Config flags for daemon | `YES` <br />when using CLI mode | `unset` |
