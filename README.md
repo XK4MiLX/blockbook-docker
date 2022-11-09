@@ -32,7 +32,10 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`DAEMON_URL`| Download URL for daemon .tar.gz archive | `NO` | `AUTO` <br />from blockbook config |
 |`FETCH_FILE`| Name of fetch parms script <br /> Example: "fetch-params.sh" | `NO` | `unset` |
 |`BLOCKBOOK_PORT`| Port for blockbook. To get correct port check: <br /> https://github.com/trezor/blockbook/blob/master/docs/ports.md | `YES` | `unset` |
-|`BOOTSTRAP`| Enable flux daemon bootstrapping <br /> DISABLED=0, ENABLED=1 | `NO` | `0` |
+|`BOOTSTRAP`| Enable daemon bootstrapping <br /> DISABLED=0, ENABLED=1 | `NO` | `0` |
+|`B_FILE`| Enable flux daemon bootstrapping | `NO` | `flux_explorer_bootstrap.tar.gz` |
+|`B_TIMEOUT`| Bootstrap speed test timeout in sec | `NO` | `6` |
+|`B_SERVERS_LIST`| Servers list for bootstraping <br /> Example: '("http://cdn-11.runonflux.io/apps/fluxshare/getfile/" "http://cdn-11.runonflux.io/apps/fluxshare/getfile/")' | `NO` | `BUILD IN SERVERS LIST` |
 
 
 v1.0.0
