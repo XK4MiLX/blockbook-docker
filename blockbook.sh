@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 TRY=1
 echo -e ""
-echo -e "Blockbook Luncher v1.0 $(date '+%Y-%m-%d %H:%M:%S')"
+echo -e "Blockbook Luncher v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "---------------------------------------------------------------------------"
 echo -e "Blockbook Settings: COIN=$COIN, RPC_USER=$RPC_USER, RPC_PASS=$RPC_PASS, RPC_PORT=$RPC_PORT, BLOCKBOOK_PORT=$BLOCKBOOK_PORT"
 while true; do
@@ -15,7 +15,7 @@ while true; do
 done
 
 CFG_FILE=/root/blockbook/build/blockchaincfg.json
-if [[ ! -f /root/config_created ]]; then
+if [[ ! -f /root/CONFIG_CRETED ]]; then
   echo -e "Updating blockchaincfg.json..."
   RPC_HOST="${RPC_HOST:-localhost}"
   MQ_PORT="${MQ_URL:-29000}"
@@ -25,7 +25,7 @@ if [[ ! -f /root/config_created ]]; then
   echo "$(jq -r --arg key "rpc_timeout" --argjson value 50 '.[$key]=$value' $CFG_FILE)" > $CFG_FILE
   echo "$(jq -r --arg key "rpc_url" --arg value "$RPC_URL_PROTOCOL://$RPC_HOST:$RPC_PORT" '.[$key]=$value' $CFG_FILE)" > $CFG_FILE
   echo "$(jq -r --arg key "message_queue_binding" --arg value "tcp://$RPC_HOST:$MQ_PORT" '.[$key]=$value' $CFG_FILE)" > $CFG_FILE
-  echo "Disabled updating blockchaincfg.json..." > /root/config_created
+  echo "Disabled updating blockchaincfg.json..." > /root/CONFIG_CRETED
 else
   echo -e "Blockchaincfg.json [LOCKED]..."
 fi
