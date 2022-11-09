@@ -6,7 +6,7 @@ $ docker pull runonflux/blockbook-docker
 ```
 ### Deploy container
 ```shell script
-docker run -d --restart=always --name fluxblockbook-flux -e COIN=flux -e DAEMON_URL=https://github.com/RunOnFlux/fluxd/releases/download/v6.0.0/Flux-amd64-v6.0.0.tar.gz -e FETCH_FILE="fetch-params.sh" -e EXTRACONFIG="addnode=explorer.flux.zelcore.io\naddnode=explorer.runonflux.io\naddnode=explorer.zelcash.online\naddnode=blockbook.runonflux.io" -e BLOCKBOOK_PORT=9158 -e RPC_PORT=16125 -p 9055:9158 -v /home/$USER/fluxdir:/root runonflux/blockbook-docker
+docker run -d --name fluxblockbook-flux -e COIN=flux -e BOOTSTRAP=1 -e FETCH_FILE="fetch-params.sh" -e EXTRACONFIG="addnode=explorer.zelcash.online\naddnode=explorer.runonflux.io\naddnode=blockbook.runonflux.io\naddnode=explorer.flux.zelcore.io" -e BLOCKBOOK_PORT=9158 -e RPC_PORT=16124 -p 7799:9158 -v /<path>:/root runonflux/blockbook-docker
 ```
 
 ### Environment Variables
