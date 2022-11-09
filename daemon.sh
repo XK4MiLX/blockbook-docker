@@ -94,6 +94,10 @@ if [[ "$BINARY_NAME" == "" ]]; then
   BINARY_NAME="${COIN}d"
 fi
 
+if [[ "$CONFIG_DIR" == "" ]]; then
+  CONFIG_DIR=$COIN
+fi
+
 stop_script() {
   echo -e "Stopping daemon (EXIT)..."
   if [[ "$BINARY_NAME" == "${COIN}d" ]]; then
@@ -111,10 +115,10 @@ echo -e "Daemon Luncher v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "---------------------------------------------------------------------------"
 
 if [[ "$CONFIG" == "1" ]]; then
-  if [[ ! -f /root/.$COIN/$COIN.conf ]]; then
-    mkdir -p /root/.$COIN
+  if [[ ! -f /root/.$CONFIG_DIR/$COIN.conf ]]; then
+    mkdir -p /root/.$CONFIG_DIR
     echo -e "Creating config file..."
-    cat <<- EOF > /root/.$COIN/$COIN.conf
+    cat <<- EOF > /root/.$CONFIG_DIR/$COIN.conf
 txindex=1
 addressindex=1
 timestampindex=1
@@ -124,7 +128,7 @@ rpcuser=$RPC_USER
 rpcpassword=$RPC_PASS
 EOF
   if [[ "$EXTRACONFIG" != "" ]]; then
-    echo -e "$EXTRACONFIG" >> /root/.$COIN/$COIN.conf
+    echo -e "$EXTRACONFIG" >> /root/.$CONFIG_DIR/$COIN.conf
   fi
  fi
 fi
@@ -142,7 +146,7 @@ if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
       cd /root
       echo -e "${YELLOW}Downloading File: ${GREEN}$DOWNLOAD_URL ${NC}"
       wget --tries 5 -O $BOOTSTRAP_FILE $DOWNLOAD_URL -q --no-verbose --show-progress --progress=dot:giga > /dev/null 2>&1
-      tar_file_unpack "/root/$BOOTSTRAP_FILE" "/root/.$COIN"
+      tar_file_unpack "/root/$BOOTSTRAP_FILE" "/root/.$CONFIG_DIR"
       echo -e "Bootstrap [LOCKED]" > BOOTSTRAP_LOCKED
       rm -rf /root/$BOOTSTRAP_FILE
       sleep 2
