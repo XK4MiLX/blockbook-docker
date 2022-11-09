@@ -5,14 +5,14 @@ if [[ ! -d /root/blockbook ]]; then
   cd /root && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git
   cd /root/rocksdb && CFLAGS=-fPIC CXXFLAGS=-fPIC make -j 4 release
   # Install ZeroMQ
-  echo -e "Installing ZeroMQ..."
-  cd /root && git clone https://github.com/zeromq/libzmq && \
-    cd libzmq && \
-    git checkout v4.2.1 && \
-    ./autogen.sh && \
-    ./configure && \
-    make -j 4 && \
-    make install
+  #echo -e "Installing ZeroMQ..."
+  #cd /root && git clone https://github.com/zeromq/libzmq && \
+  #  cd libzmq && \
+  # git checkout v4.2.1 && \
+  #  ./autogen.sh && \
+  #  ./configure && \
+  #  make -j 4 && \
+  #  make install
   echo -e "Installing BlockBook..."
   cd /root && git clone https://github.com/trezor/blockbook.git && \
   cd /root/blockbook && \
