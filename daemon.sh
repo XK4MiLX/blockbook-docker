@@ -18,7 +18,7 @@ function tar_file_unpack()
 
 function cdn_speedtest() {
 	if [[ -z $1 || "$1" == "0" ]]; then
-		BOOTSTRAP_FILE="flux_explorer_bootstrap.tar.gz"
+		BOOTSTRAP_FILE="daemon_bootstrap.tar.gz"
 	else
 		BOOTSTRAP_FILE="$1"
 	fi
