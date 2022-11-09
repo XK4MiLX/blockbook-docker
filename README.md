@@ -33,7 +33,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`FETCH_FILE`| Name of fetch parms script <br /> Example: "fetch-params.sh" | `NO` | `unset` |
 |`BLOCKBOOK_PORT`| Port for blockbook. To get correct port check: <br /> https://github.com/trezor/blockbook/blob/master/docs/ports.md | `YES` | `unset` |
 |`BOOTSTRAP`| Enable daemon bootstrapping <br /> DISABLED=0, ENABLED=1 | `NO` | `0` |
-|`B_FILE`| Enable flux daemon bootstrapping | `NO` | `flux_explorer_bootstrap.tar.gz` |
+|`B_FILE`| Bootstrap archive name | `NO` | `flux_explorer_bootstrap.tar.gz` |
 |`B_TIMEOUT`| Bootstrap speed test timeout in sec | `NO` | `6` |
 |`B_SERVERS_LIST`| Servers list for bootstraping <br /> Example: `'("http://cdn-14.runonflux.io/apps/fluxshare/getfile/" "http://cdn-15.runonflux.io/apps/fluxshare/getfile/")'` | `NO` | `BUILD-IN SERVERS LIST` |
 
