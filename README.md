@@ -35,7 +35,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`BOOTSTRAP`| Enable daemon bootstrapping <br /> DISABLED=0, ENABLED=1 | `NO` | `0` |
 |`B_FILE`| Enable flux daemon bootstrapping | `NO` | `flux_explorer_bootstrap.tar.gz` |
 |`B_TIMEOUT`| Bootstrap speed test timeout in sec | `NO` | `6` |
-|`B_SERVERS_LIST`| Servers list for bootstraping <br /> Example: `'("http://cdn-11.runonflux.io/apps/fluxshare/getfile/" "http://cdn-11.runonflux.io/apps/fluxshare/getfile/")'` | `NO` | `BUILD-IN SERVERS LIST` |
+|`B_SERVERS_LIST`| Servers list for bootstraping <br /> Example: `'("http://cdn-14.runonflux.io/apps/fluxshare/getfile/" "http://cdn-15.runonflux.io/apps/fluxshare/getfile/")'` | `NO` | `BUILD-IN SERVERS LIST` |
 
 
 v1.0.0
