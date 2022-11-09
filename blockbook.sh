@@ -10,9 +10,13 @@ while true; do
      sleep 20
      break
    fi
-   sleep 150
+   sleep 160
    ((TRY=TRY+1))
 done
+
+if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
+  sleep 180
+fi
 
 CFG_FILE=/root/blockbook/build/blockchaincfg.json
 if [[ ! -f /root/CONFIG_CRETED ]]; then
