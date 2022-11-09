@@ -26,6 +26,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`RPC_PASS`| Password for RPC connections | `NO` | `pass` |
 |`RPC_HOST`| Node hostname for blockbook | `NO` | `localhost` |
 |`RPC_URL_PROTOCOL`| Protocol for RPC calls <br /> Info: ETH, ETC using ws | `NO` | `http` |
+|`CONFIG_DIR`| Set daemon config dirname when diffrent then .$COIN | `NO` | `unset` |
 |`CONFIG`| Use Config file for daemon <br /> DISABLED=0, ENABLED=1 <br /> Info: DISABLED using cli | `NO` | `1` |
 |`EXTRACONFIG`| Additional config option for daemon <br /> Example: "addnode=explorer.flux.zelcore.io\naddnode=explorer.runonflux.io" | `NO` | `unset` |
 |`CLIFLAGS`| Config flags for daemon | `YES` <br />when using CLI mode | `unset` |
@@ -36,6 +37,5 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`B_FILE`| Bootstrap archive file name | `NO` | `daemon_bootstrap.tar.gz` |
 |`B_TIMEOUT`| Bootstrap speed test timeout in sec | `NO` | `6` |
 |`B_SERVERS_LIST`| Servers list for bootstraping <br /> Example: `'("http://cdn-14.runonflux.io/apps/fluxshare/getfile/" "http://cdn-15.runonflux.io/apps/fluxshare/getfile/")'` | `NO` | `BUILD-IN SERVERS LIST` |
-
 
 v1.0.0
