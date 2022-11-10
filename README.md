@@ -19,7 +19,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |----------------|----------------------------------------------|------------|---------|
 |`COIN`| Name of coin for blockbook | `YES` | `unset` | 
 |`DAEMON`| Enable/Disable daemon luncher <br /> DISABLED=0, ENABLED=1  | `NO` | `1` | 
-|`BINARY_NAME`| Name of daemon binary <br /> Use it when binary name is diffrent then ${COIN}d | `NO` | `unset` | 
+|`BINARY_NAME`| Name of daemon binary | `NO` | `AUTO` <br />`FROM BLOCKBOOK CONFIG` | 
 |`RPC_PORT`| Listen for RPC connections on this TCP port | `YES` | `unset` |
 |`RPC_USER`| Usename for RPC connections | `NO` | `user` |
 |`RPC_PASS`| Password for RPC connections | `NO` | `pass` |
