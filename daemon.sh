@@ -194,13 +194,13 @@ fi
 cd /
 sleep 5
 if [[ "$CONFIG" == "0" || "$CONFIG" == "" ]]; then
-  echo -e "Starting $COIN daemon (Config: Disabled)..."
+  echo -e "Starting $COIN daemon (Config: DISABLED)..."
   ${BINARY_NAME} ${CLIFLAGS}
 else
-  echo -e "Starting $COIN daemon (Config: Enabled)..."
-  ${BINARY_NAME}
+  echo -e "Starting $COIN daemon (Config: ENABLED)..."
+  ${BINARY_NAME} -datadir="/root/.${COIN}"
 fi
 else
-  echo -e "Daemon Luncher is disabled..."
+  echo -e "Daemon Luncher [DISABLED]..."
   exit
 fi
