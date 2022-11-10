@@ -18,7 +18,6 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 | Variable       | Description                                  | Required   | Default |
 |----------------|----------------------------------------------|------------|---------|
 |`COIN`| Name of coin for blockbook | `YES` | `unset` | 
-|`ALIAS`| Name of coin config on blockbook github <br /> Set only if config name is diffrent then ${COIN} | `NO` | `unset` | 
 |`DAEMON`| Enable/Disable daemon luncher <br /> DISABLED=0, ENABLED=1  | `NO` | `1` | 
 |`BINARY_NAME`| Name of daemon binary <br /> Use it when binary name is diffrent then ${COIN}d | `NO` | `unset` | 
 |`RPC_PORT`| Listen for RPC connections on this TCP port | `YES` | `unset` |
