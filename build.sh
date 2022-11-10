@@ -16,7 +16,7 @@ if [[ ! -d /root/blockbook ]]; then
   echo -e "Installing BlockBook..."
   
   if [[ "$BLOCKBOOKGIT_URL" == "" ]]; then
-    BLOCKBOOKGIT_URL=https://github.com/trezor/blockbook.git
+    BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook.git"
   fi
   
   cd /root && git clone $BLOCKBOOKGIT_URL > /dev/null 2>&1 && \
