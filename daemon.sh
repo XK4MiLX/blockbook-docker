@@ -90,10 +90,6 @@ function cdn_speedtest() {
 	fi
 }
 
-if [[ "$BINARY_NAME" == "" ]]; then
-  BINARY_NAME="${COIN}d"
-fi
-
 if [[ "$CONFIG_DIR" == "" ]]; then
   CONFIG_DIR=$COIN
 fi
@@ -156,7 +152,7 @@ if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
 if [[ "$FETCH_FILE" != "" ]]; then
   if [[ ! -d /root/.zcash-params ]]; then
     echo -e "Installing fetch-params..."
-    bash $FETCH_FILE > /dev/null 2>&1 && sleep 2
+    bash -c "$FETCH_FILE" > /dev/null 2>&1 && sleep 2
   fi
 fi
 
@@ -172,16 +168,23 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
   echo -e "Downloading daemon ($COIN)..."
   cd /tmp
   mkdir backend
-  
+  echo -e "Fetching blockbook config..."
+  BLOCKBOOKCONFIG=$(curl -SsL https://raw.githubusercontent.com/trezor/blockbook/master/configs/coins/${COIN}.json 2>/dev/null | jq .)
   if [[ "$DAEMON_URL" == "" ]]; then
-    echo -e "Reading binary url from blockbook config..." 
-    if [[ "$ALIAS" == "" ]]; then
-      DAEMON_URL=$(curl -sSL https://raw.githubusercontent.com/trezor/blockbook/master/configs/coins/${COIN}.json | jq -r .backend.binary_url)
-    else
-      DAEMON_URL=$(curl -sSL https://raw.githubusercontent.com/trezor/blockbook/master/configs/coins/${ALIAS}.json | jq -r .backend.binary_url)
-    fi
+      DAEMON_URL=$(jq -r .backend.binary_url <<< "$BLOCKBOOKCONFIG")
   fi
-  
+  if [[ "$BINARY_NAME"  == "" ]]; then
+    BINARY_NAME=$(jq -r .backend.exec_command_template 2>/dev/null <<< "$BLOCKBOOKCONFIG")
+    if [[ $(grep "\--datadir" <<< "$BINARY_NAME") ]]; then
+     PREFIX="--datadir"
+    else
+     PREFIX="-datadir"
+    fi
+    BINARY_NAME=$(grep -Po "(?<=\/).*$PREFIX" <<< "$BINARY_NAME")
+    BINARY_NAME="${BINARY_NAME%% $PREFIX}"
+    BINARY_NAME="${BINARY_NAME##*/}"
+    BINARY_NAME=( $BINARY_NAME )
+  fi
   echo -e "BINARY URL: $DAEMON_URL"
   wget -q --show-progress -c -t 5 $DAEMON_URL
   strip_lvl=$(tar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $6 }' | awk -F\/ '{print NF-1}')
