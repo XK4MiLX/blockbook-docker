@@ -127,10 +127,10 @@ echo -e "-----------------------------------------------------------------------
 if [[ -f /root/daemon_config.json ]]; then
   echo -e "Loading daemon_config.json..."
   if [[ "$CLI_NAME" == "" ]]; then
-    CLI_NAME=$(jq -r .binary_name /root/daemon_config.json)
+    CLI_NAME=$(jq -r .cli_name /root/daemon_config.json)
   fi
   if [[ "$BINARY_NAME" == "" ]]; then
-    BINARY_NAME=$(ja -r .cli_name /root/daemon_config.json)
+    BINARY_NAME=$(jq -r .binary_name /root/daemon_config.json)
   fi
 fi
 
