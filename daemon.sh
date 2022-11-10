@@ -10,6 +10,16 @@
 server_offline="0"
 failed_counter="0"
 
+function cli_search(){
+  if [[ "$CLI_NAME" == "" ]]; then
+    CLI_PATH=$(find /usr/local/bin/ -type f -iname "*-cli" | tail -n1)
+    if [[ "$CLI_PATH" != "" ]]; then
+      CLI_NAME="${CLI_PATH##*/}"
+      echo "$(jq -r --arg key "cli_name" --arg value "$CLI_NAME" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
+    fi
+  fi
+}
+
 function tar_file_unpack()
 {
     echo -e "${CYAN}Unpacking bootstrap archive file...${NC}"
@@ -96,10 +106,12 @@ fi
 
 stop_script() {
   echo -e "Stopping daemon (EXIT)..."
-  if [[ "$BINARY_NAME" == "${COIN}d" ]]; then
-    timeout 10 ${COIN}-cli -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
+  if [[ "$CLI_NAME" != "" ]]; then
+    timeout 10 ${CLI_NAME} -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
   fi
-  pkill -9 $BINARY_NAME
+  if [[ -f /root/daemon_config.json ]]; then
+    pkill -9 $(jq .binary_name /root/daemon_config.json)
+  fi
   exit 0
 }
 
@@ -109,6 +121,16 @@ if [[ "$DAEMON" == "1" ]]; then
 echo -e ""
 echo -e "Daemon Luncher v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "---------------------------------------------------------------------------"
+
+if [[ -f /root/daemon_config.json ]]; then
+  echo -e "Loading daemon_config.json..."
+  if [[ "$CLI_NAME" == "" ]]; then
+    CLI_NAME=$(jq .binary_name /root/daemon_config.json)
+  fi
+  if [[ "$BINARY_NAME" == "" ]]; then
+    BINARY_NAME=$(ja .cli_name /root/daemon_config.json)
+  fi
+fi
 
 if [[ "$CONFIG" == "1" ]]; then
   if [[ ! -f /root/.$CONFIG_DIR/$COIN.conf ]]; then
@@ -156,12 +178,12 @@ if [[ "$FETCH_FILE" != "" ]]; then
   fi
 fi
 
-if [[ -f /usr/local/bin/$BINARY_NAME ]]; then
+if [[ "$BINARY_NAME" != "" ]]; then
   echo -e "Stopping daemon (START)..."
-  if [[ "$BINARY_NAME" == "${COIN}d" ]]; then
-    timeout 10 ${COIN}-cli -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
+  if [[ "$CLI_NAME" != "" ]]; then
+    timeout 10 ${CLI_NAME} -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
   fi
-  pkill -9 ${BINARY_NAME}
+    pkill -9 $BINARY_NAME
 fi
 
 if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
@@ -184,6 +206,18 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
     BINARY_NAME="${BINARY_NAME%% $PREFIX}"
     BINARY_NAME="${BINARY_NAME##*/}"
     BINARY_NAME=( $BINARY_NAME )
+    if [[ ! -f /root/daemon_config.json ]]; then
+      echo "{}" > /root/daemon_config.json
+      echo "$(jq -r --arg key "binary_name" --arg value "$BINARY_NAME" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
+      cli_search
+    fi
+  else
+    if [[ "$CLI_NAME" == "" ]]; then 
+      if [[ ! -f /root/daemon_config.json ]]; then
+        echo "{}" > /root/daemon_config.json
+      fi
+      cli_search
+    fi
   fi
   echo -e "BINARY URL: $DAEMON_URL"
   wget -q --show-progress -c -t 5 $DAEMON_URL
