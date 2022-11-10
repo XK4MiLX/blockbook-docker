@@ -14,7 +14,12 @@ if [[ ! -d /root/blockbook ]]; then
   #  make -j 4 && \
   #  make install
   echo -e "Installing BlockBook..."
-  cd /root && git clone https://github.com/trezor/blockbook.git && \
+  
+  if [[ "$BLOCKBOOKGIT_URL" == "" ]]; then
+    BLOCKBOOKGIT_URL=https://github.com/trezor/blockbook.git
+  fi
+  
+  cd /root && git clone $BLOCKBOOKGIT_URL && \
   cd /root/blockbook && \
   go mod download && \
   BUILDTIME=$(date --iso-8601=seconds); \
