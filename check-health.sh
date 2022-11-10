@@ -12,14 +12,14 @@ if [[ "$CLI_NAME" == "" ]]; then
 fi
 
 if [[ -f /root/.${COIN}/${COIN}.conf ]]; then
-  CURRENT_NODE_HEIGHT=$(${CLI_NAME} -datadir="/root/.$COIN" -conf="/root/.${COIN}/${COIN}.conf" -getinfo 2>/dev/null | jq .blocks)
+  CURRENT_NODE_HEIGHT=$(${CLI_NAME} -conf="/root/.${COIN}/${COIN}.conf" -getinfo 2>/dev/null | jq .blocks)
   if [[ "$CURRENT_NODE_HEIGHT" == "" ]]; then
-    CURRENT_NODE_HEIGHT=$(${CLI_NAME} -datadir="/root/.$COIN" -conf="/root/.${COIN}/${COIN}.conf" getinfo 2>/dev/null | jq .blocks)
+    CURRENT_NODE_HEIGHT=$(${CLI_NAME} -conf="/root/.${COIN}/${COIN}.conf" getinfo 2>/dev/null | jq .blocks)
   fi
 else
-  CURRENT_NODE_HEIGHT=$(${CLI_NAME} -datadir="/root/.$COIN" -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" -getinfo 2>/dev/null | jq .blocks)
+  CURRENT_NODE_HEIGHT=$(${CLI_NAME} -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" -getinfo 2>/dev/null | jq .blocks)
   if [[ "$CURRENT_NODE_HEIGHT" == "" ]]; then
-    CURRENT_NODE_HEIGHT=$(${CLI_NAME} -datadir="/root/.$COIN" -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" getinfo 2>/dev/null | jq .blocks)
+    CURRENT_NODE_HEIGHT=$(${CLI_NAME} -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" getinfo 2>/dev/null | jq .blocks)
   fi
 fi
 
