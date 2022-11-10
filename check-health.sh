@@ -1,8 +1,28 @@
 #!/bin/bash
-CURRENT_NODE_HEIGHT=$($COIN-cli -datadir="/root/.$COIN" -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" -getinfo 2>/dev/null | jq .blocks)
-if [[ "$CURRENT_NODE_HEIGHT" == "" ]]; then
-  CURRENT_NODE_HEIGHT=$($COIN-cli -datadir="/root/.$COIN" -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" getinfo 2>/dev/null | jq .blocks)
+
+if [[ "$CLI_NAME" == "" ]]; then
+  if [[ -f /root/daemon_config.json ]]; then
+    CLI_NAME=$(jq -r .cli_name /root/daemon_config.json)
+  fi
 fi
+
+if [[ "$CLI_NAME" == "" ]]; then
+  echo -e "HEALCHECK [DISABLED]"
+  exit 1
+fi
+
+if [[ -f /root/.${COIN}/${COIN}.conf ]]; then
+  CURRENT_NODE_HEIGHT=$(${CLI_NAME} -datadir="/root/.$COIN" -conf="/root/.${COIN}/${COIN}.conf" -getinfo 2>/dev/null | jq .blocks)
+  if [[ "$CURRENT_NODE_HEIGHT" == "" ]]; then
+    CURRENT_NODE_HEIGHT=$(${CLI_NAME} -datadir="/root/.$COIN" -conf="/root/.${COIN}/${COIN}.conf" getinfo 2>/dev/null | jq .blocks)
+  fi
+else
+  CURRENT_NODE_HEIGHT=$(${CLI_NAME} -datadir="/root/.$COIN" -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" -getinfo 2>/dev/null | jq .blocks)
+  if [[ "$CURRENT_NODE_HEIGHT" == "" ]]; then
+    CURRENT_NODE_HEIGHT=$(${CLI_NAME} -datadir="/root/.$COIN" -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" getinfo 2>/dev/null | jq .blocks)
+  fi
+fi
+
 
 if ! egrep -o "^[0-9]+$" <<< "$CURRENT_NODE_HEIGHT" &>/dev/null; then
   echo -e "Daemon = [FAILED]"
