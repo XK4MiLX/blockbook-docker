@@ -203,7 +203,7 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
     repo=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]})
   fi
   
-  RAW_CONF_URL="https://raw.githubusercontent.com/$user/$repo/master/configs/coins/${COIN}.json"
+  RAW_CONF_URL="https://raw.githubusercontent.com/$user/$repo/$TAG/configs/coins/${COIN}.json"
   echo -e "| CONFIG URL: $RAW_CONF_URL"
   BLOCKBOOKCONFIG=$(curl -SsL $RAW_CONF_URL 2>/dev/null | jq .)
   if [[ "$DAEMON_URL" == "" ]]; then
