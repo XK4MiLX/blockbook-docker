@@ -120,7 +120,7 @@ stop_script() {
 trap stop_script SIGINT SIGTERM
 
 if [[ "$DAEMON" == "1" ]]; then
-echo -e "| Daemon Luncher v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+echo -e "| DAEMON LUNCHER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "---------------------------------------------------------------------------"
 
 if [[ -f /root/daemon_config.json ]]; then
@@ -251,7 +251,7 @@ else
 fi
 echo -e "---------------------------------------------------------------------------"
 else
-  echo -e "| Daemon Luncher [DISABLED]..."
+  echo -e "| DAEMON LUNCHER [DISABLED]..."
   echo -e "---------------------------------------------------------------------------"
   exit
 fi
