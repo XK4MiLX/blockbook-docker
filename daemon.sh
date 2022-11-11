@@ -193,7 +193,17 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
   cd /tmp
   mkdir backend
   echo -e "Fetching blockbook config..."
-  BLOCKBOOKCONFIG=$(curl -SsL https://raw.githubusercontent.com/trezor/blockbook/master/configs/coins/${COIN}.json 2>/dev/null | jq .)
+  if [[ "$BLOCKBOOKGIT_URL" == "" ]]; then
+    BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook.git"
+  fi
+  
+  re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
+  if [[ $BLOCKBOOKGIT_URL =~ $re ]]; then
+    user=${BASH_REMATCH[4]}
+    repo=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]})
+  fi
+  
+  BLOCKBOOKCONFIG=$(curl -SsL https://raw.githubusercontent.com/$user/$repo/master/configs/coins/${COIN}.json 2>/dev/null | jq .)
   if [[ "$DAEMON_URL" == "" ]]; then
       DAEMON_URL=$(jq -r .backend.binary_url <<< "$BLOCKBOOKCONFIG")
   fi
