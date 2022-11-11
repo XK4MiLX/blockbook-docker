@@ -11,7 +11,7 @@ RUN apt-get update && \
     bsdmainutils build-essential g++-multilib libc6-dev pv libtool \
     m4 ncurses-dev pkg-config python3 python3-zmq zlib1g-dev libzmq3-dev
 
-ENV TAG=master
+ENV TAG=${TAG:-master}
 ENV RPC_USER=${RPC_USER:-user}
 ENV RPC_PASS=${RPC_PASS:-pass}
 ENV HOME=/root
