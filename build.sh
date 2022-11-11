@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 if [[ ! -d /root/blockbook ]]; then
-  echo -e "| BLOCKBOOK BUILDER v1.0"
+  start_build=`date +%s`
+  echo -e "| BLOCKBOOK BUILDER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "|-----------------------------------------------------"
   echo -e "| Installing RocksDB..."
   cd /root && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git > /dev/null 2>&1
@@ -19,7 +20,7 @@ if [[ ! -d /root/blockbook ]]; then
   GITCOMMIT=$(git describe --always --dirty); \
   LDFLAGS="-X github.com/trezor/blockbook/common.version=${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}" && \
   go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}" > /dev/null 2>&1
-  echo -e "| Build: $BUILDTIME, Commit: $GITCOMMIT, Version: $TAG"
+  echo -e "| Build: $BUILDTIME, Commit: $GITCOMMIT, Version: $TAG, Duration: $((($(date +%s)-$start_build)/60)) min. $((($(date +%s)-$start_build) % 60)) sec."
   if [[ -f /root/blockbook/blockbook ]]; then
     echo -e "| Blockbook build [OK]..."
   else
