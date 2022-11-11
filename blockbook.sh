@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 TRY=1
-echo -e "| Blockbook Luncher v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+echo -e "| BLOCKBOOK LUNCHER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "---------------------------------------------------------------------------"
 echo -e "| Blockbook Settings: COIN=$COIN, RPC_USER=$RPC_USER, RPC_PASS=$RPC_PASS, RPC_PORT=$RPC_PORT, BLOCKBOOK_PORT=$BLOCKBOOK_PORT"
 while true; do
@@ -9,7 +9,7 @@ while true; do
      sleep 20
      break
    fi
-   sleep 160
+   sleep 180
    ((TRY=TRY+1))
 done
 
