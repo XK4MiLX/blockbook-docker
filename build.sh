@@ -12,7 +12,7 @@ if [[ ! -d /root/blockbook ]]; then
   if [[ "$BLOCKBOOKGIT_URL" == "" ]]; then
     BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook.git"
   fi
-  echo -e "| Blockbook GITHUB URL: $BLOCKBOOKGIT_URL"
+  echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
   cd /root && git clone $BLOCKBOOKGIT_URL > /dev/null 2>&1 && \
   cd /root/blockbook && \
   git checkout $TAG > /dev/null 2>&1 && \
