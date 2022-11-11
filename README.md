@@ -20,6 +20,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`COIN`| Name of coin for blockbook | `YES` | `unset` | 
 |`DAEMON`| Enable/Disable daemon luncher <br /> DISABLED=0, ENABLED=1  | `NO` | `1` | 
 |`BLOCKBOOKGIT_URL`| Custom blockbook github repository URL  | `NO` | `https://github.com/trezor/blockbook.git` | 
+|`TAG`| Name of git branch  | `NO` | `master` | 
 |`BINARY_NAME`| Name of daemon binary | `NO` | `AUTO` <br />`FROM BLOCKBOOK CONFIG` | 
 |`RPC_PORT`| Listen for RPC connections on this TCP port | `YES` | `unset` |
 |`RPC_USER`| Usename for RPC connections | `NO` | `user` |
