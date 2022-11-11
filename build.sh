@@ -3,7 +3,7 @@
 if [[ ! -d /root/blockbook ]]; then
   start_build=`date +%s`
   echo -e "| BLOCKBOOK BUILDER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
-  echo -e "|-----------------------------------------------------"
+  echo -e "-----------------------------------------------------"
   echo -e "| Installing RocksDB..."
   cd /root && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git > /dev/null 2>&1
   cd /root/rocksdb && CFLAGS=-fPIC CXXFLAGS=-fPIC make -j 4 release > /dev/null 2>&1
@@ -27,7 +27,7 @@ if [[ ! -d /root/blockbook ]]; then
   else
     echo -e "| Blockbook build [FAILED]..."
     echo -e "| Cleaning..."
-    echo -e "|-----------------------------------------------------"
+    echo -e "-----------------------------------------------------"
     rm -rf /root/blockbook > /dev/null 2>&1
     rm -rf /root/libzmq > /dev/null 2>&1
     rm -rf /root/rocksdb > /dev/null 2>&1
@@ -41,9 +41,9 @@ if [[ ! -d /root/blockbook ]]; then
   else
     ./contrib/scripts/build-blockchaincfg.sh $ALIAS
   fi
-  echo -e "|-----------------------------------------------------"
+  echo -e "-----------------------------------------------------"
 else
   echo -e "| BLOCKBOOK ALREADY INSTALLED.."
-  echo -e "|-----------------------------------------------------"
+  echo -e "-----------------------------------------------------"
   sleep 5
 fi
