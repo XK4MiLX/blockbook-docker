@@ -139,9 +139,6 @@ if [[ "$CONFIG" == "1" ]]; then
     echo -e "| Creating config file..."
     cat <<- EOF > /root/.$CONFIG_DIR/$COIN.conf
 txindex=1
-addressindex=1
-timestampindex=1
-spentindex=1
 rpcport=$RPC_PORT
 rpcuser=$RPC_USER
 rpcpassword=$RPC_PASS
