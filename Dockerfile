@@ -43,5 +43,5 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 VOLUME /root
 EXPOSE $BLOCKBOOK_PORT
 
-HEALTHCHECK --start-period=10m --interval=1m --retries=5 --timeout=20s CMD ./check-health.sh
+HEALTHCHECK --start-period=10m --interval=4m --retries=5 --timeout=40s CMD ./check-health.sh
 ENTRYPOINT ["/usr/bin/supervisord"]
