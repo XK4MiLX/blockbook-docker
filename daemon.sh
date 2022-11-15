@@ -251,7 +251,7 @@ EOF
       echo "$(jq -r --arg key "binary_name" --arg value "$BINARY_NAME" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
     fi
   fi
-  if [[ $(jq -r .cmd /root/daemon_config.json 2>/dev/null) == "" && $"CONFIG" == "AUTO"]]; then
+  if [[ $(jq -r .cmd /root/daemon_config.json 2>/dev/null) == "" && "$CONFIG" == "AUTO" ]]; then
     echo -e "| Parsing exec ommand template..."
     TEMPLATE=$(jq -r .backend.exec_command_template <<< "$BLOCKBOOKCONFIG")
     BIN_PATH=($TEMPLATE)
