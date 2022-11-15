@@ -251,8 +251,8 @@ EOF
       echo "$(jq -r --arg key "binary_name" --arg value "$BINARY_NAME" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
     fi
   fi
-  if [[ $(jq -r .cmd /root/daemon_config.json 2>/dev/null) == "" && "$CONFIG" == "AUTO" ]]; then
-    echo -e "| Parsing exec ommand template..."
+  if [[ $(jq -r .cmd /root/daemon_config.json 2>/dev/null) == "null" && "$CONFIG" == "AUTO" ]]; then
+    echo -e "| Parsing exec command template..."
     TEMPLATE=$(jq -r .backend.exec_command_template <<< "$BLOCKBOOKCONFIG")
     BIN_PATH=($TEMPLATE)
     DATA_PATH=${BIN_PATH[1]}
@@ -317,7 +317,10 @@ if [[ "$CONFIG" == "1" ]]; then
 fi
 if [[ "$CONFIG" == "AUTO" ]]; then
   echo -e "| Starting $COIN daemon (Config: AUTO)..."
-  bash -c "$(jq -r .cmd /root/daemon_config.json)"
+  if [[ ! -d /root/.$COIN ]]; then
+    mkdir -p /root/.$COIN 
+  fi
+   bash -c "$(jq -r .cmd /root/daemon_config.json)"
 fi
 echo -e "---------------------------------------------------------------------------"
 else
