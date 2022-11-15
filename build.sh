@@ -20,7 +20,7 @@ if [[ ! -d /root/blockbook ]]; then
   BUILDTIME=$(date --iso-8601=seconds); \
   GITCOMMIT=$(git describe --always --dirty); \
   LDFLAGS="-X github.com/trezor/blockbook/common.version=${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}" && \
-  go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}" > /dev/null 2>&1
+  go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
   echo -e "| Build: $BUILDTIME, Commit: $GITCOMMIT, Version: $TAG, Duration: $((($(date +%s)-$start_build)/60)) min. $((($(date +%s)-$start_build) % 60)) sec."
   if [[ -f /root/blockbook/blockbook ]]; then
     echo -e "| Blockbook build [OK]..."
