@@ -10,6 +10,17 @@
 server_offline="0"
 failed_counter="0"
 
+function extract_daemon() {
+    echo -e "| ${CYAN}Unpacking daemon bin archive file...${NC}"
+    if [[ ${DAEMON_URL##*/} =~ .*zip$ ]]; then
+        unzip ${DAEMON_URL##*/} -d backend > /dev/null 2>&1 || return 1
+    elif [[ ${DAEMON_URL##*/} =~ .*tar.gz$ ]]; then
+         strip_lvl=$(tar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $6 }' | awk -F\/ '{print NF-1}')
+         tar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/} > /dev/null 2>&1 || return 1
+    fi
+    return 0
+}
+
 function cli_search(){
   if [[ "$CLI_NAME" == "" ]]; then
     echo -e "| Searching for CLI binary..."
@@ -150,7 +161,6 @@ EOF
 fi
 
 if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
-
     B_FILE="${B_FILE:-0}"
     B_TIMEOUT="${B_TIMEOUT:-6}"
     B_SERVERS_LIST="${B_SERVERS_LIST:-0}"
@@ -188,21 +198,40 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
   echo -e "| Downloading daemon ($COIN)..."
   cd /tmp
   mkdir backend
-  echo -e "| Fetching Blockbook config for $COIN..."
+  
+   echo -e "| Fetching Blockbook config for $COIN..."
   if [[ "$BLOCKBOOKGIT_URL" == "" ]]; then
     BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook.git"
   fi
-  
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
   re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
   if [[ $BLOCKBOOKGIT_URL =~ $re ]]; then
-    user=${BASH_REMATCH[4]}
-    repo=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]})
+    USER=${BASH_REMATCH[4]}
+    REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]})
   fi
-  
-  RAW_CONF_URL="https://raw.githubusercontent.com/$user/$repo/$TAG/configs/coins/${COIN}.json"
+  RAW_CONF_URL="https://raw.githubusercontent.com/$USER/$REPO/$TAG/configs/coins/$COIN.json"
   echo -e "| CONFIG URL: $RAW_CONF_URL"
   BLOCKBOOKCONFIG=$(curl -SsL $RAW_CONF_URL 2>/dev/null | jq .)
+  if [[ ! -f /root/blockbook.json ]]; then
+    echo -e "| Creating blockbook.json file..."
+    cat << EOF > /root/blockbook.json
+{
+  "coin": {
+    "alias": "$COIN"
+  },
+  "env": {
+    "backenddatapath": "/root",
+    "backendinstallpath": "/root"
+  },
+  "ports": {
+    "backendauthrpc": "${BACKEND_AUTHRPC:-$(jq -r .ports.backend_authrpc <<< $BLOCKBOOKCONFIG)}",
+    "backendhttp": "${BACKEND_HTTP:-$(jq -r .ports.backend_http <<< $BLOCKBOOKCONFIG)}",
+    "backendp2p": "${BACKEND_P2P:-$(jq -r .ports.backend_p2p <<< $BLOCKBOOKCONFIG)}",
+    "backendrpc": "${RPC_PORT:-$(jq -r .ports.backend_rpc <<< $BLOCKBOOKCONFIG)}"
+  }
+}
+EOF
+  fi
   if [[ "$DAEMON_URL" == "" ]]; then
       DAEMON_URL=$(jq -r .backend.binary_url <<< "$BLOCKBOOKCONFIG")
   fi
@@ -222,10 +251,50 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
       echo "$(jq -r --arg key "binary_name" --arg value "$BINARY_NAME" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
     fi
   fi
+  if [[ $(jq -r .cmd /root/daemon_config.json 2>/dev/null) == "" && $"CONFIG" == "AUTO"]]; then
+    echo -e "| Parsing exec ommand template..."
+    TEMPLATE=$(jq -r .backend.exec_command_template <<< "$BLOCKBOOKCONFIG")
+    BIN_PATH=($TEMPLATE)
+    DATA_PATH=${BIN_PATH[1]}
+    CONF_PATH=${BIN_PATH[2]}
+    if [[ $(grep "\-pid" <<< $TEMPLATE) ]]; then
+      TEMPLATE="$BIN_PATH $DATA_PATH $CONF_PATH"
+      TEMPLATE=$(sed "s/${BIN_PATH//\//\\/}/$BINARY_NAME/g" <<< $TEMPLATE)
+    else
+      TEMPLATE=$(sed "s|/bin/sh -c '{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/|""|" <<< $TEMPLATE)
+    fi
+    KEY_LIST=($(grep -oP "{{.*?}}" <<< $TEMPLATE))
+    LENGTH=${#KEY_LIST[@]}
+    for (( j=0; j<${LENGTH}; j++ ));
+    do
+      re="^\{\{(.*)\}\}$"
+      if [[ "${KEY_LIST[$j]}" =~ $re ]]; then
+        POSITION=${BASH_REMATCH[1]}
+        NEW_ENTRY=$(jq -r "${POSITION,,}" /root/blockbook.json)
+        if [[ "{{.Coin.Alias}}" == "${KEY_LIST[$j]}" ]]; then
+         i=$((i+1))
+         if [[ "$i" == "3" ]]; then
+           TEMPLATE=$(sed "s|${KEY_LIST[$j]}|"$NEW_ENTRY"|" <<< $TEMPLATE)
+         else
+           TEMPLATE=$(sed "s|${KEY_LIST[$j]}|\."$NEW_ENTRY"|" <<< $TEMPLATE)
+         fi
+       else
+         TEMPLATE=$(sed "s|${KEY_LIST[$j]}|"$NEW_ENTRY"|" <<< $TEMPLATE)
+       fi
+      fi
+    done
+    TEMPLATE=$(sed "s/\/backend/""/g" <<< $TEMPLATE)
+    TEMPLATE=$(sed "s/'/""/g" <<< $TEMPLATE)
+    TEMPLATE=$(sed "s/\"/\'/g" <<< $TEMPLATE)
+    if [[ ! -f /root/daemon_config.json ]]; then
+        echo "{}" > /root/daemon_config.json
+    fi
+    echo "$(jq -r --arg key "cmd" --arg value "$TEMPLATE" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
+    echo -e "| RUN CMD: $(jq -r .cmd /root/daemon_config.json)"
+  fi
   echo -e "| BINARY URL: $DAEMON_URL"
   wget -q --show-progress -c -t 5 $DAEMON_URL
-  strip_lvl=$(tar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $6 }' | awk -F\/ '{print NF-1}')
-  tar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/}
+  extract_daemon
   echo -e "| Installing daemon ($COIN)..."
   install -m 0755 -o root -g root -t /usr/local/bin backend/*
   rm -rf /tmp/*
@@ -236,15 +305,19 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
     cli_search
   fi
 fi
-
 cd /
 sleep 5
 if [[ "$CONFIG" == "0" || "$CONFIG" == "" ]]; then
   echo -e "| Starting $COIN daemon (Config: DISABLED)..."
   ${BINARY_NAME} ${CLIFLAGS}
-else
+fi
+if [[ "$CONFIG" == "1" ]]; then
   echo -e "| Starting $COIN daemon (Config: ENABLED)..."
   ${BINARY_NAME} -datadir="/root/.${COIN}" -conf="/root/.${COIN}/${COIN}.conf"
+fi
+if [[ "$CONFIG" == "AUTO" ]]; then
+  echo -e "| Starting $COIN daemon (Config: AUTO)..."
+  bash -c "$(jq -r .cmd /root/daemon_config.json)"
 fi
 echo -e "---------------------------------------------------------------------------"
 else
