@@ -15,7 +15,7 @@ if [[ ! -d /root/blockbook ]]; then
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
   cd /root && git clone $BLOCKBOOKGIT_URL > /dev/null 2>&1 && \
   cd /root/blockbook && \
-  git checkout $TAG > /dev/null 2>&1 && \
+  git checkout "$TAG" > /dev/null 2>&1 && \
   go mod download > /dev/null 2>&1  && \
   BUILDTIME=$(date --iso-8601=seconds); \
   GITCOMMIT=$(git describe --always --dirty); \
