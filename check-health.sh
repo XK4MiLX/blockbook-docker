@@ -15,7 +15,7 @@ if [[ "$CLI_NAME" == "" ]]; then
   exit 1
 fi
 
-if [[ -f /root/.${CONFIG_DIR}/${COIN}.conf ]]; then
+if [[ -f /root/${CONFIG_DIR}/${COIN}.conf ]]; then
   CURRENT_NODE_HEIGHT=$(${CLI_NAME} -conf="/root/${CONFIG_DIR}/${COIN}.conf" -getinfo 2>/dev/null | jq .blocks)
   if [[ "$CURRENT_NODE_HEIGHT" == "" ]]; then
     CURRENT_NODE_HEIGHT=$(${CLI_NAME} -conf="/root/${CONFIG_DIR}/${COIN}.conf" getinfo 2>/dev/null | jq .blocks)
