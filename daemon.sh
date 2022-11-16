@@ -9,6 +9,8 @@
 #NC='\033[0m'
 server_offline="0"
 failed_counter="0"
+CONFIG_FILE=${CONFIG_FILE:-$COIN}
+CONFIG_DIR=${CONFIG_DIR:-$COIN}
 
 
 function parse_template(){
@@ -146,14 +148,11 @@ function cdn_speedtest() {
         fi
 }
 
-if [[ "$CONFIG_DIR" == "" ]]; then
-  CONFIG_DIR=$COIN
-fi
-
 stop_script() {
   echo -e "| Stopping daemon (EXIT)..."
   if [[ "$CLI_NAME" != "" ]]; then
-    timeout 10 ${CLI_NAME} -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
+    timeout 10 ${CLI_NAME} -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASS} stop > /dev/null 2>&1
+    timeout 10 ${CLI_NAME} -conf /root/$CONFIG_DIR/$CONFIG_FILE stop > /dev/null 2>&1
   fi
   if [[ "$BINARY_NAME" != "" ]]; then
     pkill -9 $BINARY_NAME
@@ -178,17 +177,17 @@ if [[ -f /root/daemon_config.json ]]; then
 fi
 
 if [[ "$CONFIG" == "1" ]]; then
-  if [[ ! -f /root/$CONFIG_DIR/$COIN.conf ]]; then
+  if [[ ! -f /root/$CONFIG_DIR/$CONFIG_FILE.conf ]]; then
     mkdir -p /root/$CONFIG_DIR
     echo -e "| Creating config file..."
-    cat <<- EOF > /root/$CONFIG_DIR/$COIN.conf
+    cat <<- EOF > /root/$CONFIG_DIR/$CONFIG_FILE.conf
 txindex=1
 rpcport=$RPC_PORT
 rpcuser=$RPC_USER
 rpcpassword=$RPC_PASS
 EOF
   if [[ "$EXTRACONFIG" != "" ]]; then
-    echo -e "$EXTRACONFIG" >> /root/$CONFIG_DIR/$COIN.conf
+    echo -e "$EXTRACONFIG" >> /root/$CONFIG_DIR/$CONFIG_FILE.conf
   fi
  fi
 fi
@@ -222,7 +221,8 @@ fi
 if [[ "$BINARY_NAME" != "" ]]; then
   echo -e "| Stopping daemon (START)..."
   if [[ "$CLI_NAME" != "" ]]; then
-    timeout 10 ${CLI_NAME} -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" stop
+    timeout 10 ${CLI_NAME} -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASS} stop > /dev/null 2>&1
+    timeout 10 ${CLI_NAME} -conf=/root/$CONFIG_DIR/$CONFIG_FILE  stop > /dev/null 2>&1
   fi
     pkill -9 $BINARY_NAME
 fi
@@ -231,7 +231,7 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
   echo -e "| Downloading daemon ($COIN)..."
   cd /tmp
   mkdir backend
-  
+
    echo -e "| Fetching Blockbook config for $COIN..."
   if [[ "$BLOCKBOOKGIT_URL" == "" ]]; then
     BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook.git"
@@ -289,18 +289,22 @@ EOF
     parse_template "$BLOCKBOOKCONFIG" "cmd" "daemon_config" "blockbook"
     ##################################################################
   fi
-  echo -e "| BINARY URL: $DAEMON_URL"
-  wget -q --show-progress -c -t 5 $DAEMON_URL
-  extract_daemon
-  echo -e "| Installing daemon ($COIN)..."
-  install -m 0755 -o root -g root -t /usr/local/bin backend/*
-  rm -rf /tmp/*
-  if [[ "$CLI_NAME" == "" ]]; then
-    if [[ ! -f /root/daemon_config.json ]]; then
+
+  if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
+    echo -e "| BINARY URL: $DAEMON_URL"
+    wget -q --show-progress -c -t 5 $DAEMON_URL
+    extract_daemon
+    echo -e "| Installing daemon ($COIN)..."
+    install -m 0755 -o root -g root -t /usr/local/bin backend/*
+    rm -rf /tmp/*
+    if [[ "$CLI_NAME" == "" ]]; then
+      if [[ ! -f /root/daemon_config.json ]]; then
         echo "{}" > /root/daemon_config.json
+      fi
+      cli_search
     fi
-    cli_search
   fi
+
 fi
 cd /
 sleep 5
@@ -310,25 +314,25 @@ if [[ "$CONFIG" == "0" || "$CONFIG" == "" ]]; then
 fi
 if [[ "$CONFIG" == "1" ]]; then
   echo -e "| Starting $COIN daemon (Config: ENABLED)..."
-  ${BINARY_NAME} -datadir="/root/${CONFIG_DIR}" -conf="/root/${CONFIG_DIR}/${COIN}.conf"
+  ${BINARY_NAME} -datadir="/root/${CONFIG_DIR}" -conf="/root/${CONFIG_DIR}/${CONFIG_FILE}.conf"
 fi
 if [[ "$CONFIG" == "AUTO" ]]; then
- if [[ ! -f /root/$CONFIG_DIR/$COIN.conf ]]; then
+ if [[ ! -f /root/$CONFIG_DIR/$CONFIG_FILE.conf ]]; then
     mkdir -p /root/$CONFIG_DIR
     echo -e "| Creating config file..."
-    cat <<- EOF > /root/$CONFIG_DIR/$COIN.conf
+    cat <<- EOF > /root/$CONFIG_DIR/$CONFIG_FILE.conf
 txindex=1
 rpcport=$RPC_PORT
 rpcuser=$RPC_USER
 rpcpassword=$RPC_PASS
 EOF
    if [[ "$EXTRACONFIG" != "" ]]; then
-     echo -e "$EXTRACONFIG" >> /root/$CONFIG_DIR/$COIN.conf
+     echo -e "$EXTRACONFIG" >> /root/$CONFIG_DIR/$CONFIG_FILE.conf
    fi
  fi
   echo -e "| Starting $COIN daemon (Config: AUTO)..."
-  if [[ ! -d /root/$COIN/backend ]]; then
-    mkdir -p /root/$COIN/backend
+  if [[ ! -d /root/$CONFIG_DIR/backend ]]; then
+    mkdir -p /root/$CONFIG_DIR/backend
   fi
    bash -c "$(jq -r .cmd /root/daemon_config.json)"
 fi
