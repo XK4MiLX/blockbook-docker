@@ -178,17 +178,17 @@ if [[ -f /root/daemon_config.json ]]; then
 fi
 
 if [[ "$CONFIG" == "1" ]]; then
-  if [[ ! -f /root/.$CONFIG_DIR/$COIN.conf ]]; then
-    mkdir -p /root/.$CONFIG_DIR
+  if [[ ! -f /root/$CONFIG_DIR/$COIN.conf ]]; then
+    mkdir -p /root/$CONFIG_DIR
     echo -e "| Creating config file..."
-    cat <<- EOF > /root/.$CONFIG_DIR/$COIN.conf
+    cat <<- EOF > /root/$CONFIG_DIR/$COIN.conf
 txindex=1
 rpcport=$RPC_PORT
 rpcuser=$RPC_USER
 rpcpassword=$RPC_PASS
 EOF
   if [[ "$EXTRACONFIG" != "" ]]; then
-    echo -e "$EXTRACONFIG" >> /root/.$CONFIG_DIR/$COIN.conf
+    echo -e "$EXTRACONFIG" >> /root/$CONFIG_DIR/$COIN.conf
   fi
  fi
 fi
@@ -254,7 +254,7 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
   },
   "env": {
     "backenddatapath": "/root",
-    "backendinstallpath": "/root"
+    "backendinstallpath": "/root/"
   },
   "ports": {
     "backendauthrpc": "${BACKEND_AUTHRPC:-$(jq -r .ports.backend_authrpc <<< $BLOCKBOOKCONFIG)}",
@@ -310,7 +310,7 @@ if [[ "$CONFIG" == "0" || "$CONFIG" == "" ]]; then
 fi
 if [[ "$CONFIG" == "1" ]]; then
   echo -e "| Starting $COIN daemon (Config: ENABLED)..."
-  ${BINARY_NAME} -datadir="/root/.${COIN}" -conf="/root/.${COIN}/${COIN}.conf"
+  ${BINARY_NAME} -datadir="/root/${CONFIG_DIR}" -conf="/root/${CONFIG_DIR}/${COIN}.conf"
 fi
 if [[ "$CONFIG" == "AUTO" ]]; then
   echo -e "| Starting $COIN daemon (Config: AUTO)..."
