@@ -271,19 +271,19 @@ EOF
       if [[ "${KEY_LIST[$j]}" =~ $re ]]; then
         POSITION=${BASH_REMATCH[1]}
         NEW_ENTRY=$(jq -r "${POSITION,,}" /root/blockbook.json)
-        if [[ "{{.Coin.Alias}}" == "${KEY_LIST[$j]}" ]]; then
-         i=$((i+1))
-         if [[ "$i" == "3" ]]; then
-           TEMPLATE=$(sed "s|${KEY_LIST[$j]}|"$NEW_ENTRY"|" <<< $TEMPLATE)
-         else
-           TEMPLATE=$(sed "s|${KEY_LIST[$j]}|\."$NEW_ENTRY"|" <<< $TEMPLATE)
-         fi
-       else
+        #if [[ "{{.Coin.Alias}}" == "${KEY_LIST[$j]}" ]]; then
+     #    i=$((i+1))
+      #   if [[ "$i" == "3" ]]; then
+       #    TEMPLATE=$(sed "s|${KEY_LIST[$j]}|"$NEW_ENTRY"|" <<< $TEMPLATE)
+        # else
+           # TEMPLATE=$(sed "s|${KEY_LIST[$j]}|\."$NEW_ENTRY"|" <<< $TEMPLATE)
+         #fi
+       #else
          TEMPLATE=$(sed "s|${KEY_LIST[$j]}|"$NEW_ENTRY"|" <<< $TEMPLATE)
-       fi
+       #fi
       fi
     done
-    TEMPLATE=$(sed "s/\/backend/""/g" <<< $TEMPLATE)
+    #TEMPLATE=$(sed "s/\/backend/""/g" <<< $TEMPLATE)
     TEMPLATE=$(sed "s/'/""/g" <<< $TEMPLATE)
     TEMPLATE=$(sed "s/\"/\'/g" <<< $TEMPLATE)
     if [[ ! -f /root/daemon_config.json ]]; then
@@ -317,8 +317,8 @@ if [[ "$CONFIG" == "1" ]]; then
 fi
 if [[ "$CONFIG" == "AUTO" ]]; then
   echo -e "| Starting $COIN daemon (Config: AUTO)..."
-  if [[ ! -d /root/.$COIN ]]; then
-    mkdir -p /root/.$COIN 
+  if [[ ! -d /root/$COIN/backend ]]; then
+    mkdir -p /root/$COIN/backend
   fi
    bash -c "$(jq -r .cmd /root/daemon_config.json)"
 fi
