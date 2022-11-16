@@ -15,8 +15,8 @@ if [[ ! -d /root/blockbook ]]; then
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
   cd /root && git clone $BLOCKBOOKGIT_URL > /dev/null 2>&1 && \
   cd /root/blockbook && \
-  git checkout "$TAG" > /dev/null 2>&1 && \
-  go mod download > /dev/null 2>&1  && \
+  git checkout "$TAG" && \
+  go mod download && \
   BUILDTIME=$(date --iso-8601=seconds); \
   GITCOMMIT=$(git describe --always --dirty); \
   LDFLAGS="-X github.com/trezor/blockbook/common.version=${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}" && \
@@ -31,6 +31,7 @@ if [[ ! -d /root/blockbook ]]; then
     rm -rf /root/blockbook > /dev/null 2>&1
     rm -rf /root/libzmq > /dev/null 2>&1
     rm -rf /root/rocksdb > /dev/null 2>&1
+    rm -rf /root/go > /dev/null 2>&1
     exit 1
   fi
   echo -e "| Creating blockchaincfg.sh for $COIN..."
