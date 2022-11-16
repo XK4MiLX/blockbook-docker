@@ -8,12 +8,12 @@
   headers=$(jq -r .backend.headers <<< "$blockbookapi")
   blockbook=$(jq -r .blockbook.bestHeight <<< "$blockbookapi")
   if [[ $bloks != "" && $blockbook != "" ]]; then  
-    if [[ $headers != "" ]]; then
+    if [[ $headers != "" && $headers != "null" ]]; then
       progress1=$(awk 'BEGIN {total=ARGV[1] / ARGV[2]; printf("%.2f", total*100)}' $bloks $headers)
       progress2=$(awk 'BEGIN {total=ARGV[1] / ARGV[2]; printf("%.2f", total*100)}' $blockbook $headers)
       msg="Blockbook = [OK], Daemon = [OK], Daemon Sync: ${progress1}%, Blockbook Sync: ${progress2}%"
     else
-      msg="Blockbook = [OK], Daemon = [OK], Daemon Height: ${bloks}, Blockbook Height: ${blockbook}%"
+      msg="Blockbook = [OK], Daemon = [OK], Daemon Height: ${bloks}, Blockbook Height: ${blockbook}"
     fi
     echo -e "${msg}"
     exit
