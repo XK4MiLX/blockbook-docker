@@ -43,71 +43,6 @@ function parse_template(){
  echo -e "| RUN CMD: $(jq -r .$2 /root/$3.json)"
 }
 
-function consensus_client(){
-
-  echo -e "Checking consensus client requriment..."
-  RAW_CONSENSUS_URL="https://raw.githubusercontent.com/$USER/$REPO/$TAG/configs/coins/$COIN_consensus.json"
-  echo -e "| CLIENT URL: $RAW_CONSENSUS_URL"
-  CLIENT_CONFIG=$(curl -SsL $RAW_CONSENSUS_URL 2>/dev/null | jq .)
-  
-    if [[ ! -f /root/consensus.json ]]; then
-    echo -e "| Creating consensus.json file..."
-    cat << 'EOF' > /root/consensus.json
-{
-  "coin": {
-    "alias": "$COIN_consensus"
-  },
-  "env": {
-    "backenddatapath": "/root",
-    "backendinstallpath": "/root"
-  },
-  "ports": {
-    "backendauthrpc": "${BACKEND_AUTHRPC:-$(jq -r .ports.backend_authrpc <<< $CLIENT_CONFIG)}",
-    "backendhttp": "${BACKEND_HTTP:-$(jq -r .ports.backend_http <<< $CLIENT_CONFIG)}",
-    "backendp2p": "${BACKEND_P2P:-$(jq -r .ports.backend_p2p <<< $CLIENT_CONFIG)}",
-    "backendrpc": "${RPC_PORT:-$(jq -r .ports.backend_rpc <<< $CLIENT_CONFIG)}"
-  }
-}
-EOF
-  fi
-  
-  
-   if [[ $(jq -r .cmd /root/consensus.json 2>/dev/null) == "null" && "$CONFIG" == "AUTO" ]]; then
-    echo -e "| Parsing exec command template..."
-    TEMPLATE=$(jq -r .backend.exec_command_template <<< "$BLOCKBOOKCONFIG")
-    BIN_PATH=($TEMPLATE)
-    DATA_PATH=${BIN_PATH[1]}
-    CONF_PATH=${BIN_PATH[2]}
-    if [[ $(grep "\-pid" <<< $TEMPLATE) ]]; then
-      TEMPLATE="$BIN_PATH $DATA_PATH $CONF_PATH"
-      TEMPLATE=$(sed "s/${BIN_PATH//\//\\/}/$BINARY_NAME/g" <<< $TEMPLATE)
-    else
-      TEMPLATE=$(sed "s|/bin/sh -c '{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/|""|" <<< $TEMPLATE)
-    fi
-    KEY_LIST=($(grep -oP "{{.*?}}" <<< $TEMPLATE))
-    LENGTH=${#KEY_LIST[@]}
-    for (( j=0; j<${LENGTH}; j++ ));
-    do
-      re="^\{\{(.*)\}\}$"
-      if [[ "${KEY_LIST[$j]}" =~ $re ]]; then
-        POSITION=${BASH_REMATCH[1]}
-        NEW_ENTRY=$(jq -r "${POSITION,,}" /root/blockbook.json)
-        TEMPLATE=$(sed "s|${KEY_LIST[$j]}|"$NEW_ENTRY"|" <<< $TEMPLATE)
-      fi
-    done
-    TEMPLATE=$(sed "s/'/""/g" <<< $TEMPLATE)
-    TEMPLATE=$(sed "s/\"/\'/g" <<< $TEMPLATE)
-    if [[ ! -f /root/daemon_config.json ]]; then
-        echo "{}" > /root/daemon_config.json
-    fi
-    echo "$(jq -r --arg key "cmd_consensus" --arg value "$TEMPLATE" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
-    echo -e "| RUN CMD: $(jq -r .cmd /root/daemon_config.json)"
-  fi
-  
-  
-
-}
-
 function extract_daemon() {
     echo -e "| ${CYAN}Unpacking daemon bin archive file...${NC}"
     if [[ ${DAEMON_URL##*/} =~ .*zip$ ]]; then
@@ -351,7 +286,7 @@ EOF
   fi
   if [[ $(jq -r .cmd /root/daemon_config.json 2>/dev/null) == "null" && "$CONFIG" == "AUTO" ]]; then
     ################ PARSE DAEMON EXEC TEMPLATE ######################
-    parse_template "$CLIENT_CONFIG" "cmd" "daemon_config" "blockbook"
+    parse_template "$BLOCKBOOKCONFIG" "cmd" "daemon_config" "blockbook"
     ##################################################################
   fi
   echo -e "| BINARY URL: $DAEMON_URL"
