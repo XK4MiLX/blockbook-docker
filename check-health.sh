@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [[ "$CONFIG_DIR" == "" ]]; then
+  CONFIG_DIR=$COIN
+fi
+
 if [[ "$CLI_NAME" == "" ]]; then
   if [[ -f /root/daemon_config.json ]]; then
     CLI_NAME=$(jq -r .cli_name /root/daemon_config.json)
@@ -11,10 +15,10 @@ if [[ "$CLI_NAME" == "" ]]; then
   exit 1
 fi
 
-if [[ -f /root/.${COIN}/${COIN}.conf ]]; then
-  CURRENT_NODE_HEIGHT=$(${CLI_NAME} -conf="/root/.${COIN}/${COIN}.conf" -getinfo 2>/dev/null | jq .blocks)
+if [[ -f /root/.${CONFIG_DIR}/${COIN}.conf ]]; then
+  CURRENT_NODE_HEIGHT=$(${CLI_NAME} -conf="/root/${CONFIG_DIR}/${COIN}.conf" -getinfo 2>/dev/null | jq .blocks)
   if [[ "$CURRENT_NODE_HEIGHT" == "" ]]; then
-    CURRENT_NODE_HEIGHT=$(${CLI_NAME} -conf="/root/.${COIN}/${COIN}.conf" getinfo 2>/dev/null | jq .blocks)
+    CURRENT_NODE_HEIGHT=$(${CLI_NAME} -conf="/root/${CONFIG_DIR}/${COIN}.conf" getinfo 2>/dev/null | jq .blocks)
   fi
 else
   CURRENT_NODE_HEIGHT=$(${CLI_NAME} -rpcpassword="$RPC_PASS" -rpcuser="$RPC_USER" -getinfo 2>/dev/null | jq .blocks)
