@@ -18,8 +18,8 @@ ENV HOME=/root
 ENV BOOTSTRAP=${BOOTSTRAP:-0}
 ENV DAEMON=${DAEMON:-1}
 ENV CONFIG=${CONFIG:-AUTO}
-ENV GOLANG_VERSION=go1.19.2.linux-amd64
-ENV ROCKSDB_VERSION=v7.7.2
+ENV GOLANG_VERSION=${GOLANG_VERSION:-go1.19.2.linux-amd64}
+ENV ROCKSDB_VERSION=${ROCKSDB_VERSION:-v7.7.2}
 ENV GOPATH=$HOME/go
 ENV PATH=$PATH:$GOPATH/bin
 ENV CGO_CFLAGS="-I$HOME/rocksdb/include"
@@ -41,6 +41,7 @@ RUN mkdir -p /var/log/supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 VOLUME /root
+
 EXPOSE $BLOCKBOOK_PORT
 
 HEALTHCHECK --start-period=10m --interval=4m --retries=5 --timeout=40s CMD ./check-health.sh
