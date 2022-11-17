@@ -46,7 +46,7 @@ function create_consensus_config(){
     echo "$(jq -r --arg value "${BACKEND_HTTP:-$(jq -r .ports.backend_http <<< $CLIENT_CONFIG)}" '.ports.backendhttp=$value' /root/consensus.json)" > /root/consensus.json
     echo "$(jq -r --arg value "${BACKEND_P2P:-$(jq -r .ports.backend_p2p <<< $CLIENT_CONFIG)}" '.ports.backendp2p=$value' /root/consensus.json)" > /root/consensus.json
     echo "$(jq -r --arg value "${RPC_PORT:-$(jq -r .ports.backend_rpc <<< $CLIENT_CONFIG)}" '.ports.backendrpc=$value' /root/consensus.json)" > /root/consensus.json
-    echo "$(jq -r --arg value "${CONSENSUS_BIN:-$(jq -r .backend.binary_url <<< $CLIENT_CONFIG)}" '.bin_url=$value' /root/consensus.json)" > /root/consensus.json
+    echo "$(jq -r --arg value "${CONSENSUS_URL:-$(jq -r .backend.binary_url <<< $CLIENT_CONFIG)}" '.bin_url=$value' /root/consensus.json)" > /root/consensus.json
   fi
 }
 
