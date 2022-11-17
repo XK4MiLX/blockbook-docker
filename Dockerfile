@@ -18,15 +18,15 @@ ENV HOME=/root
 ENV BOOTSTRAP=${BOOTSTRAP:-0}
 ENV DAEMON=${DAEMON:-1}
 ENV CONFIG=${CONFIG:-AUTO}
-ENV GOLANG_VERSION=${GOLANG_VERSION:-go1.19.2.linux-amd64}
+ENV GOLANG_VERSION=${GOLANG_VERSION:-go1.19.2}
 ENV ROCKSDB_VERSION=${ROCKSDB_VERSION:-v7.7.2}
 ENV GOPATH=$HOME/go
 ENV PATH=$PATH:$GOPATH/bin
 ENV CGO_CFLAGS="-I$HOME/rocksdb/include"
 ENV CGO_LDFLAGS="-L$HOME/rocksdb -lrocksdb -lstdc++ -lm -lz -ldl -lbz2 -lsnappy -llz4 -lzstd"
 # Install and configure go
-RUN cd /opt && wget https://dl.google.com/go/$GOLANG_VERSION.tar.gz && \
-    tar xf $GOLANG_VERSION.tar.gz
+RUN cd /opt && wget https://dl.google.com/go/$GOLANG_VERSION.linux-amd64.tar.gz && \
+    tar xf $GOLANG_VERSION.linux-amd64.tar.gz
 RUN ln -s /opt/go/bin/go /usr/bin/go
 RUN mkdir -p $GOPATH
 RUN echo -n "GO version: " && go version
