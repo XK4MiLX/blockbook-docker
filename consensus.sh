@@ -61,6 +61,8 @@ if [[ -f /usr/local/bin/beacon-chain ]]; then
  exit
 fi
 
+sleep 60
+
 echo -e "---------------------------------------------------"
 echo -e "| Checking consensus client requriment ${COIN}..."
 if [[ "$BLOCKBOOKGIT_URL" == "" ]]; then
