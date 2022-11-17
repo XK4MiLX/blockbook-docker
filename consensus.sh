@@ -75,13 +75,13 @@ if [[ $BLOCKBOOKGIT_URL =~ $re ]]; then
   REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]})
 fi
 RAW_CONSENSUS_URL="https://raw.githubusercontent.com/$USER/$REPO/$TAG/configs/coins/${COIN}_consensus.json"
-echo -e "| CONSENSUS CONFIG: $RAW_CONSENSUS_URL"
 CLIENT_CONFIG=$(curl -SsL $RAW_CONSENSUS_URL 2>/dev/null | jq .  2>/dev/null)
 if [[ $(jq -r . 2>/dev/null <<< "$CLIENT_CONFIG") == "" || $(jq -r . 2>/dev/null <<< "$CLIENT_CONFIG") == "null" ]]; then
   echo -e "| CONSENSUS CLIENT: Not required (EXIT)"
   echo -e "---------------------------------------------------"
   exit
 fi
+echo -e "| CONSENSUS CONFIG: $RAW_CONSENSUS_URL"
 create_consensus_config
 parse_template "$CLIENT_CONFIG" "cmd_consensus" "consensus" "consensus"
 mkdir -p /root/${COIN}_consensus/backend 2>/dev/null
