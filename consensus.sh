@@ -1,7 +1,5 @@
 #!/bin/bash
-
 function parse_template(){
-
  if [[ $(jq -r .$2 /root/$3.json 2>/dev/null) != "null" ]]; then
   return
  fi
@@ -49,8 +47,6 @@ function create_consensus_config(){
     echo "$(jq -r --arg value "${CONSENSUS_URL:-$(jq -r .backend.binary_url <<< $CLIENT_CONFIG)}" '.bin_url=$value' /root/consensus.json)" > /root/consensus.json
   fi
 }
-
-
 if [[ -f /usr/local/bin/beacon-chain ]]; then
  VERSION=($(beacon-chain -v))
  echo -e "---------------------------------------------------------------"
@@ -60,9 +56,7 @@ if [[ -f /usr/local/bin/beacon-chain ]]; then
  bash -c "$(jq -r .cmd_consensus /root/consensus.json)"
  exit
 fi
-
 sleep 60
-
 echo -e "---------------------------------------------------"
 echo -e "| Checking consensus client requriment ${COIN}..."
 if [[ "$BLOCKBOOKGIT_URL" == "" ]]; then
@@ -96,9 +90,7 @@ if [[ ! -f /usr/local/bin/beacon-chain ]]; then
   install -m 0755 -o root -g root -t /usr/local/bin backend/*
   rm -rf /tmp/*
 fi
-
  VERSION=($(beacon-chain -v))
  echo -e "---------------------------------------------------------------"
  echo -e "| CLIENT: ${VERSION[2]}"
  bash -c "$(jq -r .cmd_consensus /root/consensus.json)"
-
