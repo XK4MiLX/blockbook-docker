@@ -15,6 +15,11 @@ done
 if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
   sleep 180
 fi
+
+if [[ ! -f /root/blockbook/build/blockchaincfg.json ]]; then
+  sleep 180
+fi
+
 CFG_FILE=/root/blockbook/build/blockchaincfg.json
 if [[ ! -f /root/CONFIG_CRETED ]]; then
   echo -e "| Updating blockchaincfg.json..."
