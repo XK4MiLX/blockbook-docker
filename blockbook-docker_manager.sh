@@ -1,4 +1,12 @@
 #!/bin/bash
+set +o history
+trap close EXIT
+function close(){
+  if [[ $(set -o | grep history) == *"off"* ]]; then
+    set -o history
+  fi
+}
+
 function coin_list(){
   if [[ "$1" == "" ]]; then
     BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook/tree/v0.4.0/configs/coins"
