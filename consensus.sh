@@ -65,10 +65,10 @@ fi
 echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
 re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
 if [[ $BLOCKBOOKGIT_URL =~ $re ]]; then
-  USER=${BASH_REMATCH[4]}
+  GIT_USER=${BASH_REMATCH[4]}
   REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]})
 fi
-RAW_CONSENSUS_URL="https://raw.githubusercontent.com/$USER/$REPO/$TAG/configs/coins/${COIN}_consensus.json"
+RAW_CONSENSUS_URL="https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/coins/${COIN}_consensus.json"
 CLIENT_CONFIG=$(curl -SsL $RAW_CONSENSUS_URL 2>/dev/null | jq .  2>/dev/null)
 if [[ $(jq -r . 2>/dev/null <<< "$CLIENT_CONFIG") == "" || $(jq -r . 2>/dev/null <<< "$CLIENT_CONFIG") == "null" ]]; then
   echo -e "| CONSENSUS CLIENT: Not required (EXIT)"
