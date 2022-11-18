@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 if [[ ! -d /root/blockbook ]]; then
   start_build=`date +%s`
   echo -e "| BLOCKBOOK BUILDER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
@@ -8,7 +7,6 @@ if [[ ! -d /root/blockbook ]]; then
   cd /root && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git > /dev/null 2>&1
   cd /root/rocksdb && CFLAGS=-fPIC CXXFLAGS=-fPIC make -j 4 release > /dev/null 2>&1
   echo -e "| Installing BlockBook..."
-
   if [[ "$BLOCKBOOKGIT_URL" == "" ]]; then
     BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook.git"
   fi
