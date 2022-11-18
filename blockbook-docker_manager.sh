@@ -31,11 +31,11 @@ function setup(){
  echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL, BRANCH: $TAG"
  re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
  if [[ $BLOCKBOOKGIT_URL =~ $re ]]; then
-   USER=${BASH_REMATCH[4]}
+   GIT_USER=${BASH_REMATCH[4]}
    REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]})
  fi
- RAW_CONF_URL="https://raw.githubusercontent.com/$USER/$REPO/$TAG/configs/coins/$COIN.json"
- G_V=($(curl -SsL https://raw.githubusercontent.com/$USER/$REPO/$TAG/build/docker/bin/Dockerfile | egrep "ENV GOLANG_VERSION|ENV ROCKSDB_VERSION"))
+ RAW_CONF_URL="https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/coins/$COIN.json"
+ G_V=($(curl -SsL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/build/docker/bin/Dockerfile | egrep "ENV GOLANG_VERSION|ENV ROCKSDB_VERSION"))
  if [[ "$G_V" != "" ]]; then
    if [[ ${G_V[1]##*=} != "go1.19.2" ]]; then
      flage="-e GOLANG_VERSION=${G_V[1]##*=}"
@@ -113,9 +113,9 @@ fi
 
 setup
 if [[ "$1" == "create" ]]; then
-  BLOCKBOOKCONFIG=$(curl -SsL https://raw.githubusercontent.com/$USER/$REPO/$TAG/configs/coins/$2.json 2>/dev/null)
+  BLOCKBOOKCONFIG=$(curl -SsL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/coins/$2.json 2>/dev/null)
 else
-  BLOCKBOOKCONFIG=$(curl -SsL https://raw.githubusercontent.com/$USER/$REPO/$TAG/configs/coins/$1.json 2>/dev/null)
+  BLOCKBOOKCONFIG=$(curl -SsL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/coins/$1.json 2>/dev/null)
 fi
 BLOCKBOOKPORT=$(jq -r .ports.blockbook_public 2>/dev/null <<< "$BLOCKBOOKCONFIG")
 BLOCKBOOKPOSTINST=$(jq -r .backend.postinst_script_template 2>/dev/null <<< "$BLOCKBOOKCONFIG")
