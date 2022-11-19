@@ -3,9 +3,10 @@ TRY=1
 echo -e "| BLOCKBOOK LUNCHER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "---------------------------------------------------------------------------"
 echo -e "| Blockbook Settings: COIN=$COIN, RPC_USER=$RPC_USER, RPC_PASS=$RPC_PASS, RPC_PORT=$RPC_PORT, BLOCKBOOK_PORT=$BLOCKBOOK_PORT"
+CFG_FILE=/root/blockbook/build/blockchaincfg.json
 while true; do
    echo -e "| Awaiting for Blockbook build...($TRY)"
-   if [[ -d /root/blockbook ]]; then
+   if [[ -f $CFG_FILE ]]; then
      sleep 20
      break
    fi
@@ -13,14 +14,9 @@ while true; do
    ((TRY=TRY+1))
 done
 if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
-  sleep 180
+  echo -e "| Awaiting for bootstraping...($TRY)"
+  sleep 600
 fi
-
-if [[ ! -f /root/blockbook/build/blockchaincfg.json ]]; then
-  sleep 180
-fi
-
-CFG_FILE=/root/blockbook/build/blockchaincfg.json
 if [[ ! -f /root/CONFIG_CRETED ]]; then
   echo -e "| Updating blockchaincfg.json..."
   RPC_HOST="${RPC_HOST:-localhost}"
