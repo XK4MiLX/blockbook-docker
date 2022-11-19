@@ -204,7 +204,7 @@ if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
       cd /root
       echo -e "| ${YELLOW}Downloading File: ${GREEN}$DOWNLOAD_URL ${NC}"
       wget --tries 5 -O $BOOTSTRAP_FILE $DOWNLOAD_URL -q --no-verbose --show-progress --progress=dot:giga > /dev/null 2>&1
-      tar_file_unpack "/root/$BOOTSTRAP_FILE" "/root/.$CONFIG_DIR"
+      tar_file_unpack "/root/$BOOTSTRAP_FILE" "/root/CONFIG_DIR/backend"
       echo -e "Bootstrap [LOCKED]" > BOOTSTRAP_LOCKED
       rm -rf /root/$BOOTSTRAP_FILE
       sleep 2
