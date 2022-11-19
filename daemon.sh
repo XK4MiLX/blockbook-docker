@@ -207,7 +207,13 @@ if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
       wget --tries 5 -O $BOOTSTRAP_FILE $DOWNLOAD_URL -q --no-verbose --show-progress --progress=dot:giga > /dev/null 2>&1
       echo -e "| Download duration: $((($(date +%s)-$start_download)/60)) min. $((($(date +%s)-$start_download) % 60)) sec."
       start_unzip=`date +%s`
-      tar_file_unpack "/root/$BOOTSTRAP_FILE" "/root/$CONFIG_DIR/backend"
+      if [[ "$CONFIG" == "AUTO" ]]; then
+        mkdir -p /root/$CONFIG_DIR/backend  > /dev/null 2>&1
+        tar_file_unpack "/root/$BOOTSTRAP_FILE" "/root/$CONFIG_DIR/backend"
+      else
+        mkdir -p /root/$CONFIG_DIR  > /dev/null 2>&1
+        tar_file_unpack "/root/$BOOTSTRAP_FILE" "/root/$CONFIG_DIR"
+      fi
       echo -e "| Unzip duration: $((($(date +%s)-$start_unzip)/60)) min. $((($(date +%s)-$start_unzip) % 60)) sec."
       echo -e "| Bootstraping duration: $((($(date +%s)-$start_download)/60)) min. $((($(date +%s)-$start_download) % 60)) sec."
       echo -e "Bootstrap [LOCKED]" > BOOTSTRAP_LOCKED
