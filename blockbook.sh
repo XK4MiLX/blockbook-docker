@@ -13,10 +13,18 @@ while true; do
    sleep 180
    ((TRY=TRY+1))
 done
+
 if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
-  echo -e "| Awaiting for bootstraping...($TRY)"
-  sleep 600
+  echo -e "| Awaiting for bootstraping..."
+  while true; do
+   if [[ -f /root/BOOTSTRAP_LOCKED  ]]; then
+     sleep 20
+     break
+   fi
+   sleep 180
+  done
 fi
+
 if [[ ! -f /root/CONFIG_CRETED ]]; then
   echo -e "| Updating blockchaincfg.json..."
   RPC_HOST="${RPC_HOST:-localhost}"
