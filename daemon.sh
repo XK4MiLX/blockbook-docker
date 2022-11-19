@@ -205,11 +205,11 @@ if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
       start_download=`date +%s`
       echo -e "| ${YELLOW}Downloading File: ${GREEN}$DOWNLOAD_URL ${NC}"
       wget --tries 5 -O $BOOTSTRAP_FILE $DOWNLOAD_URL -q --no-verbose --show-progress --progress=dot:giga > /dev/null 2>&1
-      | Download duration: $((($(date +%s)-$start_download)/60)) min. $((($(date +%s)-$start_download) % 60)) sec."
+      echo -e "| Download duration: $((($(date +%s)-$start_download)/60)) min. $((($(date +%s)-$start_download) % 60)) sec."
       start_unzip=`date +%s`
       tar_file_unpack "/root/$BOOTSTRAP_FILE" "/root/$CONFIG_DIR/backend"
-      | Unzip duration: $((($(date +%s)-$start_unzip)/60)) min. $((($(date +%s)-$start_unzip) % 60)) sec."
-      | Bootstraping duration: $((($(date +%s)-$start_download)/60)) min. $((($(date +%s)-$start_download) % 60)) sec."
+      echo -e "| Unzip duration: $((($(date +%s)-$start_unzip)/60)) min. $((($(date +%s)-$start_unzip) % 60)) sec."
+      echo -e "| Bootstraping duration: $((($(date +%s)-$start_download)/60)) min. $((($(date +%s)-$start_download) % 60)) sec."
       echo -e "Bootstrap [LOCKED]" > BOOTSTRAP_LOCKED
       rm -rf /root/$BOOTSTRAP_FILE
       sleep 2
