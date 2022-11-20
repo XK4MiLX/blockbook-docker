@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 TRY=1
+RPC_HOST="${RPC_HOST:-localhost}"
+RPC_URL_PROTOCOL="${RPC_URL_PROTOCOL:-http}"
+CFG_FILE=/root/blockbook/build/blockchaincfg.json
 echo -e "| BLOCKBOOK LUNCHER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "---------------------------------------------------------------------------"
-echo -e "| Blockbook Settings: COIN=$COIN, RPC_USER=$RPC_USER, RPC_PASS=$RPC_PASS, RPC_PORT=$RPC_PORT, BLOCKBOOK_PORT=$BLOCKBOOK_PORT"
-CFG_FILE=/root/blockbook/build/blockchaincfg.json
+echo -e "| Blockbook Settings: COIN=$COIN, RPC_USER=$RPC_USER, RPC_PASS=$RPC_PASS, RPC_PORT=$RPC_PORT, BLOCKBOOK_PORT=$BLOCKBOOK_PORT, RPC_HOST=$RPC_HOST, RPC_URL_PROTOCOL=$RPC_URL_PROTOCOL"
 while true; do
    echo -e "| Awaiting for Blockbook build...($TRY)"
    if [[ -f $CFG_FILE ]]; then
@@ -24,11 +26,8 @@ if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
    sleep 180
   done
 fi
-
 if [[ ! -f /root/CONFIG_CRETED ]]; then
   echo -e "| Updating blockchaincfg.json..."
-  RPC_HOST="${RPC_HOST:-localhost}"
-  RPC_URL_PROTOCOL="${RPC_URL_PROTOCOL:-http}"
   echo "$(jq -r --arg key "rpc_user" --arg value "$RPC_USER" '.[$key]=$value' $CFG_FILE)" > $CFG_FILE
   echo "$(jq -r --arg key "rpc_pass" --arg value "$RPC_PASS" '.[$key]=$value' $CFG_FILE)" > $CFG_FILE
   echo "$(jq -r --arg key "rpc_timeout" --argjson value 50 '.[$key]=$value' $CFG_FILE)" > $CFG_FILE
