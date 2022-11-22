@@ -7,6 +7,12 @@ function close(){
   fi
 }
 
+if jq --version > /dev/null 2>&1; then
+  sleep 1
+else
+  sudo apt install jq whiptail -y  > /dev/null 2>&1
+fi
+
 function coin_list(){
   if [[ "$1" == "" ]]; then
     BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook/tree/v0.4.0/configs/coins"
