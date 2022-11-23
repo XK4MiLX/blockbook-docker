@@ -222,13 +222,6 @@ if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
    fi
  fi
 
-if [[ "$FETCH_FILE" != "" ]]; then
-  if [[ ! -d /root/.zcash-params ]]; then
-    echo -e "| Installing fetch-params..."
-    bash -c "$FETCH_FILE" > /dev/null 2>&1 && sleep 2
-  fi
-fi
-
 if [[ "$BINARY_NAME" != "" ]]; then
   echo -e "| Stopping daemon (START)..."
   if [[ "$CLI_NAME" != "" ]]; then
@@ -319,6 +312,14 @@ EOF
 fi
 cd /
 sleep 5
+
+if [[ "$FETCH_FILE" != "" ]]; then
+  if [[ ! -d /root/.zcash-params ]]; then
+    echo -e "| Installing fetch-params..."
+    bash -c "$FETCH_FILE" > /dev/null 2>&1 && sleep 2
+  fi
+fi
+
 if [[ "$CONFIG" == "0" || "$CONFIG" == "" ]]; then
   echo -e "| Starting $COIN daemon (Config: DISABLED)..."
   ${BINARY_NAME} ${CLIFLAGS}
