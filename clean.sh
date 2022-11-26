@@ -1,7 +1,7 @@
 #!/bin/bash
 echo -e "| LOG CLEANER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "--------------------------------------------------"
- LOG_SIZE_LIMIT=${LOG_SIZE_LIMIT:-4}
+ LOG_SIZE_LIMIT=${LOG_SIZE_LIMIT:-40}
  LOG_LIST=($(find /root -type f \( -name "$COIN*.log" -o -name "debug.log" \)))
  LENGTH=${#LOG_LIST[@]}
  for (( j=0; j<${LENGTH}; j++ ));
