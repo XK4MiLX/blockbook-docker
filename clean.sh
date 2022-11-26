@@ -8,7 +8,7 @@ echo -e "--------------------------------------------------"
  do
   LOG_PATH="${LOG_LIST[$j]}"
   SIZE=$(ls -l --b=M  $LOG_PATH | cut -d " " -f5)
-  echo -e "| File: ${LOG_PATH} SIZE: ${SIZE}"
+  #echo -e "| File: ${LOG_PATH} SIZE: ${SIZE}"
   if [[ $(egrep -o '[0-9]+' <<< $SIZE) -gt $LOG_SIZE_LIMIT ]]; then
     echo -e "| FOUND: ${LOG_PATH} SIZE: ${SIZE}"
     LOG_FILE=${LOG_PATH##*/}
