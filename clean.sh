@@ -1,4 +1,5 @@
 #!/bin/bash
+CLEAN=0
 echo -e "| LOG CLEANER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "--------------------------------------------------"
  LOG_SIZE_LIMIT=${LOG_SIZE_LIMIT:-40}
@@ -14,6 +15,10 @@ echo -e "--------------------------------------------------"
     LOG_FILE=${LOG_PATH##*/}
     echo -e "| File ${LOG_FILE} reached ${LOG_SIZE_LIMIT}M limit, file was cleaned!"
     echo "" > $LOG_PATH
+    CLEAN=1
   fi
  done
-echo -e "--------------------------------------------------"
+ if [[ "$CLEAN" == "0" ]]; then
+   echo -e "| All logs belown ${LOG_SIZE_LIMIT}M limit..."
+ fi
+ echo -e "--------------------------------------------------"
