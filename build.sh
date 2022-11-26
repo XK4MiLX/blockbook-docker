@@ -40,6 +40,13 @@ if [[ ! -d /root/blockbook ]]; then
   else
     ./contrib/scripts/build-blockchaincfg.sh $ALIAS
   fi
+  if [[ ! -f /root/CRONE_CREATE ]]; then
+    echo -e "| Added crone job for log cleaner..."
+    (crontab -l -u "$USER" 2>/dev/null; echo "0 0 1-30/5 * *  /bin/bash /clean.sh > /tmp/clean_output.log 2>&1") | crontab -
+    echo -e "Cron job added!" >> /root/CRONE_CREATE
+  else
+     echo -e "Cron job already exist..."
+  fi
   echo -e "-----------------------------------------------------"
 else
   echo -e "| BLOCKBOOK ALREADY INSTALLED.."
