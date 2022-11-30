@@ -11,7 +11,9 @@ server_offline="0"
 failed_counter="0"
 CONFIG_FILE=${CONFIG_FILE:-$COIN}
 CONFIG_DIR=${CONFIG_DIR:-$COIN}
-
+RPC_PORT_KEY=${RPC_PORT_KEY:-rpcport}
+RPC_USER_KEY=${RPC_USER_KEY:-rpcuser}
+RPC_PASSWORD_KEY=${RPC_PASSWORD_KEY:-rpcpassword}
 
 function parse_template(){
  echo -e "| Parsing exec command template..."
@@ -19,8 +21,8 @@ function parse_template(){
  BIN_PATH=($TEMPLATE)
  DATA_PATH=${BIN_PATH[1]}
  CONF_PATH=${BIN_PATH[2]}
- if [[ $(grep "\-pid" <<< $TEMPLATE) ]]; then
-   TEMPLATE="$BIN_PATH $DATA_PATH $CONF_PATH"
+ if [[ ! $(grep "/bin/sh -c" <<< $TEMPLATE) ]]; then
+   #TEMPLATE="$BIN_PATH $DATA_PATH $CONF_PATH"
    TEMPLATE=$(sed "s/${BIN_PATH//\//\\/}/$BINARY_NAME/g" <<< $TEMPLATE)
  else
    TEMPLATE=$(sed "s|/bin/sh -c '{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/|""|" <<< $TEMPLATE)
@@ -38,6 +40,7 @@ function parse_template(){
  done
  TEMPLATE=$(sed "s/'/""/g" <<< $TEMPLATE)
  TEMPLATE=$(sed "s/\"/\'/g" <<< $TEMPLATE)
+ TEMPLATE=$(sed "s/run/root/g" <<< $TEMPLATE)
  if [[ ! -f /root/$3.json ]]; then
    echo "{}" > /root/$3.json
  fi
@@ -155,7 +158,7 @@ stop_script() {
     timeout 10 ${CLI_NAME} -conf /root/$CONFIG_DIR/$CONFIG_FILE stop > /dev/null 2>&1
   fi
   if [[ "$BINARY_NAME" != "" ]]; then
-    pkill -9 $BINARY_NAME
+    kill -9 $(ps -ef | grep $BINARY_NAME | tr -s ' ' | cut -d ' ' -f2 | head -n1)
   fi
   exit 0
 }
@@ -182,9 +185,9 @@ if [[ "$CONFIG" == "1" ]]; then
     echo -e "| Creating config file..."
     cat <<- EOF > /root/$CONFIG_DIR/$CONFIG_FILE.conf
 txindex=1
-rpcport=$RPC_PORT
-rpcuser=$RPC_USER
-rpcpassword=$RPC_PASS
+$RPC_PORT_KEY=$RPC_PORT
+$RPC_USER_KEY=$RPC_USER
+$RPC_PASSWORD_KEY=$RPC_PASS
 EOF
   if [[ "$EXTRACONFIG" != "" ]]; then
     echo -e "$EXTRACONFIG" >> /root/$CONFIG_DIR/$CONFIG_FILE.conf
@@ -228,7 +231,7 @@ if [[ "$BINARY_NAME" != "" ]]; then
     timeout 10 ${CLI_NAME} -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASS} stop > /dev/null 2>&1
     timeout 10 ${CLI_NAME} -conf=/root/$CONFIG_DIR/$CONFIG_FILE  stop > /dev/null 2>&1
   fi
-    pkill -9 $BINARY_NAME
+    kill -9 $(ps -ef | grep $BINARY_NAME | tr -s ' ' | cut -d ' ' -f2 | head -n1)
 fi
 
 if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
@@ -334,9 +337,9 @@ if [[ "$CONFIG" == "AUTO" ]]; then
     echo -e "| Creating config file..."
     cat <<- EOF > /root/$CONFIG_DIR/$CONFIG_FILE.conf
 txindex=1
-rpcport=$RPC_PORT
-rpcuser=$RPC_USER
-rpcpassword=$RPC_PASS
+$RPC_PORT_KEY=$RPC_PORT
+$RPC_USER_KEY=$RPC_USER
+$RPC_PASSWORD_KEY=$RPC_PASS
 EOF
    if [[ "$EXTRACONFIG" != "" ]]; then
      echo -e "$EXTRACONFIG" >> /root/$CONFIG_DIR/$CONFIG_FILE.conf
