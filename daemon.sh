@@ -20,7 +20,6 @@ function config_clean(){
  REMOVED_LENGTH=${#REMOVED_LIST[@]}
  for (( p=0; p<${REMOVED_LENGTH}; p++ ));
  do
-   echo -e "${REMOVED_LIST[$p]}"
    sed -i "/$(grep -e ${REMOVED_LIST[$p]} /root/${CONFIG_DIR}/${CONFIG_FILE}.conf)/d" /root/${CONFIG_DIR}/${CONFIG_FILE}.conf > /dev/null 2>&1
  done
 }
