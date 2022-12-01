@@ -7,12 +7,14 @@
  headers=$(jq -r .backend.headers <<< "$blockbookapi")
  blockbook=$(jq -r .blockbook.bestHeight <<< "$blockbookapi")
  if [[ $bloks != "" && $blockbook != "" ]]; then  
+   DAEMON_SIZE=$(du -sb /root/$CONFIG_DIR | awk '{printf("%0.2f GB\n", $1/1024/1024/1024)}')
+   BLOCKBOOK_SIZE=$(du -sb /root/blockbook/data | awk '{printf("%0.2f GB\n", $1/1024/1024/1024)}')
    if [[ $headers != "" && $headers != "null" ]]; then
      progress1=$(awk 'BEGIN {total=ARGV[1] / ARGV[2]; printf("%.2f", total*100)}' $bloks $headers)
      progress2=$(awk 'BEGIN {total=ARGV[1] / ARGV[2]; printf("%.2f", total*100)}' $blockbook $headers)
-     msg="Blockbook = [OK], Daemon = [OK], Daemon Sync: ${progress1}%, Blockbook Sync: ${progress2}%"
+     msg="Blockbook = [OK], Daemon = [OK], Daemon Sync: ${progress1}%, Blockbook Sync: ${progress2}%, Backend Size: $DAEMON_SIZE, Blockbook Size: $BLOCKBOOK_SIZE"
    else
-     msg="Blockbook = [OK], Daemon = [OK], Daemon Height: ${bloks}, Blockbook Height: ${blockbook}"
+     msg="Blockbook = [OK], Daemon = [OK], Daemon Height: ${bloks}, Blockbook Height: ${blockbook}, Backend Size: $DAEMON_SIZE, Blockbook Size: $BLOCKBOOK_SIZE"
    fi
    echo -e "${msg}"
    exit
