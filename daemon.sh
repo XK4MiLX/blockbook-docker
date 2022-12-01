@@ -15,6 +15,16 @@ RPC_PORT_KEY=${RPC_PORT_KEY:-rpcport}
 RPC_USER_KEY=${RPC_USER_KEY:-rpcuser}
 RPC_PASSWORD_KEY=${RPC_PASSWORD_KEY:-rpcpassword}
 
+function config_clean(){
+ REMOVED_LIST=( "mainnet" "daemon" )
+ REMOVED_LENGTH=${#REMOVED_LIST[@]}
+ for (( p=0; p<${REMOVED_LENGTH}; p++ ));
+ do
+   echo -e "${REMOVED_LIST[$p]}"
+   sed -i "/$(grep -e ${REMOVED_LIST[$p]} /root/${CONFIG_DIR}/${CONFIG_FILE}.conf)/d" /root/${CONFIG_DIR}/${CONFIG_FILE}.conf > /dev/null 2>&1
+ done
+}
+
 function config_create(){
 if [[ "$DAEMON_CONFIG" != "AUTO" ]]; then
  echo -e "| Creating config file..."
@@ -28,6 +38,7 @@ EOF
    echo -e "| Awaiting for daemon config generate by blockbook..."
    while true; do
      if [[ -f /root/$CONFIG_DIR/$CONFIG_FILE.conf ]]; then
+       config_clean
        sleep 5
        break
      fi
