@@ -35,14 +35,12 @@ if [[ ! -d /root/blockbook ]]; then
     exit 1
   fi
   
-  echo -e "| Creating blockchaincfg.sh for $COIN..."
-  echo -n "| "
   cd /root/blockbook
-  go run build/templates/generate.go $1 > /dev/null
-  echo -e "| Generated blockchaincfg.json for $1"
+  go run build/templates/generate.go $COIN > /dev/null
+  echo -e "| Generated blockchaincfg.json for $COIN"
   mv build/pkg-defs/blockbook/blockchaincfg.json build
   if [[ "$DAEMON_CONFIG" == "AUTO" ]]
-    echo -e "| Generated $COIN.conf for $1 daemon"
+    echo -e "| Generated daemon config for $COIN daemon"
     mv build/pkg-defs/backend/server.conf /root/$CONFIG_DIR/$CONFIG_FILE.conf
   fi
   rm -rf build/pkg-defs
