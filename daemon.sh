@@ -15,6 +15,27 @@ RPC_PORT_KEY=${RPC_PORT_KEY:-rpcport}
 RPC_USER_KEY=${RPC_USER_KEY:-rpcuser}
 RPC_PASSWORD_KEY=${RPC_PASSWORD_KEY:-rpcpassword}
 
+function config_create(){
+if [[ "$DAEMON_CONFIG" != "AUTO" ]]; then
+ echo -e "| Creating config file..."
+ cat <<- EOF > /root/$CONFIG_DIR/$CONFIG_FILE.conf
+ txindex=1
+ $RPC_PORT_KEY=$RPC_PORT
+ $RPC_USER_KEY=$RPC_USER
+ $RPC_PASSWORD_KEY=$RPC_PASS
+EOF
+ else
+   echo -e "| Awaiting for daemon config generate by blockbook..."
+   while true; do
+     if [[ -f /root/$CONFIG_DIR/$CONFIG_FILE.conf ]]; then
+       sleep 5
+       break
+     fi
+     sleep 180
+   done
+ fi
+}
+
 function parse_template(){
  echo -e "| Parsing exec command template..."
  TEMPLATE=$(jq -r .backend.exec_command_template <<< "$1")
@@ -181,17 +202,11 @@ fi
 
 if [[ "$CONFIG" == "1" ]]; then
   if [[ ! -f /root/$CONFIG_DIR/$CONFIG_FILE.conf ]]; then
-    mkdir -p /root/$CONFIG_DIR
-    echo -e "| Creating config file..."
-    cat <<- EOF > /root/$CONFIG_DIR/$CONFIG_FILE.conf
-txindex=1
-$RPC_PORT_KEY=$RPC_PORT
-$RPC_USER_KEY=$RPC_USER
-$RPC_PASSWORD_KEY=$RPC_PASS
-EOF
-  if [[ "$EXTRACONFIG" != "" ]]; then
+   mkdir -p /root/$CONFIG_DIR
+   config_create
+   if [[ "$EXTRACONFIG" != "" ]]; then
     echo -e "$EXTRACONFIG" >> /root/$CONFIG_DIR/$CONFIG_FILE.conf
-  fi
+   fi
  fi
 fi
 
@@ -333,14 +348,8 @@ if [[ "$CONFIG" == "1" ]]; then
 fi
 if [[ "$CONFIG" == "AUTO" ]]; then
  if [[ ! -f /root/$CONFIG_DIR/$CONFIG_FILE.conf ]]; then
-    mkdir -p /root/$CONFIG_DIR
-    echo -e "| Creating config file..."
-    cat <<- EOF > /root/$CONFIG_DIR/$CONFIG_FILE.conf
-txindex=1
-$RPC_PORT_KEY=$RPC_PORT
-$RPC_USER_KEY=$RPC_USER
-$RPC_PASSWORD_KEY=$RPC_PASS
-EOF
+   mkdir -p /root/$CONFIG_DIR
+   config_create
    if [[ "$EXTRACONFIG" != "" ]]; then
      echo -e "$EXTRACONFIG" >> /root/$CONFIG_DIR/$CONFIG_FILE.conf
    fi
