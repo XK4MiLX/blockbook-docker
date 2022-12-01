@@ -357,8 +357,9 @@ if [[ "$CONFIG" == "1" ]]; then
   ${BINARY_NAME} -datadir="/root/${CONFIG_DIR}" -conf="/root/${CONFIG_DIR}/${CONFIG_FILE}.conf"
 fi
 if [[ "$CONFIG" == "AUTO" ]]; then
- if [[ ! -f /root/$CONFIG_DIR/$CONFIG_FILE.conf ]]; then
-   mkdir -p /root/$CONFIG_DIR
+ CLEAN_CHECK=$(grep 'daemon=' /root/${CONFIG_DIR}/${CONFIG_FILE}.conf)
+ if [[ ! -f /root/$CONFIG_DIR/$CONFIG_FILE.conf || "$CLEAN_CHECK" != "" ]]; then
+   mkdir -p /root/$CONFIG_DIR > /dev/null 2>&1
    config_create
    if [[ "$EXTRACONFIG" != "" ]]; then
      echo -e "$EXTRACONFIG" >> /root/$CONFIG_DIR/$CONFIG_FILE.conf
@@ -366,7 +367,7 @@ if [[ "$CONFIG" == "AUTO" ]]; then
  fi
   echo -e "| Starting $COIN daemon (Config: AUTO)..."
   if [[ ! -d /root/$CONFIG_DIR/backend ]]; then
-    mkdir -p /root/$CONFIG_DIR/backend
+    mkdir -p /root/$CONFIG_DIR/backend > /dev/null 2>&1
   fi
    bash -c "$(jq -r .cmd /root/daemon_config.json)"
 fi
