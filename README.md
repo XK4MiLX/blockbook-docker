@@ -32,6 +32,7 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`EXTRACONFIG`| Additional config option for daemon <br /> Example: "addnode=explorer.flux.zelcore.io\naddnode=explorer.runonflux.io" | `NO` | `unset` |
 |`CLIFLAGS`| Config flags for daemon | `YES` <br />when using CLI mode | `unset` |
 |`DAEMON_URL`| Download URL for daemon .tar.gz archive | `NO` | `AUTO` <br />`FROM BLOCKBOOK CONFIG` |
+|`DAEMON_CONFIG`| Generate daemon config using blockbook template | `NO` | `AUTO` <br />`FROM BLOCKBOOK` |
 |`FETCH_FILE`| Name of fetch parms script <br /> Example: "fetch-params.sh" | `NO` | `unset` |
 |`LOG_SIZE_LIMIT`| Size limit for log cleaner in MB | `NO` | `40` |
 |`BLOCKBOOK_PORT`| Port for blockbook. To get correct port check: <br /> https://github.com/trezor/blockbook/blob/master/docs/ports.md | `YES` | `unset` |
@@ -40,4 +41,4 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`B_TIMEOUT`| Bootstrap speed test timeout in sec | `NO` | `6` |
 |`B_SERVERS_LIST`| Servers list for bootstraping <br /> Example: `'("http://cdn-14.runonflux.io/apps/fluxshare/getfile/" "http://cdn-15.runonflux.io/apps/fluxshare/getfile/")'` | `NO` | `BUILD-IN SERVERS LIST` |
 
-v1.0.0
+v1.0.1
