@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+CONFIG_FILE=${CONFIG_FILE:-$COIN}
+CONFIG_DIR=${CONFIG_DIR:-$COIN}
 if [[ ! -d /root/blockbook ]]; then
   start_build=`date +%s`
   echo -e "| BLOCKBOOK BUILDER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
@@ -32,14 +34,18 @@ if [[ ! -d /root/blockbook ]]; then
     rm -rf /root/go > /dev/null 2>&1
     exit 1
   fi
+  
   echo -e "| Creating blockchaincfg.sh for $COIN..."
   echo -n "| "
   cd /root/blockbook
-  if [[ "$ALIAS" == "" ]]; then
-    ./contrib/scripts/build-blockchaincfg.sh $COIN
-  else
-    ./contrib/scripts/build-blockchaincfg.sh $ALIAS
+  go run build/templates/generate.go $1 > /dev/null
+  echo -e "| Generated blockchaincfg.json for $1"
+  mv build/pkg-defs/blockbook/blockchaincfg.json build
+  if [[ "$DAEMON_CONFIG" == "AUTO" ]]
+    echo -e "| Generated $COIN.conf for $1 daemon"
+    mv build/pkg-defs/backend/server.conf /root/$CONFIG_DIR/$CONFIG_FILE.conf
   fi
+  rm -rf build/pkg-defs
   if [[ ! -f /root/CRONE_CREATE ]]; then
     echo -e "| Added crone job for log cleaner..."
     (crontab -l -u "$USER" 2>/dev/null; echo "0 0 1-30/5 * *  /bin/bash /clean.sh > /tmp/clean_output.log 2>&1") | crontab -
