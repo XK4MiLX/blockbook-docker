@@ -80,15 +80,12 @@ function parse_template(){
 }
 
 function extract_daemon() {
-    echo -e "| ${CYAN}Unpacking daemon bin archive file...${NC}"
-    if [[ ${DAEMON_URL##*/} =~ .*zip$ ]]; then
-        unzip ${DAEMON_URL##*/} -d backend > /dev/null 2>&1 || return 1
-    elif [[ ${DAEMON_URL##*/} =~ .*tar.gz$ ]]; then
-         strip_lvl=$(tar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $6 }' | awk -F\/ '{print NF-1}')
-         tar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/} > /dev/null 2>&1 || return 1
-    fi
-    return 0
+   echo -e "| ${CYAN}Unpacking daemon bin archive file...${NC}"
+   strip_lvl=$(bsdtar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
+   bsdtar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/} > /dev/null 2>&1 || return 1
+   return 0
 }
+
 
 function cli_search(){
   if [[ "$CLI_NAME" == "" ]]; then
