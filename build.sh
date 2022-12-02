@@ -5,7 +5,7 @@ if [[ ! -d /root/blockbook ]]; then
   start_build=`date +%s`
   echo -e "| BLOCKBOOK BUILDER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "-----------------------------------------------------"
-  echo -e "| Installing RocksDB..."
+  echo -e "| Installing RocksDB [$ROCKSDB_VERSION]..."
   cd /root && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git > /dev/null 2>&1
   cd /root/rocksdb && CFLAGS=-fPIC CXXFLAGS=-fPIC make -j 4 release > /dev/null 2>&1
   echo -e "| Installing BlockBook..."
@@ -13,9 +13,10 @@ if [[ ! -d /root/blockbook ]]; then
     BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook.git"
   fi
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
+  echo -e "| BRANCH: $TAG" 
   cd /root && git clone $BLOCKBOOKGIT_URL > /dev/null 2>&1 && \
   cd /root/blockbook && \
-  git checkout "$TAG" && \
+  git checkout "$TAG" > /dev/null 2>&1 && \
   go mod download && \
   BUILDTIME=$(date --iso-8601=seconds); \
   GITCOMMIT=$(git describe --always --dirty); \
