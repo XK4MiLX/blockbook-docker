@@ -153,7 +153,7 @@ else
  echo -e "---------------------------------------------------------------------------------------"
 fi
 
-if [[ "$BLOCKBOOKPOSTINST" != "" ]]; then
+if [[ "$BLOCKBOOKPOSTINST" != "" && "$1" != "divi" && "$2" != "divi" ]]; then
   POSTINST="-e FETCH_FILE=${BLOCKBOOKPOSTINST##*/}"
 fi
 
