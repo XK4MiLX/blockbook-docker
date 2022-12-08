@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-TRY=1
 RPC_HOST="${RPC_HOST:-localhost}"
 RPC_URL_PROTOCOL="${RPC_URL_PROTOCOL:-http}"
 CFG_FILE=/root/blockbook/build/blockchaincfg.json
@@ -10,14 +9,13 @@ if [[ "$DAEMON_CONFIG" != "AUTO" ]]; then
 else
   echo -e "| Blockbook Settings: COIN=$COIN, BLOCKBOOK_PORT=$BLOCKBOOK_PORT, DAEMON_CONFIG=AUTO"
 fi
+echo -e "| Awaiting for Blockbook build..."
 while true; do
-   echo -e "| Awaiting for Blockbook build...($TRY)"
    if [[ -f $CFG_FILE ]]; then
      sleep 20
      break
    fi
    sleep 180
-   ((TRY=TRY+1))
 done
 
 if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
