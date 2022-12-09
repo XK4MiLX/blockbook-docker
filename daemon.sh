@@ -80,10 +80,29 @@ function parse_template(){
 }
 
 function extract_daemon() {
-   echo -e "| ${CYAN}Unpacking daemon bin archive file...${NC}"
-   strip_lvl=$(bsdtar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
-   bsdtar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/} > /dev/null 2>&1 || return 1
-   return 0
+  if [[ ! -d /tmp/backend ]]; then
+    echo -e "| Creating directory..."
+    mkdir -p /tmp/backend
+  fi
+  cd /tmp
+  echo -e "| Searching params script..."
+  PARAMS_CHECK=$(bsdtar -ztvf ${DAEMON_URL##*/} |  grep 'params.sh$')
+  if [[ "$PARAMS_CHECK" != "" ]]; then
+    STRIP=$(bsdtar -tvf ${DAEMON_URL##*/} | grep 'params.sh$' | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
+    bsdtar -C backend --strip $STRIP -xf ${DAEMON_URL##*/} > /dev/null 2>&1
+    PARAMS_PATH=$(find /tmp -type f -iname "*params.sh" | tail -n1)
+    if [[ $PARAMS_PATH != "" ]]; then
+      echo -e "| FOUND: $PARAMS_PATH..."
+      chmod +x $PARAMS_PATH
+      echo -e "| Lunching ${PARAMS_PATH##*/}...."
+      bash -c $PARAMS_PATH
+    fi
+    rm -rf /tmp/backend/*
+  fi
+  echo -e "| ${CYAN}Unpacking daemon bin archive file...${NC}"
+  strip_lvl=$(bsdtar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
+  bsdtar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/} > /dev/null 2>&1 || return 1
+  return 0
 }
 
 
@@ -260,7 +279,6 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
   echo -e "| Downloading daemon ($COIN)..."
   cd /tmp
   mkdir backend
-
    echo -e "| Fetching Blockbook config for $COIN..."
   if [[ "$BLOCKBOOKGIT_URL" == "" ]]; then
     BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook.git"
@@ -338,12 +356,12 @@ fi
 cd /
 sleep 5
 
-if [[ "$FETCH_FILE" != "" ]]; then
-  if [[ ! -d /root/.zcash-params ]]; then
-    echo -e "| Installing fetch-params..."
-    bash -c "$FETCH_FILE" > /dev/null 2>&1 && sleep 2
-  fi
-fi
+#if [[ "$FETCH_FILE" != "" ]]; then
+#  if [[ ! -d /root/.zcash-params ]]; then
+#    echo -e "| Installing fetch-params..."
+#    bash -c "$FETCH_FILE" > /dev/null 2>&1 && sleep 2
+#  fi
+#fi
 
 if [[ "$CONFIG" == "0" || "$CONFIG" == "" ]]; then
   echo -e "| Starting $COIN daemon (Config: DISABLED)..."
