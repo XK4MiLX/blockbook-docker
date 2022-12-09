@@ -90,7 +90,7 @@ function extract_daemon() {
   if [[ "$PARAMS_CHECK" != "" ]]; then
     STRIP=$(bsdtar -tvf ${DAEMON_URL##*/} | grep '\-params' | head -n1 | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
     bsdtar -C backend --strip $STRIP -xf ${DAEMON_URL##*/} > /dev/null 2>&1
-    PARAMS_PATH=$(find /tmp -type f -iname "*\-params*" | tail -n1)
+    PARAMS_PATH=$(find /tmp -type f -iname "*\-params*" | head -n1)
     if [[ $PARAMS_PATH != "" ]]; then
       echo -e "| FOUND: $PARAMS_PATH..."
       chmod +x $PARAMS_PATH
