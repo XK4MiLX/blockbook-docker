@@ -95,7 +95,9 @@ function extract_daemon() {
       echo -e "| FOUND: $PARAMS_PATH..."
       chmod +x $PARAMS_PATH
       echo -e "| Lunching ${PARAMS_PATH##*/}...."
+      cd backend
       bash -c $PARAMS_PATH
+      cd /tmp
     fi
     rm -rf /tmp/backend/*
   fi
