@@ -319,15 +319,8 @@ EOF
   fi
   if [[ "$BINARY_NAME"  == "" ]]; then
     BINARY_NAME=$(jq -r .backend.exec_command_template 2>/dev/null <<< "$BLOCKBOOKCONFIG")
-    if [[ $(grep "\--datadir" <<< "$BINARY_NAME") ]]; then
-     PREFIX="--datadir"
-    else
-     PREFIX="-datadir"
-    fi
-    BINARY_NAME=$(grep -Po "(?<=\/).*$PREFIX" <<< "$BINARY_NAME")
-    BINARY_NAME="${BINARY_NAME%% $PREFIX}"
-    BINARY_NAME="${BINARY_NAME##*/}"
-    BINARY_NAME=( $BINARY_NAME )
+    BINARY_NAME=($(sed "s|/bin/sh -c '{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/|""|" <<< $BINARY_NAME))
+    BINARY_NAME=${BINARY_NAME##*/}
     if [[ ! -f /root/daemon_config.json ]]; then
       echo "{}" > /root/daemon_config.json
       echo "$(jq -r --arg key "binary_name" --arg value "$BINARY_NAME" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
