@@ -42,5 +42,5 @@ else
 fi
 cd /root/blockbook
 echo -e "| Starting Blockbook ($COIN)..."
-exec ./blockbook -sync -blockchaincfg=$CFG_FILE -debug -workers=${WORKERS:-1} -public=:${BLOCKBOOK_PORT} -logtostderr
+exec ./blockbook -sync -blockchaincfg=$CFG_FILE -debug -workers=${WORKERS:-1} -dbcache=${DBCACHE:-500} -public=:${BLOCKBOOK_PORT} -logtostderr
 echo -e "---------------------------------------------------------------------------"
