@@ -15,7 +15,7 @@ fi
 
 function coin_list(){
   if [[ "$1" == "" ]]; then
-    BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook/tree/v0.4.0/configs/coins"
+    BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook/tree/master/configs/coins"
   else
     BLOCKBOOKGIT_URL="$1"
   fi
@@ -39,7 +39,7 @@ function setup(){
     BLOCKBOOKGIT_URL="https://github.com/trezor/blockbook.git"
  fi
  if [[ "$TAG" == "" ]]; then
-    TAG="v0.4.0"
+    TAG="master"
  fi
  echo -e "---------------------------------------------------------------------------------------"
  echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL, BRANCH: $TAG"
@@ -61,7 +61,7 @@ function setup(){
      flage="$flage -e BLOCKBOOKGIT_URL=$BLOCKBOOKGIT_URL"
    fi
 
-   if [[ $TAG != "v0.4.0" ]]; then
+   if [[ $TAG != "master" ]]; then
      flage="$flage -e TAG=$TAG"
    fi
    if [[ $DAEMON_URL != "" ]]; then
