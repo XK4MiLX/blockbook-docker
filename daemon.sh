@@ -383,7 +383,7 @@ if [[ "$CONFIG" == "AUTO" ]]; then
     mkdir -p /root/$CONFIG_DIR/backend > /dev/null 2>&1
   fi
    
-   init_url=$(jq -r .geth.init_url /root/blockbook.json);
+   init_url=$(jq -r .geth.init_url /root/blockbook.json)
    if [[ "$init_url" != "" && "$init_url" != "null" ]] ; then
      if [[ ! -f /root/geth_init.json ]];
        echo -e "| Downloading init file, URL: $init_url"
