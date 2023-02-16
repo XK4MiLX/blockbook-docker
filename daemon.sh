@@ -389,7 +389,7 @@ if [[ "$CONFIG" == "AUTO" ]]; then
        echo -e "| Downloading init file, URL: $init_url"
        wget "$init_url" -O /root/geth_init.json > /dev/null 2>&1
        echo -e "| Tiggering geth init..."
-       geth init /root/geth_init.json
+       geth --datadir /root/$COIN/backend init /root/geth_init.json
      fi
    fi
    bash -c "$(jq -r .cmd /root/daemon_config.json)"
