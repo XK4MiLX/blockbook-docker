@@ -310,6 +310,9 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
     "backendhttp": "${BACKEND_HTTP:-$(jq -r .ports.backend_http <<< $BLOCKBOOKCONFIG)}",
     "backendp2p": "${BACKEND_P2P:-$(jq -r .ports.backend_p2p <<< $BLOCKBOOKCONFIG)}",
     "backendrpc": "${RPC_PORT:-$(jq -r .ports.backend_rpc <<< $BLOCKBOOKCONFIG)}"
+  },
+  "geth": {
+    init_url: "${INIT_URL:-$(jq -r .backend.geth_init_url <<< $BLOCKBOOKCONFIG)}"
   }
 }
 EOF
@@ -379,6 +382,16 @@ if [[ "$CONFIG" == "AUTO" ]]; then
   if [[ ! -d /root/$CONFIG_DIR/backend ]]; then
     mkdir -p /root/$CONFIG_DIR/backend > /dev/null 2>&1
   fi
+   
+   init_url=$(jq -r .geth.init_url /root/blockbook.json);
+   if [[ "$init_url" != "" && "$init_url" != "null" ]] ; then
+     if [[ ! -f /root/geth_init.json ]];
+       echo -e "| Downloading init file, URL: $init_url"
+       wget "$init_url" -O /root/geth_init.json > /dev/null 2>&1
+       echo -e "| Tiggering geth init..."
+       geth init /root/geth_init.json
+     fi
+   fi
    bash -c "$(jq -r .cmd /root/daemon_config.json)"
 fi
 echo -e "---------------------------------------------------------------------------"
