@@ -312,7 +312,8 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
     "backendrpc": "${RPC_PORT:-$(jq -r .ports.backend_rpc <<< $BLOCKBOOKCONFIG)}"
   },
   "geth": {
-    "init_url": "${INIT_URL:-$(jq -r .backend.geth_init_url <<< $BLOCKBOOKCONFIG)}"
+    "init_url": "${INIT_URL:-$(jq -r .backend.geth_init_url <<< $BLOCKBOOKCONFIG)}",
+    "static_nodes_url": "${STATIC_NODE_URL:-$(jq -r .backend.static_nodes_url <<< $BLOCKBOOKCONFIG)}"
   }
 }
 EOF
@@ -390,8 +391,11 @@ if [[ "$CONFIG" == "AUTO" ]]; then
        wget "$init_url" -O /root/geth_init.json > /dev/null 2>&1
        echo -e "| Tiggering geth init..."
        geth --datadir /root/$COIN/backend init /root/geth_init.json
-       # test only
-       wget https://raw.githubusercontent.com/XK4MiLX/brise-node/main/static-nodes.json -O /root/brise/backend/geth/static-nodes.json
+       static_nodes_url=$(jq -r .geth.static_nodes_url /root/blockbook.json)
+       if [[ "$static_nodes_url" != "" && "$static_nodes_url" != "null" ]]; then
+         echo -e "| Downloading static node file, URL: $static_nodes_url"
+         wget "$static_nodes_url" -O /root/$COIN/backend/geth/static-nodes.json
+       fi
      fi
    fi
    bash -c "$(jq -r .cmd /root/daemon_config.json)"
