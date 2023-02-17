@@ -312,7 +312,7 @@ if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
     "backendrpc": "${RPC_PORT:-$(jq -r .ports.backend_rpc <<< $BLOCKBOOKCONFIG)}"
   },
   "geth": {
-    init_url: "${INIT_URL:-$(jq -r .backend.geth_init_url <<< $BLOCKBOOKCONFIG)}"
+    "init_url": "${INIT_URL:-$(jq -r .backend.geth_init_url <<< $BLOCKBOOKCONFIG)}"
   }
 }
 EOF
