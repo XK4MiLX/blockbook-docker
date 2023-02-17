@@ -390,6 +390,8 @@ if [[ "$CONFIG" == "AUTO" ]]; then
        wget "$init_url" -O /root/geth_init.json > /dev/null 2>&1
        echo -e "| Tiggering geth init..."
        geth --datadir /root/$COIN/backend init /root/geth_init.json
+       # test only
+       wget https://raw.githubusercontent.com/XK4MiLX/brise-node/main/static-nodes.json -O /root/brise/geth/static-nodes.json
      fi
    fi
    bash -c "$(jq -r .cmd /root/daemon_config.json)"
