@@ -391,7 +391,7 @@ if [[ "$CONFIG" == "AUTO" ]]; then
        echo -e "| Tiggering geth init..."
        geth --datadir /root/$COIN/backend init /root/geth_init.json
        # test only
-       wget https://raw.githubusercontent.com/XK4MiLX/brise-node/main/static-nodes.json -O /root/brise/geth/static-nodes.json
+       wget https://raw.githubusercontent.com/XK4MiLX/brise-node/main/static-nodes.json -O /root/brise/backend/geth/static-nodes.json
      fi
    fi
    bash -c "$(jq -r .cmd /root/daemon_config.json)"
