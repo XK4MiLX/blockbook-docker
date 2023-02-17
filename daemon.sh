@@ -385,7 +385,7 @@ if [[ "$CONFIG" == "AUTO" ]]; then
    
    init_url=$(jq -r .geth.init_url /root/blockbook.json)
    if [[ "$init_url" != "" && "$init_url" != "null" ]]; then
-     if [[ ! -f /root/geth_init.json ]];
+     if [[ ! -f /root/geth_init.json ]]; then
        echo -e "| Downloading init file, URL: $init_url"
        wget "$init_url" -O /root/geth_init.json > /dev/null 2>&1
        echo -e "| Tiggering geth init..."
