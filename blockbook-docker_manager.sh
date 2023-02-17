@@ -165,7 +165,7 @@ if [[ "$1" == "create" ]]; then
   fi
   EXTRAFLAGS="$3"
   echo -e "| BlockBookURL: http://$WANIP:$OUT_PORT"
-  CMD=$(echo "docker run -d --name fluxosblockbook-${2} -e COIN=${2} $BINARY_NAME -e BLOCKBOOK_PORT=${BLOCKBOOKPORT} $flage $POSTINST $EXTRAFLAGS -p ${OUT_PORT}:${BLOCKBOOKPORT} -v /home/$USER/fluxosblockbook_${2}:/root runonflux/blockbook-docker" | awk '$1=$1')
+  CMD=$(echo "docker run -d --name fluxosblockbook-${2} -e COIN=${2} $BINARY_NAME -e BLOCKBOOK_PORT=${BLOCKBOOKPORT} $flage $POSTINST $EXTRAFLAGS -p ${OUT_PORT}:${BLOCKBOOKPORT} -v /home/$USER/fluxosblockbook_${2}:/root xk4milx/blockbook-docker" | awk '$1=$1')
   echo -e "| $CMD"
   bash -c "$CMD"
   echo -e ""
@@ -176,6 +176,6 @@ else
   fi
   EXTRAFLAGS="$2"
   echo -e "| BlockBookURL: http://$WANIP:$OUT_PORT (EMULATION ONLY)"
-  echo -e "| docker run -d --name fluxosblockbook-${1} -e COIN=${1} $BINARY_NAME -e BLOCKBOOK_PORT=${BLOCKBOOKPORT} $flage $POSTINST $EXTRAFLAGS -p ${OUT_PORT}:${BLOCKBOOKPORT} -v /home/$USER/fluxosblockbook_${1}:/root runonflux/blockbook-docker" | awk '$1=$1'
+  echo -e "| docker run -d --name fluxosblockbook-${1} -e COIN=${1} $BINARY_NAME -e BLOCKBOOK_PORT=${BLOCKBOOKPORT} $flage $POSTINST $EXTRAFLAGS -p ${OUT_PORT}:${BLOCKBOOKPORT} -v /home/$USER/fluxosblockbook_${1}:/root xk4milx/blockbook-docker" | awk '$1=$1'
   echo -e "----------------------------------------------------------------------------------------"
 fi
