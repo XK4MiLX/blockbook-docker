@@ -97,7 +97,7 @@ exit
 fi
 
 if [[ "$1" == "update" ]]; then
-  docker pull runonflux/blockbook-docker
+  docker pull xk4milx/blockbook-docker
   exit
 fi
 
