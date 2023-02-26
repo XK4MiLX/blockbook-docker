@@ -8,6 +8,7 @@ RUN apt-get update && \
     bsdmainutils build-essential g++-multilib libc6-dev pv libarchive-tools cron unzip libtool \
     m4 ncurses-dev pkg-config python3 python3-zmq zlib1g-dev libzmq3-dev
 
+ENV BLOCKBOOKGIT_URL=${BLOCKBOOKGIT_URL:-https://github.com/trezor/blockbook.git}
 ENV TAG=${TAG:-master}
 ENV RPC_USER=${RPC_USER:-user}
 ENV RPC_PASS=${RPC_PASS:-pass}
@@ -25,7 +26,8 @@ ENV CGO_LDFLAGS="-L$HOME/rocksdb -lrocksdb -lstdc++ -lm -lz -ldl -lbz2 -lsnappy 
 # Install GO
 RUN echo -e "Installing GOLANG [$GOLANG_VERSION]..." && \
     cd /opt && wget https://dl.google.com/go/$GOLANG_VERSION.linux-amd64.tar.gz && \
-    tar xf $GOLANG_VERSION.linux-amd64.tar.gz
+    tar xf $GOLANG_VERSION.linux-amd64.tar.gz && \
+    rm $GOLANG_VERSION.linux-amd64.tar.gz
 RUN ln -s /opt/go/bin/go /usr/bin/go
 RUN mkdir -p $GOPATH
 RUN echo -n "GO version: " && go version
@@ -34,7 +36,16 @@ RUN echo -n "GOPATH: " && echo $GOPATH
 RUN echo -e "Installing RocksDB [$ROCKSDB_VERSION]..." && \
 cd $HOME && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git && \
 cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release
-
+# Install BlockBook
+RUN echo -e "Installing BlockBook..." && \ 
+  cd $HOME && git clone $BLOCKBOOKGIT_URL && \
+  cd $HOME/blockbook && \
+  git checkout "$TAG" && \
+  go mod download && \
+  BUILDTIME=$(date --iso-8601=seconds); GITCOMMIT=$(git describe --always --dirty); \
+  LDFLAGS="-X github.com/trezor/blockbook/common.version=${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}" && \
+  go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
+  
 COPY build.sh /build.sh
 COPY daemon.sh /daemon.sh
 COPY blockbook.sh /blockbook.sh
