@@ -33,7 +33,7 @@ RUN echo -n "GOPATH: " && echo $GOPATH
 # Install RocksDB
 RUN echo -e "Installing RocksDB [$ROCKSDB_VERSION]..." && \
 cd $HOME && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git && \
-cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC PORTABLE=1 -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' make -j 4 release
+cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release
 
 COPY build.sh /build.sh
 COPY daemon.sh /daemon.sh
