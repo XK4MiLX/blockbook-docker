@@ -2,7 +2,7 @@
 CONFIG_FILE=${CONFIG_FILE:-$COIN}
 CONFIG_DIR=${CONFIG_DIR:-$COIN}
 BLOCKBOOKGIT_URL=${BLOCKBOOKGIT_URL:-https://github.com/trezor/blockbook.git}
-if [[ ! -d /root/blockbook ]]; then
+if [[ ! -f /root/blockchaincfg.json ]]; then
   start_build=`date +%s`
   echo -e "| BLOCKBOOK BUILDER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "-----------------------------------------------------"
