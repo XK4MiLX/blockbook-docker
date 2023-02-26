@@ -33,13 +33,11 @@ if [[ ! -d /root/blockbook ]]; then
     rm -rf /root/go > /dev/null 2>&1
     exit 1
   fi
-  cd /root/blockbook
-  
+  cd /root/blockbook 
   if [[ ! -d /root/$CONFIG_DIR ]]; then
     echo -e "| Creating config directory..."
     mkdir -p /root/$CONFIG_DIR
   fi
-  
   echo -e "| Generating config files for $COIN"
   go run build/templates/generate.go $COIN > /dev/null  
   if [[ -f /root/blockbook/build/pkg-defs/blockbook/blockchaincfg.json ]]; then
