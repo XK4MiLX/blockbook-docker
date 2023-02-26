@@ -10,6 +10,7 @@ if [[ ! -d /root/blockbook ]]; then
   #cd /root && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git > /dev/null 2>&1
   #cd /root/rocksdb && CFLAGS=-fPIC CXXFLAGS="-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess" make -j 4 release > /dev/null 2>&1
   echo -e "| Installing BlockBook..."
+  echo -e "| RocksDB: $ROCKSDB_VERSION, GOLANG: $GOLANG_VERSION"
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
   echo -e "| BRANCH: $TAG" 
   cd /root && git clone $BLOCKBOOKGIT_URL > /dev/null 2>&1 && \
@@ -28,9 +29,9 @@ if [[ ! -d /root/blockbook ]]; then
     echo -e "| Cleaning..."
     echo -e "-----------------------------------------------------"
     rm -rf /root/blockbook > /dev/null 2>&1
-    rm -rf /root/libzmq > /dev/null 2>&1
-    rm -rf /root/rocksdb > /dev/null 2>&1
-    rm -rf /root/go > /dev/null 2>&1
+    #rm -rf /root/libzmq > /dev/null 2>&1
+    #rm -rf /root/rocksdb > /dev/null 2>&1
+    #rm -rf /root/go > /dev/null 2>&1
     exit 1
   fi
   cd /root/blockbook 
