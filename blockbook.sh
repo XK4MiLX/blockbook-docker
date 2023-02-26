@@ -40,7 +40,7 @@ if [[ ! -f /root/CONFIG_CRETED ]]; then
 else
   echo -e "| Blockchaincfg.json [LOCKED]..."
 fi
-cd /root/blockbook
+cd /opt/blockbook
 echo -e "| Starting Blockbook ($COIN)..."
 if [[ ! -d /root/blockbook-db ]]; then
   mkdir -p /root/blockbook-db
