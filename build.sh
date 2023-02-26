@@ -6,9 +6,9 @@ if [[ ! -d /root/blockbook ]]; then
   start_build=`date +%s`
   echo -e "| BLOCKBOOK BUILDER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "-----------------------------------------------------"
-  echo -e "| Installing RocksDB [$ROCKSDB_VERSION]..."
-  cd /root && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git > /dev/null 2>&1
-  cd /root/rocksdb && CFLAGS=-fPIC CXXFLAGS="-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess" make -j 4 release > /dev/null 2>&1
+  #echo -e "| Installing RocksDB [$ROCKSDB_VERSION]..."
+  #cd /root && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git > /dev/null 2>&1
+  #cd /root/rocksdb && CFLAGS=-fPIC CXXFLAGS="-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess" make -j 4 release > /dev/null 2>&1
   echo -e "| Installing BlockBook..."
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
   echo -e "| BRANCH: $TAG" 
