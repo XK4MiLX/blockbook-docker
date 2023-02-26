@@ -11,7 +11,7 @@ RUN apt-get update && \
 ENV TAG=${TAG:-master}
 ENV RPC_USER=${RPC_USER:-user}
 ENV RPC_PASS=${RPC_PASS:-pass}
-ENV HOME=/root
+ENV HOME=/opt
 ENV BOOTSTRAP=${BOOTSTRAP:-0}
 ENV DAEMON=${DAEMON:-1}
 ENV CONFIG=${CONFIG:-AUTO}
@@ -22,13 +22,18 @@ ENV GOPATH=$HOME/go
 ENV PATH=$PATH:$GOPATH/bin
 ENV CGO_CFLAGS="-I$HOME/rocksdb/include"
 ENV CGO_LDFLAGS="-L$HOME/rocksdb -lrocksdb -lstdc++ -lm -lz -ldl -lbz2 -lsnappy -llz4 -lzstd"
-# Install and configure go
-RUN cd /opt && wget https://dl.google.com/go/$GOLANG_VERSION.linux-amd64.tar.gz && \
+# Install GO
+RUN echo -e "Installing GOLANG [$GOLANG_VERSION]..." && \
+    cd /opt && wget https://dl.google.com/go/$GOLANG_VERSION.linux-amd64.tar.gz && \
     tar xf $GOLANG_VERSION.linux-amd64.tar.gz
 RUN ln -s /opt/go/bin/go /usr/bin/go
 RUN mkdir -p $GOPATH
 RUN echo -n "GO version: " && go version
 RUN echo -n "GOPATH: " && echo $GOPATH
+# Install RocksDB
+RUN echo -e "Installing RocksDB [$ROCKSDB_VERSION]..." && \
+cd $HOME && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git && \
+cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS="-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess" make -j 4 release
 
 COPY build.sh /build.sh
 COPY daemon.sh /daemon.sh
