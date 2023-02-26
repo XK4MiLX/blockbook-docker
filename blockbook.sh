@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 RPC_HOST="${RPC_HOST:-localhost}"
 RPC_URL_PROTOCOL="${RPC_URL_PROTOCOL:-http}"
-CFG_FILE=/root/blockbook/build/blockchaincfg.json
+CFG_FILE=/root/blockchaincfg.json
 echo -e "| BLOCKBOOK LUNCHER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "---------------------------------------------------------------------------"
 if [[ "$DAEMON_CONFIG" != "AUTO" ]]; then
