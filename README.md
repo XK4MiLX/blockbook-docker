@@ -14,7 +14,7 @@ bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/mas
 | update                         - install/update blockbook docker image
 | exec <coin_name>               - login to docker image
 | create <coin_name> <variable>  - create docker blockbook
-| <coin_name>                    - generate docker run commandline
+| <coin_name> <variable>         - generate docker run commandline
 | clean <coin_name>              - removing blockbook
 -------------------------------------------------------------------
 ```
