@@ -23,24 +23,8 @@ ENV GOPATH=$HOME/go
 ENV PATH=$PATH:$GOPATH/bin
 ENV CGO_CFLAGS="-I$HOME/rocksdb/include"
 ENV CGO_LDFLAGS="-L$HOME/rocksdb -lrocksdb -lstdc++ -lm -lz -ldl -lbz2 -lsnappy -llz4 -lzstd"
-
-
-RUN echo -e "Installing BlockBook..." && \ 
-  REPO_UNCAT=${BLOCKBOOKGIT_URL##*/} && \
-  REPO=${REPO_UNCAT%%.*} && \
-  GIT_USER=$(echo "$BLOCKBOOKGIT_URL" | grep -oP "(?<=github.com.)\w+(?=.$REPO)"); \
-  VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version); \
-  echo -e "REPO: $REPO, VERSION: $VERSION" && \
-  cd $HOME && git clone $BLOCKBOOKGIT_URL && \
-  cd $HOME/blockbook && \
-  git checkout "$TAG" && \
-  go mod download && \
-  BUILDTIME=$(date --iso-8601=seconds); GITCOMMIT=$(git describe --always --dirty); \
-  LDFLAGS="-X github.com/trezor/blockbook/common.version=${VERSION}-${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}" && \
-  go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
-
 # Install GOLANG
-RUN echo -e "Installing GOLANG [$GOLANG_VERSION]..." && \
+RUN echo "Installing GOLANG [$GOLANG_VERSION]..." && \
   cd /opt && wget https://dl.google.com/go/$GOLANG_VERSION.linux-amd64.tar.gz && \
   tar xf $GOLANG_VERSION.linux-amd64.tar.gz && \
   rm $GOLANG_VERSION.linux-amd64.tar.gz
@@ -49,16 +33,16 @@ RUN mkdir -p $GOPATH
 RUN echo -n "GO version: " && go version
 RUN echo -n "GOPATH: " && echo $GOPATH
 # Install RocksDB
-RUN echo -e "Installing RocksDB [$ROCKSDB_VERSION]..." && \
+RUN echo "Installing RocksDB [$ROCKSDB_VERSION]..." && \
   cd $HOME && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git && \
   cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release
 # Install BlockBook
-RUN echo -e "Installing BlockBook..." && \ 
+RUN echo "Installing BlockBook..." && \ 
   REPO_UNCAT=${BLOCKBOOKGIT_URL##*/} && \
   REPO=${REPO_UNCAT%%.*} && \
   GIT_USER=$(echo "$BLOCKBOOKGIT_URL" | grep -oP "(?<=github.com.)\w+(?=.$REPO)"); \
   VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version); \
-  echo -e "REPO: $REPO, VERSION: $VERSION" \
+  echo -e "REPO: $REPO, VERSION: $VERSION" && \
   cd $HOME && git clone $BLOCKBOOKGIT_URL && \
   cd $HOME/blockbook && \
   git checkout "$TAG" && \
