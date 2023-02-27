@@ -26,7 +26,7 @@ ENV CGO_LDFLAGS="-L$HOME/rocksdb -lrocksdb -lstdc++ -lm -lz -ldl -lbz2 -lsnappy 
 ENV re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
 #
   RUN if [ "$BLOCKBOOKGIT_URL" =~ "$re" ]; then \
-  GIT_USER=$BASH_REMATCH[4] \
+  GIT_USER=$BASH_REMATCH[4] fi \
   #REPO=$(cut -d "." -f 1 <<< $BASH_REMATCH[5]) fi \
   VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version) && \
   echo -e "| BRANCH: $TAG, VERSION: $VERSION"
