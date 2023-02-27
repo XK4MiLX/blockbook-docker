@@ -5,18 +5,19 @@
 bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/master/blockbook-docker_manager.sh)
 ```
 ```
--------------------------------------------------------------------
+-----------------------------------------------------------------------
 | Blockbook Docker Manager v2.0
--------------------------------------------------------------------
+-----------------------------------------------------------------------
 | Usage:
-| status <coin_name>             - show blockbook docker status
-| list <url>                     - show coin list
-| update                         - install/update blockbook docker image
-| exec <coin_name>               - login to docker image
-| create <coin_name> <variable>  - create docker blockbook
-| <coin_name> <variable>         - generate docker run commandline
-| clean <coin_name>              - removing blockbook
--------------------------------------------------------------------
+| status <coin_name>               - show blockbook docker status
+| list <url>                       - show coin list
+| update                           - update blockbook docker image
+| exec <coin_name>                 - login to docker image
+| create <coin_name> <-e variable> - create docker blockbook
+| <coin_name> <-e variable>        - generate docker run commandline
+| clean <coin_name>                - removing blockbook
+| softdeploy <coin_name>           - updating image with date
+-----------------------------------------------------------------------
 ```
 ### Deploy container
 ```
