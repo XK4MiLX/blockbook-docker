@@ -20,7 +20,7 @@ function coin_list(){
     BLOCKBOOKGIT_URL="$1"
   fi
   echo -e "--------------------------------------------------------------------------------------"
-  echo -e "| Blockbook Docker Manager v1.0"
+  echo -e "| Blockbook Docker Manager v2.0"
   echo -e "--------------------------------------------------------------------------------------"
   COIN_LIST=$(curl -SsL $BLOCKBOOKGIT_URL | grep -oP '(?<=title=").*(?=.json" data)')
   COIN_EXCLUDE=$(egrep -v 'consensus|testnet|regtest|test|archive|signet' <<< $COIN_LIST)
