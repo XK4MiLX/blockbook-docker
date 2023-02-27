@@ -8,6 +8,7 @@ if [[ ! -f /root/blockchaincfg.json ]]; then
   echo -e "| RocksDB: $ROCKSDB_VERSION, GOLANG: $GOLANG_VERSION"
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
   echo -e "| BRANCH: $TAG" 
+  echo -e "| PATH: $HOME/blockbook" 
   if [[ -f $HOME/blockbook/blockbook ]]; then
     echo -e "| Blockbook build [OK]..."
   fi
