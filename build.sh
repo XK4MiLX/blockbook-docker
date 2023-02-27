@@ -2,7 +2,7 @@
 CONFIG_FILE=${CONFIG_FILE:-$COIN}
 CONFIG_DIR=${CONFIG_DIR:-$COIN}
 BLOCKBOOKGIT_URL=${BLOCKBOOKGIT_URL:-https://github.com/trezor/blockbook.git}
-echo -e "| BLOCKBOOK LUNCHER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+echo -e "| BLOCKBOOK LUNCHER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "-----------------------------------------------------"
 if [[ ! -f /root/blockchaincfg.json ]]; then
   echo -e "| RocksDB: $ROCKSDB_VERSION, GOLANG: $GOLANG_VERSION"
