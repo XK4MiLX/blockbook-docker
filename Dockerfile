@@ -27,7 +27,7 @@ ENV re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
 #
   RUN if [ "$BLOCKBOOKGIT_URL" =~ "$re" ]; 
   then GIT_USER=${BASH_REMATCH[4]} REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]}); fi \
-  VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version); \
+  VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version); && \
   echo -e "| BRANCH: $TAG, VERSION: $VERSION"
 # Install GOLANG
 RUN echo -e "Installing GOLANG [$GOLANG_VERSION]..." && \
