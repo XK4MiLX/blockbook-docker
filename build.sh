@@ -35,14 +35,13 @@ else
   echo -e "-----------------------------------------------------"
   sleep 5
 fi
-
- echo -e "| CRON JOB CHECKING..."
- [ -f /var/spool/cron/crontabs/root ] && crontab_check=$(cat /var/spool/cron/crontabs/root| grep -o clean | wc -l) || crontab_check=0
- if [[ "$crontab_check" == "0" ]]; then
-   echo -e "| ADDED CRONE JOB FOR LOG CLEANER..."
-   echo -e "-----------------------------------------------------"
-   (crontab -l -u root 2>/dev/null; echo "0 0 1-30/5 * *  /bin/bash /clean.sh > /tmp/clean_output.log 2>&1") | crontab -
- else
-   echo -e "| CRONE JOB ALREADY EXIST..."
-   echo -e "-----------------------------------------------------"
- fi
+echo -e "| CRON JOB CHECKING..."
+[ -f /var/spool/cron/crontabs/root ] && crontab_check=$(cat /var/spool/cron/crontabs/root| grep -o clean | wc -l) || crontab_check=0
+if [[ "$crontab_check" == "0" ]]; then
+  echo -e "| ADDED CRONE JOB FOR LOG CLEANER..."
+  echo -e "-----------------------------------------------------"
+  (crontab -l -u root 2>/dev/null; echo "0 0 1-30/5 * *  /bin/bash /clean.sh > /tmp/clean_output.log 2>&1") | crontab -
+else
+  echo -e "| CRONE JOB ALREADY EXIST..."
+  echo -e "-----------------------------------------------------"
+fi
