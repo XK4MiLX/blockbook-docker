@@ -24,9 +24,9 @@ ENV PATH=$PATH:$GOPATH/bin
 ENV CGO_CFLAGS="-I$HOME/rocksdb/include"
 ENV CGO_LDFLAGS="-L$HOME/rocksdb -lrocksdb -lstdc++ -lm -lz -ldl -lbz2 -lsnappy -llz4 -lzstd"
 
-ENV REPO_UNCAT=${BLOCKBOOKGIT_URL##*/}
-ENV REPO=${REPO_UNCAT%%.*}
-RUN GIT_USER=$(echo "$BLOCKBOOKGIT_URL" | grep -oP "(?<=github.com.)\w+(?=.$REPO)"); \
+RUN REPO_UNCAT=${BLOCKBOOKGIT_URL##*/} \
+    REPO=${REPO_UNCAT%%.*} \
+    GIT_USER=$(echo "$BLOCKBOOKGIT_URL" | grep -oP "(?<=github.com.)\w+(?=.$REPO)") \
     VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version) \
     echo -e "REPO: $REPO, VERSION: $VERSION"
 
