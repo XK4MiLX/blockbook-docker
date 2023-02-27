@@ -81,18 +81,19 @@ function get_ip() {
 }
 
 if [[ "$1" == "" ]]; then
-echo -e "--------------------------------------------------------"
-echo -e "| Blockbook Docker Manager v1.0"
-echo -e "--------------------------------------------------------"
+echo -e "-----------------------------------------------------------------------"
+echo -e "| Blockbook Docker Manager v2.0"
+echo -e "-----------------------------------------------------------------------"
 echo -e "| Usage:"
-echo -e "| status <coin_name>  - show blockbook docker status"
-echo -e "| list <url>          - show coin list"
-echo -e "| update              - update blockbook docker image"
-echo -e "| exec <coin_name>    - login to docker image"
-echo -e "| create <coin_name>  - create docker blockbook"
-echo -e "| <coin_name>         - generate docker run commandline"
-echo -e "| clean <coin_name>   - removing blockbook"
-echo -e "--------------------------------------------------------"
+echo -e "| status <coin_name>               - show blockbook docker status"
+echo -e "| list <url>                       - show coin list"
+echo -e "| update                           - update blockbook docker image"
+echo -e "| exec <coin_name>                 - login to docker image"
+echo -e "| create <coin_name> <-e variable> - create docker blockbook"
+echo -e "| <coin_name> <-e variable>        - generate docker run commandline"
+echo -e "| clean <coin_name>                - removing blockbook"
+echo -e "| softdeploy <coin_name>           - updating image with date"
+echo -e "-----------------------------------------------------------------------"
 exit
 fi
 
@@ -147,6 +148,10 @@ if [[ ! -d /home/$USER/fluxosblockbook_${2} && "$1" == "create" ]]; then
   echo -e "| COIN: $2, DIRNAME: fluxosblockbook_${2}"
   echo -e "---------------------------------------------------------------------------------------"
   mkdir /home/$USER/fluxosblockbook_${2}
+elif [[ -d /home/$USER/fluxosblockbook_${2} && "$1" == "softdeploy" ]]; then
+  echo -e "---------------------------------------------------------------------------------------"
+  echo -e "| COIN: $2, DIRNAME: fluxosblockbook_${2}"
+  echo -e "---------------------------------------------------------------------------------------"
 else
  echo -e "---------------------------------------------------------------------------------------"
  echo -e "| COIN: $1"
@@ -178,4 +183,16 @@ else
   echo -e "| BlockBookURL: http://$WANIP:$OUT_PORT (EMULATION ONLY)"
   echo -e "| docker run -d --name fluxosblockbook-${1} -e COIN=${1} $BINARY_NAME -e BLOCKBOOK_PORT=${BLOCKBOOKPORT} $flage $POSTINST $EXTRAFLAGS -p ${OUT_PORT}:${BLOCKBOOKPORT} -v /home/$USER/fluxosblockbook_${1}:/root xk4milx/blockbook-docker" | awk '$1=$1'
   echo -e "----------------------------------------------------------------------------------------"
+fi
+
+if [[ "$1" == "softdeploy" ]]; then
+  echo -e "| Removing image..."
+  docker stop fluxosblockbook-${2} > /dev/null 2>&1
+  docker rm fluxosblockbook-${2} > /dev/null 2>&1
+  EXTRAFLAGS="$3"
+  echo -e "| BlockBookURL: http://$WANIP:$OUT_PORT"
+  CMD=$(echo "docker run -d --name fluxosblockbook-${2} -e COIN=${2} $BINARY_NAME -e BLOCKBOOK_PORT=${BLOCKBOOKPORT} $flage $POSTINST $EXTRAFLAGS -p ${OUT_PORT}:${BLOCKBOOKPORT} -v /home/$USER/fluxosblockbook_${2}:/root xk4milx/blockbook-docker" | awk '$1=$1')
+  echo -e "| $CMD"
+  bash -c "$CMD"
+  echo -e ""
 fi
