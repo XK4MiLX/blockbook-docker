@@ -30,7 +30,7 @@ RUN echo -e "Installing BlockBook..." && \
   REPO=${REPO_UNCAT%%.*} && \
   GIT_USER=$(echo "$BLOCKBOOKGIT_URL" | grep -oP "(?<=github.com.)\w+(?=.$REPO)"); \
   VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version); \
-  echo -e "REPO: $REPO, VERSION: $VERSION" \
+  echo -e "REPO: $REPO, VERSION: $VERSION" && \
   cd $HOME && git clone $BLOCKBOOKGIT_URL && \
   cd $HOME/blockbook && \
   git checkout "$TAG" && \
