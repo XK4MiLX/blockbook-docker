@@ -127,7 +127,7 @@ if [[ "$1" == "clean" ]]; then
 fi
 
 setup
-if [[ "$1" == "create" ]]; then
+if [[ "$1" == "create" || "$1" == "softdeploy" ]]; then
   BLOCKBOOKCONFIG=$(curl -SsL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/coins/$2.json 2>/dev/null)
 else
   BLOCKBOOKCONFIG=$(curl -SsL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/coins/$1.json 2>/dev/null)
