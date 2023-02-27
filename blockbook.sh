@@ -15,9 +15,8 @@ while true; do
      sleep 20
      break
    fi
-   sleep 180
+   sleep 20
 done
-
 if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
   echo -e "| Awaiting for bootstraping..."
   while true; do
