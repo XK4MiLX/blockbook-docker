@@ -19,8 +19,8 @@ bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/mas
 --------------------------------------------------------
 ```
 ### Deploy container
-```shell script
-docker run -d --name fluxblockbook-flux -e COIN=flux -e BOOTSTRAP=1 -e FETCH_FILE="fetch-params.sh" -e EXTRACONFIG="addnode=explorer.zelcash.online\naddnode=explorer.runonflux.io\naddnode=blockbook.runonflux.io\naddnode=explorer.flux.zelcore.io" -e BLOCKBOOK_PORT=9158 -e RPC_PORT=16124 -p 7799:9158 -v /<local_path>:/root runonflux/blockbook-docker
+```
+bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/master/blockbook-docker_manager.sh) create flux
 ```
 
 ### Environment Variables
