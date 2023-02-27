@@ -2,7 +2,7 @@
 RPC_HOST="${RPC_HOST:-localhost}"
 RPC_URL_PROTOCOL="${RPC_URL_PROTOCOL:-http}"
 CFG_FILE=/root/blockchaincfg.json
-echo -e "| BLOCKBOOK LUNCHER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+echo -e "| BLOCKBOOK LUNCHER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "---------------------------------------------------------------------------"
 if [[ "$DAEMON_CONFIG" != "AUTO" ]]; then
   echo -e "| Blockbook Settings: COIN=$COIN, RPC_USER=$RPC_USER, RPC_PASS=$RPC_PASS, RPC_PORT=$RPC_PORT, BLOCKBOOK_PORT=$BLOCKBOOK_PORT, RPC_HOST=$RPC_HOST, RPC_URL_PROTOCOL=$RPC_URL_PROTOCOL"
