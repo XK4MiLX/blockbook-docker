@@ -1,6 +1,7 @@
 # Multicoin Blockbook Explorer
 
-### Pull latest image
+### USAGE
+bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/master/blockbook-docker_manager.sh)
 ```
 --------------------------------------------------------
 | Blockbook Docker Manager v1.0
