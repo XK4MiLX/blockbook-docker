@@ -8,7 +8,7 @@
 | Usage:
 | status <coin_name>  - show blockbook docker status
 | list <url>          - show coin list
-| update              - update blockbook docker image
+| update              - install/update blockbook docker image
 | exec <coin_name>    - login to docker image
 | create <coin_name>  - create docker blockbook
 | <coin_name>         - generate docker run commandline
