@@ -26,10 +26,11 @@ ENV CGO_LDFLAGS="-L$HOME/rocksdb -lrocksdb -lstdc++ -lm -lz -ldl -lbz2 -lsnappy 
 ENV re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
 #
   RUN if [ "$BLOCKBOOKGIT_URL" =~ "$re" ]; then \
-  GIT_USER=$BASH_REMATCH[4] fi \
+  GIT_USER=$BASH_REMATCH[4] \
   #REPO=$(cut -d "." -f 1 <<< $BASH_REMATCH[5]) fi \
-  VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version) && \
-  echo -e "| BRANCH: $TAG, VERSION: $VERSION"
+  VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version) \
+  echo -e "| BRANCH: $TAG, VERSION: $VERSION" \
+  fi
 # Install GOLANG
 RUN echo -e "Installing GOLANG [$GOLANG_VERSION]..." && \
   cd /opt && wget https://dl.google.com/go/$GOLANG_VERSION.linux-amd64.tar.gz && \
