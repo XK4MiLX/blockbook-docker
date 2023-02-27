@@ -43,12 +43,9 @@ RUN echo -e "Installing BlockBook..." && \
   git checkout "$TAG" && \
   go mod download && \
   BUILDTIME=$(date --iso-8601=seconds); GITCOMMIT=$(git describe --always --dirty); \
-  re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$" \
-  if [[ $BLOCKBOOKGIT_URL =~ $re ]]; then \
-   GIT_USER=${BASH_REMATCH[4]} \
-   REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]}) \
-  fi \
-  VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version) \
+  re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"; \
+  if [[ $BLOCKBOOKGIT_URL =~ $re ]]; then GIT_USER=${BASH_REMATCH[4]}; REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]}); fi \
+  VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version); \
   echo -e "| BRANCH: $TAG, VERSION: $VERSION" \
   LDFLAGS="-X github.com/trezor/blockbook/common.version=${VERSION}-${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}" && \
   go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
