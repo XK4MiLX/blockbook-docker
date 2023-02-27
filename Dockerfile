@@ -24,12 +24,6 @@ ENV PATH=$PATH:$GOPATH/bin
 ENV CGO_CFLAGS="-I$HOME/rocksdb/include"
 ENV CGO_LDFLAGS="-L$HOME/rocksdb -lrocksdb -lstdc++ -lm -lz -ldl -lbz2 -lsnappy -llz4 -lzstd"
 
-RUN REPO_UNCAT=${BLOCKBOOKGIT_URL##*/} \
-    REPO=${REPO_UNCAT%%.*} \
-    GIT_USER=$(echo "$BLOCKBOOKGIT_URL" | grep -oP "(?<=github.com.)\w+(?=.$REPO)") \
-    VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version) \
-    echo -e "REPO: $REPO, VERSION: $VERSION"
-
 
 # Install GOLANG
 RUN echo -e "Installing GOLANG [$GOLANG_VERSION]..." && \
@@ -46,15 +40,16 @@ RUN echo -e "Installing RocksDB [$ROCKSDB_VERSION]..." && \
   cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release
 # Install BlockBook
 RUN echo -e "Installing BlockBook..." && \ 
+  REPO_UNCAT=${BLOCKBOOKGIT_URL##*/} \
+  REPO=${REPO_UNCAT%%.*} \
+  GIT_USER=$(echo "$BLOCKBOOKGIT_URL" | grep -oP "(?<=github.com.)\w+(?=.$REPO)") \
+  VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version) \
+  echo -e "REPO: $REPO, VERSION: $VERSION" \
   cd $HOME && git clone $BLOCKBOOKGIT_URL && \
   cd $HOME/blockbook && \
   git checkout "$TAG" && \
   go mod download && \
   BUILDTIME=$(date --iso-8601=seconds); GITCOMMIT=$(git describe --always --dirty); \
-  re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"; \
-  if [[ $BLOCKBOOKGIT_URL =~ $re ]]; then GIT_USER=${BASH_REMATCH[4]}; REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]}); fi \
-  VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version); \
-  echo -e "| BRANCH: $TAG, VERSION: $VERSION" \
   LDFLAGS="-X github.com/trezor/blockbook/common.version=${VERSION}-${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}" && \
   go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
   
