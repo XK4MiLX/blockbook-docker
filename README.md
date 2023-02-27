@@ -55,4 +55,4 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`B_TIMEOUT`| Bootstrap speed test timeout in sec | `NO` | `6` |
 |`B_SERVERS_LIST`| Servers list for bootstraping <br /> Example: `'("http://cdn-14.runonflux.io/apps/fluxshare/getfile/" "http://cdn-15.runonflux.io/apps/fluxshare/getfile/")'` | `NO` | `BUILD-IN SERVERS LIST` |
 
-v1.0.1
+v2.0
