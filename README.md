@@ -6,7 +6,7 @@ bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/mas
 ```
 ```
 -------------------------------------------------------------------
-| Blockbook Docker Manager v1.0
+| Blockbook Docker Manager v2.0
 -------------------------------------------------------------------
 | Usage:
 | status <coin_name>             - show blockbook docker status
