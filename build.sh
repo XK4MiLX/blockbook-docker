@@ -7,7 +7,12 @@ echo -e "-----------------------------------------------------"
 if [[ ! -f /root/blockchaincfg.json ]]; then
   echo -e "| RocksDB: $ROCKSDB_VERSION, GOLANG: $GOLANG_VERSION"
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
-  echo -e "| BRANCH: $TAG" 
+  re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
+  if [[ $BLOCKBOOKGIT_URL =~ $re ]]; then
+   GIT_USER=${BASH_REMATCH[4]}
+   REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]})
+  fi
+  echo -e "| BRANCH: $TAG, VERSION: $(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version)"
   echo -e "| PATH: $HOME/blockbook" 
   if [[ -f $HOME/blockbook/blockbook ]]; then
     echo -e "| Blockbook build [OK]..."
