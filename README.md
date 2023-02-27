@@ -1,7 +1,7 @@
 # Multicoin Blockbook Explorer
 
 ### Pull latest image
-```shell script
+```
 --------------------------------------------------------
 | Blockbook Docker Manager v1.0
 --------------------------------------------------------
