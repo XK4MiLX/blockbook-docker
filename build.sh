@@ -25,13 +25,7 @@ function blockbook_install() {
   fi
   echo -e "| Installing Blockbook [v$VERSION]..."
   echo -e "| RocksDB: $ROCKSDB_VERSION, GOLANG: $GOLANG_VERSION"
-  echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
-  re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
-  if [[ $BLOCKBOOKGIT_URL =~ $re ]]; then
-   GIT_USER=${BASH_REMATCH[4]}
-   REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]})
-  fi
-  echo -e "| BRANCH: $TAG, VERSION: $VERSION"
+  echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL, BRANCH: $TAG"
   echo -e "| PATH: $HOME/blockbook"
   x=1
   while [ $x -le 3 ]
