@@ -2,9 +2,13 @@
 CONFIG_FILE=${CONFIG_FILE:-$COIN}
 CONFIG_DIR=${CONFIG_DIR:-$COIN}
 BLOCKBOOKGIT_URL=${BLOCKBOOKGIT_URL:-https://github.com/trezor/blockbook.git}
-echo -e "| BLOCKBOOK LUNCHER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
-echo -e "-----------------------------------------------------"
-if [[ ! -f /root/blockchaincfg.json ]]; then
+VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version)
+
+function blockbook_install() {
+  if [[ -d $HOME/blockbook ]]; then
+   return
+  fi
+  echo -e "| Installing Blockbook [$VERSION]..."
   echo -e "| RocksDB: $ROCKSDB_VERSION, GOLANG: $GOLANG_VERSION"
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
   re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
@@ -12,11 +16,35 @@ if [[ ! -f /root/blockchaincfg.json ]]; then
    GIT_USER=${BASH_REMATCH[4]}
    REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]})
   fi
-  echo -e "| BRANCH: $TAG, VERSION: $(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version)"
-  echo -e "| PATH: $HOME/blockbook" 
-  if [[ -f $HOME/blockbook/blockbook ]]; then
-    echo -e "| Blockbook build [OK]..."
-  fi
+  echo -e "| BRANCH: $TAG, VERSION: $VERSION"
+  echo -e "| PATH: $HOME/blockbook"
+  x=1
+  while [ $x -le 3 ]
+  do
+    #####  
+    cd $HOME && git clone $BLOCKBOOKGIT_URL
+    cd $HOME/blockbook 
+    git checkout "$TAG" 
+    go mod download 
+    BUILDTIME=$(date --iso-8601=seconds)
+    GITCOMMIT=$(git describe --always --dirty)
+    LDFLAGS="-X github.com/trezor/blockbook/common.version=${VERSION}-${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}"
+    go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
+    #####
+    if [[ -f $HOME/blockbook/blockbook ]]; then
+      echo -e "| Blockbook build [OK]..."
+      break
+    else
+      echo -e "| Blockbook build [FAILED]..."
+      rm -rf $HOME/blockbook
+    fi 
+    x=$(( $x + 1 ))
+  done
+}
+echo -e "| BLOCKBOOK LUNCHER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+echo -e "-----------------------------------------------------"
+blockbook_install
+if [[ ! -f /root/blockchaincfg.json ]]; then
   if [[ ! -d /root/$CONFIG_DIR ]]; then
     echo -e "| Creating config directory..."
     mkdir -p /root/$CONFIG_DIR
@@ -36,10 +64,6 @@ if [[ ! -f /root/blockchaincfg.json ]]; then
   fi
   rm -rf $HOME/blockbook/build/pkg-defs
   echo -e "-----------------------------------------------------"
-else
-  echo -e "| BLOCKBOOK ALREADY SETUP..."
-  echo -e "-----------------------------------------------------"
-  sleep 5
 fi
 echo -e "| CRON JOB CHECKING..."
 [ -f /var/spool/cron/crontabs/root ] && crontab_check=$(cat /var/spool/cron/crontabs/root| grep -o clean | wc -l) || crontab_check=0
