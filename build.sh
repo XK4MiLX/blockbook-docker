@@ -2,6 +2,11 @@
 CONFIG_FILE=${CONFIG_FILE:-$COIN}
 CONFIG_DIR=${CONFIG_DIR:-$COIN}
 BLOCKBOOKGIT_URL=${BLOCKBOOKGIT_URL:-https://github.com/trezor/blockbook.git}
+re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
+if [[ $BLOCKBOOKGIT_URL =~ $re ]]; then
+  GIT_USER=${BASH_REMATCH[4]}
+  REPO=$(cut -d "." -f 1 <<< ${BASH_REMATCH[5]})
+fi
 VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version)
 start_build=`date +%s`
 
@@ -11,7 +16,7 @@ function rocksdb_install(){
   fi
   echo "Installing RocksDB [$ROCKSDB_VERSION]..."
   cd $HOME && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git > /dev/null 2>&1
-  cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release > /dev/null 2>&
+  cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release > /dev/null 2>&1
 }
 
 function blockbook_install() {
