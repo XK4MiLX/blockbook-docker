@@ -11,7 +11,7 @@ else
 fi
 echo -e "| Awaiting for Blockbook build..."
 while true; do
-   if [[ -f $CFG_FILE ]]; then
+   if [[ -f $CFG_FILE && -f $HOME/blockbook/blockbok ]]; then
      sleep 20
      break
    fi
