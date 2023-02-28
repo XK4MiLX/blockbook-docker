@@ -1,4 +1,18 @@
 #!/bin/bash
+
+if [[ "$1" == "db" ]]; then
+  echo -e "| BLOCKBOOK DB CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"  
+  echo -e "| Stopping blockbook srervice..."
+  supervisorctl stop blockbook
+  echo -e "| Removing blockbook-db..."
+  rm -rf /blockbook-db/*
+  echo -e "| Startting blockbook service..." 
+  supervisorctl start blockbook
+  echo -e "--------------------------------------------------"  
+  exit
+fi
+
 CLEAN=0
 echo -e "| LOG CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "--------------------------------------------------"
