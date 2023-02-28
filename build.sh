@@ -39,7 +39,7 @@ function blockbook_install() {
     #####  
     cd $HOME && git clone $BLOCKBOOKGIT_URL
     cd $HOME/blockbook 
-    git checkout "$TAG" 
+    git checkout "$TAG" > /dev/null 2>&1
     go mod download 
     BUILDTIME=$(date --iso-8601=seconds)
     GITCOMMIT=$(git describe --always --dirty)
