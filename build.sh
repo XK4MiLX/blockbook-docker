@@ -3,6 +3,16 @@ CONFIG_FILE=${CONFIG_FILE:-$COIN}
 CONFIG_DIR=${CONFIG_DIR:-$COIN}
 BLOCKBOOKGIT_URL=${BLOCKBOOKGIT_URL:-https://github.com/trezor/blockbook.git}
 VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version)
+start_build=`date +%s`
+
+function rocksdb_install(){
+  if [[ -d $HOME/rocksdb ]]; then
+    return
+  fi
+  echo "Installing RocksDB [$ROCKSDB_VERSION]..."
+  cd $HOME && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git > /dev/null 2>&1
+  cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release > /dev/null 2>&
+}
 
 function blockbook_install() {
   if [[ -d $HOME/blockbook ]]; then
@@ -31,6 +41,7 @@ function blockbook_install() {
     LDFLAGS="-X github.com/trezor/blockbook/common.version=${VERSION}-${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}"
     go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
     #####
+    echo -e "| Duration: $((($(date +%s)-$start_build)/60)) min. $((($(date +%s)-$start_build) % 60)) sec."
     if [[ -f $HOME/blockbook/blockbook ]]; then
       echo -e "| Blockbook build [OK]..."
       break
@@ -43,6 +54,7 @@ function blockbook_install() {
 }
 echo -e "| BLOCKBOOK LUNCHER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "-----------------------------------------------------"
+rocksdb_install
 blockbook_install
 if [[ ! -f /root/blockchaincfg.json ]]; then
   if [[ ! -d /root/$CONFIG_DIR ]]; then
@@ -63,6 +75,8 @@ if [[ ! -f /root/blockchaincfg.json ]]; then
     fi
   fi
   rm -rf $HOME/blockbook/build/pkg-defs
+  echo -e "-----------------------------------------------------"
+else
   echo -e "-----------------------------------------------------"
 fi
 echo -e "| CRON JOB CHECKING..."
