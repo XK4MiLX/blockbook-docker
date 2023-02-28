@@ -1,6 +1,19 @@
 #!/bin/bash
 
-if [[ "$1" == "db" ]]; then
+if [[ "$1" == "db_fix" ]]; then
+  echo -e "| BLOCKBOOK DB FIXER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"  
+  echo -e "| Stopping blockbook srervice..."
+  supervisorctl stop blockbook
+  echo -e "| Repair the database..."
+  ./opt/blockbook/blockbook -repair -datadir=/root/blockbook-db
+  echo -e "| Startting blockbook service..." 
+  supervisorctl start blockbook
+  echo -e "--------------------------------------------------"  
+  exit
+fi
+
+if [[ "$1" == "db_clean" ]]; then
   echo -e "| BLOCKBOOK DB CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"  
   echo -e "| Stopping blockbook srervice..."
