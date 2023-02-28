@@ -23,7 +23,7 @@ function blockbook_install() {
   if [[ -d $HOME/blockbook ]]; then
    return
   fi
-  echo -e "| Installing Blockbook [$VERSION]..."
+  echo -e "| Installing Blockbook [v$VERSION]..."
   echo -e "| RocksDB: $ROCKSDB_VERSION, GOLANG: $GOLANG_VERSION"
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL"
   re="^(https|git)(:\/\/|@)([^\/:]+)[\/:]([^\/:]+)\/(.+)(.git)*$"
