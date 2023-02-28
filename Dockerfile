@@ -16,8 +16,8 @@ ENV HOME=/opt
 ENV BOOTSTRAP=${BOOTSTRAP:-0}
 ENV DAEMON=${DAEMON:-1}
 ENV CONFIG=${CONFIG:-AUTO}
-ENV GOLANG_VERSION='go1.19.2'
-ENV ROCKSDB_VERSION='v7.7.2'
+ENV GOLANG_VERSION="go1.19.2"
+ENV ROCKSDB_VERSION=${ROCKSDB_VERSION:-v7.7.2}
 ENV DAEMON_CONFIG=${DAEMON_CONFIG:-AUTO}
 ENV GOPATH=$HOME/go
 ENV PATH=$PATH:$GOPATH/bin
@@ -33,9 +33,9 @@ RUN mkdir -p $GOPATH
 RUN echo -n "GO version: " && go version
 RUN echo -n "GOPATH: " && echo $GOPATH
 # Install RocksDB
-RUN echo "Installing RocksDB [$ROCKSDB_VERSION]..." && \
-  cd $HOME && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git && \
-  cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release
+#RUN echo "Installing RocksDB [$ROCKSDB_VERSION]..." && \
+#cd $HOME && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git && \
+#cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release
   
 COPY build.sh /build.sh
 COPY daemon.sh /daemon.sh
