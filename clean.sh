@@ -1,9 +1,9 @@
 #!/bin/bash
 CLEAN=0
-echo -e "| LOG CLEANER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+echo -e "| LOG CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "--------------------------------------------------"
- LOG_SIZE_LIMIT=${LOG_SIZE_LIMIT:-40}
- LOG_LIST=($(find /root -type f \( -name "$COIN*.log" -o -name "debug.log" \)))
+ LOG_SIZE_LIMIT=${LOG_SIZE_LIMIT:-20}
+ LOG_LIST=($(find /root -type f \( -name "$COIN*.log" -o -name "debug.log" -o -name "blockbook.log*" -o -name "*.log" \)))
  LENGTH=${#LOG_LIST[@]}
  for (( j=0; j<${LENGTH}; j++ ));
  do
@@ -14,7 +14,9 @@ echo -e "--------------------------------------------------"
     echo -e "| FOUND: ${LOG_PATH} SIZE: ${SIZE}"
     LOG_FILE=${LOG_PATH##*/}
     echo -e "| File ${LOG_FILE} reached ${LOG_SIZE_LIMIT}M limit, file was cleaned!"
-    echo "" > $LOG_PATH
+    if [[ -f $LOG_PATH ]]; then
+      echo "" > $LOG_PATH > /dev/null 2>&1
+    fi
     CLEAN=1
   fi
  done
