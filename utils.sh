@@ -7,7 +7,6 @@ function extract_daemon() {
     echo -e "| Creating directory..."
     mkdir -p /tmp/backend
   fi
-  cd /tmp
   echo -e "| Unpacking daemon bin archive file..."
   strip_lvl=$(bsdtar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
   bsdtar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/} > /dev/null 2>&1 || return 1
@@ -17,33 +16,33 @@ function extract_daemon() {
 
 if [[ "$1" == "db_fix" ]]; then
   echo -e "| BLOCKBOOK DB FIXER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
-  echo -e "--------------------------------------------------"  
+  echo -e "--------------------------------------------------"
   echo -e "| Stopping blockbook service..."
-  supervisorctl stop blockbook
+  supervisorctl stop blockbook > /dev/null 2>&1
   echo -e "| Repair the database..."
   ./opt/blockbook/blockbook -repair -datadir=/root/blockbook-db
-  echo -e "| Startting blockbook service..." 
-  supervisorctl start blockbook
-  echo -e "--------------------------------------------------"  
+  echo -e "| Starting blockbook service..."
+  supervisorctl start blockbook > /dev/null 2>&1
+  echo -e "--------------------------------------------------"
   exit
 fi
 
 if [[ "$1" == "db_clean" ]]; then
   echo -e "| BLOCKBOOK DB CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
-  echo -e "--------------------------------------------------"  
+  echo -e "--------------------------------------------------"
   echo -e "| Stopping blockbook service..."
-  supervisorctl stop blockbook
+  supervisorctl stop blockbook > /dev/null 2>&1
   echo -e "| Removing blockbook-db..."
   rm -rf /blockbook-db/*
-  echo -e "| Startting blockbook service..." 
-  supervisorctl start blockbook
-  echo -e "--------------------------------------------------"  
+  echo -e "| Starting blockbook service..."
+  supervisorctl start blockbook > /dev/null 2>&1
+  echo -e "--------------------------------------------------"
   exit
 fi
 
 if [[ "$1" == "update_daemon" ]]; then
   echo -e "| DAEMON UPDATE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
-  echo -e "--------------------------------------------------"  
+  echo -e "--------------------------------------------------"
   DAEMON_URL=$2
   if [[ "$DAEMON_URL" == "" ]]; then
     echo -e "| Missing binary archive url..."
@@ -51,34 +50,35 @@ if [[ "$1" == "update_daemon" ]]; then
     exit
   fi
   echo -e "| Stopping daemon service..."
-  supervisorctl stop daemon
+  supervisorctl stop daemon > /dev/null 2>&1
   if [[ "$BINARY_NAME" == "" ]]; then
     BINARY_NAME=$(jq -r .binary_name /root/daemon_config.json)
   fi
   echo -e "| Removing daemon binary..."
   rm -rf /usr/local/bin/$BINARY_NAME
   echo -e "| BINARY URL: $DAEMON_URL"
+  cd /tmp
   wget -q --show-progress -c -t 5 $DAEMON_URL
   extract_daemon
   echo -e "| Installing daemon..."
   install -m 0755 -o root -g root -t /usr/local/bin backend/*
   rm -rf /tmp/*
-  echo -e "| Startting daemon service..." 
-  supervisorctl start daemon
-  echo -e "--------------------------------------------------"  
+  echo -e "| Starting daemon service..."
+  supervisorctl start daemon > /dev/null 2>&1
+  echo -e "--------------------------------------------------"
   exit
 fi
 
 if [[ "$1" == "backend_clean" ]]; then
   echo -e "| BACKEND CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
-  echo -e "--------------------------------------------------"  
+  echo -e "--------------------------------------------------"
   echo -e "| Stopping daemon service..."
-  supervisorctl stop daemon
+  supervisorctl stop daemon > /dev/null 2>&1
   echo -e "| Cleaning backend datadir..."
   rm -rf /root/$CONFIG_DIR/backend/*
-  echo -e "| Startting daemon service..." 
-  supervisorctl start daemon
-  echo -e "--------------------------------------------------"  
+  echo -e "| Starting daemon service..."
+  supervisorctl start daemon > /dev/null 2>&1
+  echo -e "--------------------------------------------------"
   exit
 fi
 
