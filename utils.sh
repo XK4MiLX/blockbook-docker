@@ -8,7 +8,7 @@ function extract_daemon() {
     mkdir -p /tmp/backend
   fi
   cd /tmp
-  echo -e "| ${CYAN}Unpacking daemon bin archive file...${NC}"
+  echo -e "| Unpacking daemon bin archive file..."
   strip_lvl=$(bsdtar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
   bsdtar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/} > /dev/null 2>&1 || return 1
   return 0
