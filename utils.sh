@@ -1,9 +1,11 @@
 #!/bin/bash
 
+CONFIG_DIR=${CONFIG_DIR:-$COIN}
+
 if [[ "$1" == "db_fix" ]]; then
   echo -e "| BLOCKBOOK DB FIXER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"  
-  echo -e "| Stopping blockbook srervice..."
+  echo -e "| Stopping blockbook service..."
   supervisorctl stop blockbook
   echo -e "| Repair the database..."
   ./opt/blockbook/blockbook -repair -datadir=/root/blockbook-db
@@ -16,12 +18,41 @@ fi
 if [[ "$1" == "db_clean" ]]; then
   echo -e "| BLOCKBOOK DB CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"  
-  echo -e "| Stopping blockbook srervice..."
+  echo -e "| Stopping blockbook service..."
   supervisorctl stop blockbook
   echo -e "| Removing blockbook-db..."
   rm -rf /blockbook-db/*
   echo -e "| Startting blockbook service..." 
   supervisorctl start blockbook
+  echo -e "--------------------------------------------------"  
+  exit
+fi
+
+if [[ "$1" == "update_daemon" ]]; then
+  echo -e "| DAEMON UPDATE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"  
+  echo -e "| Stopping daemon service..."
+  supervisorctl stop daemon
+  if [[ "$BINARY_NAME" == "" ]]; then
+    BINARY_NAME=$(jq -r .binary_name /root/daemon_config.json)
+  fi
+  echo -e "| Removing daemon binary..."
+  rm -rf /usr/local/bin/$BINARY_NAME
+  echo -e "| Startting daemon service..." 
+  supervisorctl start daemon
+  echo -e "--------------------------------------------------"  
+  exit
+fi
+
+if [[ "$1" == "backend_clean" ]]; then
+  echo -e "| BACKEND CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"  
+  echo -e "| Stopping daemon service..."
+  supervisorctl stop daemon
+  echo -e "| Cleaning backend datadir..."
+  rm -rf /root/$CONFIG_DIR/backend/*
+  echo -e "| Startting daemon service..." 
+  supervisorctl start daemon
   echo -e "--------------------------------------------------"  
   exit
 fi
