@@ -51,9 +51,9 @@ function setup(){
  RAW_CONF_URL="https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/coins/$COIN.json"
  G_V=($(curl -SsL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/build/docker/bin/Dockerfile | egrep "ENV GOLANG_VERSION|ENV ROCKSDB_VERSION"))
  if [[ "$G_V" != "" ]]; then
-   if [[ ${G_V[1]##*=} != "go1.19.2" ]]; then
-     flage="-e GOLANG_VERSION=${G_V[1]##*=}"
-   fi
+   #if [[ ${G_V[1]##*=} != "go1.19.2" ]]; then
+   #  flage="-e GOLANG_VERSION=${G_V[1]##*=}"
+   #fi
    if [[ ${G_V[3]##*=} != "v7.7.2" ]]; then
     flage="$flage -e ROCKSDB_VERSION=${G_V[3]##*=}"
    fi
