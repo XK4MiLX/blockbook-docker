@@ -37,7 +37,7 @@ function blockbook_install() {
     go mod download 
     BUILDTIME=$(date --iso-8601=seconds)
     GITCOMMIT=$(git describe --always --dirty)
-    LDFLAGS="-X github.com/trezor/blockbook/common.version=${VERSION}-${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}"
+    LDFLAGS="-X github.com/trezor/blockbook/common.version=${VERSION} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}"
     go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
     #####
     echo -e "| Duration: $((($(date +%s)-$start_build)/60)) min. $((($(date +%s)-$start_build) % 60)) sec."
