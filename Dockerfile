@@ -32,11 +32,27 @@ RUN ln -s /opt/go/bin/go /usr/bin/go
 RUN mkdir -p $GOPATH
 RUN echo -n "GO version: " && go version
 RUN echo -n "GOPATH: " && echo $GOPATH
+
 # Install RocksDB
 #RUN echo "Installing RocksDB [$ROCKSDB_VERSION]..." && \
 #cd $HOME && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git && \
 #cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release
-  
+
+# Install BlockBook
+#RUN echo "Installing BlockBook..." && \ 
+#REPO_UNCAT=${BLOCKBOOKGIT_URL##*/} && \
+#REPO=${REPO_UNCAT%%.*} && \
+#GIT_USER=$(echo "$BLOCKBOOKGIT_URL" | grep -oP "(?<=github.com.)\w+(?=.$REPO)"); \
+#VERSION=$(curl -ssL https://raw.githubusercontent.com/$GIT_USER/$REPO/$TAG/configs/environ.json | jq -r .version); \
+#echo -e "REPO: $REPO, VERSION: $VERSION" && \
+#cd $HOME && git clone $BLOCKBOOKGIT_URL && \
+#cd $HOME/blockbook && \
+#git checkout "$TAG" && \
+#go mod download && \
+#BUILDTIME=$(date --iso-8601=seconds); GITCOMMIT=$(git describe --always --dirty); \
+#LDFLAGS="-X github.com/trezor/blockbook/common.version=${VERSION}-${TAG} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}" && \
+#go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
+
 COPY build.sh /build.sh
 COPY daemon.sh /daemon.sh
 COPY blockbook.sh /blockbook.sh
