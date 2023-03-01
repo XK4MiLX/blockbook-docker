@@ -27,6 +27,38 @@ if [[ "$1" == "db_fix" ]]; then
   exit
 fi
 
+if [[ "$1" == "db_backup" ]]; then
+  echo -e "| BLOCKBOOK DB BACKUP v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  echo -e "| Stopping blockbook service..."
+  supervisorctl stop blockbook > /dev/null 2>&1
+  echo -e "| Backuping the database..."
+  if [[ -d /root/blockbook_backup ]]; then
+    rm -rf /root/blockbook_backup/* > /dev/null 2>&1
+  else
+    mkdir -p /root/blockbook_backup
+  fi
+  ./opt/rocksdb/ldb --db=/root/blockbook-db backup --backup_dir=/root/blockbook_backup/rocksdb.bk
+  echo -e "| Starting blockbook service..."
+  supervisorctl start blockbook > /dev/null 2>&1
+  echo -e "--------------------------------------------------"
+  exit
+fi
+
+if [[ "$1" == "db_restore" ]]; then
+  echo -e "| BLOCKBOOK DB RESTORE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  echo -e "| Stopping blockbook service..."
+  supervisorctl stop blockbook > /dev/null 2>&1
+  echo -e "| Restoring the database..."
+  ./opt/rocksdb/ldb --db=/root/blockbook-db restore --backup_dir=/root/blockbook_backup/rocksdb.bk
+  echo -e "| Starting blockbook service..."
+  supervisorctl start blockbook > /dev/null 2>&1
+  echo -e "--------------------------------------------------"
+  exit
+fi
+
+
 if [[ "$1" == "db_clean" ]]; then
   echo -e "| BLOCKBOOK DB CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
