@@ -2,6 +2,19 @@
 
 CONFIG_DIR=${CONFIG_DIR:-$COIN}
 
+function extract_daemon() {
+  if [[ ! -d /tmp/backend ]]; then
+    echo -e "| Creating directory..."
+    mkdir -p /tmp/backend
+  fi
+  cd /tmp
+  echo -e "| ${CYAN}Unpacking daemon bin archive file...${NC}"
+  strip_lvl=$(bsdtar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
+  bsdtar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/} > /dev/null 2>&1 || return 1
+  return 0
+}
+
+
 if [[ "$1" == "db_fix" ]]; then
   echo -e "| BLOCKBOOK DB FIXER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"  
@@ -31,6 +44,12 @@ fi
 if [[ "$1" == "update_daemon" ]]; then
   echo -e "| DAEMON UPDATE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"  
+  DAEMON_URL=$2
+  if [[ "$DAEMON_URL" == "" ]]; then
+    echo -e "| Missing binary archive url..."
+    echo -e "--------------------------------------------------"
+    exit
+  fi
   echo -e "| Stopping daemon service..."
   supervisorctl stop daemon
   if [[ "$BINARY_NAME" == "" ]]; then
@@ -38,6 +57,12 @@ if [[ "$1" == "update_daemon" ]]; then
   fi
   echo -e "| Removing daemon binary..."
   rm -rf /usr/local/bin/$BINARY_NAME
+  echo -e "| BINARY URL: $DAEMON_URL"
+  wget -q --show-progress -c -t 5 $DAEMON_URL
+  extract_daemon
+  echo -e "| Installing daemon..."
+  install -m 0755 -o root -g root -t /usr/local/bin backend/*
+  rm -rf /tmp/*
   echo -e "| Startting daemon service..." 
   supervisorctl start daemon
   echo -e "--------------------------------------------------"  
