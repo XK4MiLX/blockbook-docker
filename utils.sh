@@ -3,7 +3,7 @@
 CONFIG_DIR=${CONFIG_DIR:-$COIN}
 
 function tar_file_pack() {
-	echo -e "| Creating bootstrap archive file..."
+	echo -e "| Creating archive file..."
 	tar -czf - $1 | (pv -p --timer --rate --bytes > $2) 2>&1
 }
 
@@ -18,6 +18,20 @@ function extract_daemon() {
   return 0
 }
 
+if [[ "$1" == "db_gzip" ]]; then
+  echo -e "| BLOCKBOOK DB GZIP v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  echo -e "| Checking backup directory..."
+  if [[ -d /root/blockbook_backup/rocksdb.bk ]]; then
+    cd /root
+    tar_file_pack "blockbook_backup" "/root/blockbook-$COIN-db-backup.tar.gz"
+    echo -e "| Backup archive created, path: /root/blockbook-$COIN-db-backup.tar.gz"
+  else
+    echo -e "| Backup directory not exist, operation aborted..."
+  fi
+  echo -e "--------------------------------------------------"
+  exit
+fi
 
 if [[ "$1" == "db_fix" ]]; then
   echo -e "| BLOCKBOOK DB FIXER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
