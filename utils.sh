@@ -2,6 +2,11 @@
 
 CONFIG_DIR=${CONFIG_DIR:-$COIN}
 
+function tar_file_pack() {
+	echo -e "| Creating bootstrap archive file..."
+	tar -czf - $1 | (pv -p --timer --rate --bytes > $2) 2>&1
+}
+
 function extract_daemon() {
   if [[ ! -d /tmp/backend ]]; then
     echo -e "| Creating directory..."
