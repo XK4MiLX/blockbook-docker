@@ -18,20 +18,20 @@ function extract_daemon() {
 }
 
 if [[ "$1" == "" ]]; then
-  echo -e "------------------------------------------------------------------------"
+  echo -e "---------------------------------------------------------------------"
   echo -e "| Blockbook Untils v1.0"
-  echo -e "------------------------------------------------------------------------"
+  echo -e "---------------------------------------------------------------------"
   echo -e "| Usage:"
-  echo -e "| db_backup				- create blockbook db backup"
-  echo -e "| db_restore				- restore blockbook db"
-  echo -e "| db_gzip				- archivize blockbook db"
-  echo -e "| db_fix				- fix corrupted blockbook db"
-  echo -e "| db_clean				- wipe blockbook db"
-  echo -e "| update_daemon <url>		- update daemon binary"
-  echo -e "| backend_clean			- wipe backend directory"
-  echo -e "| log_clean				- removing logs"
-  echo -e "| logs <number>			- show all logs"
-  echo -e "-----------------------------------------------------------------------"
+  echo -e "| db_backup                  - create blockbook db backup"
+  echo -e "| db_restore                 - restore blockbook db"
+  echo -e "| db_gzip                    - archivize blockbook db"
+  echo -e "| db_fix                     - fix corrupted blockbook db"
+  echo -e "| db_clean                   - wipe blockbook db"
+  echo -e "| update_daemon <url>        - update daemon binary"
+  echo -e "| backend_clean              - wipe backend directory"
+  echo -e "| log_clean                  - removing logs"
+  echo -e "| logs <number>              - show all logs"
+  echo -e "--------------------------------------------------------------------"
   exit
 fi
 
