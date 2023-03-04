@@ -303,7 +303,14 @@ if [[ "$1" == "http_archive" ]]; then
   echo -e "--------------------------------------------------"
   if [[ -d /root/backup_archive ]]; then
     echo -e "| STARTING HTTP SERVER...."
+    PORT=$2
+    PORT=${PORT:-BLOCKBOOK_PORT}
+    if [[ "$PORT" == "$BLOCKBOOK_PORT" ]]; then
+      supervisorctl stop blockbook > /dev/null 2>&1
+    fi
     python -m http.server $PORT
+  else
+    echo -e "Backup directory not exist, operation aborted..."
   fi
   echo -e "--------------------------------------------------"
   exit
