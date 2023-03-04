@@ -281,6 +281,34 @@ if [[ "$1" == "backend_restore" ]]; then
   exit
 fi
 
+if [[ "$1" == "backup_archive" ]]; then
+  echo -e "| BLOCKBOOK BACKUP ARCHIVE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  timestamp=$(date +%s)
+  mkdir -p /root/backup_archive > /dev/null 2>&1
+  if [[ -f /root/backend-$COIN-backup.tar.gz ]]; then
+    echo -e "| File backend-$COIN-backup.tar.gz moved to /root/backup_archive"
+    mv /root/backend-$COIN-backup.tar.gz /root/backup_archive/backend-$COIN-backup-${timestamp}.tar.gz
+  fi
+  if [[ -f /root/blockboook-$COIN-db-backup.tar.gz ]]; then
+    echo -e "| File blockboook-$COIN-db-backup.tar.gz moved to /root/backup_archive"
+    mv /root/blockboook-$COIN-db-backup.tar.gz /root/backup_archive/blockboook-$COIN-db-backup-${timestamp}.tar.gz
+  fi
+  echo -e "--------------------------------------------------"
+  exit
+fi
+
+if [[ "$1" == "http_archive" ]]; then
+  echo -e "| BLOCKBOOK ARCHIVE HTTP SERVER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  if [[ -d /root/backup_archive ]]; then
+    echo -e "| STARTING HTTP SERVER...."
+    python -m http.server $PORT
+  fi
+  echo -e "--------------------------------------------------"
+  exit
+fi
+
 if [[ "$1" == "backend_clean" ]]; then
   echo -e "| BACKEND CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
