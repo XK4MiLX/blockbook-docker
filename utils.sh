@@ -122,6 +122,7 @@ if [[ "$1" == "db_backup" ]]; then
   else
     mkdir -p /root/blockbook_backup
   fi
+  cd /
   ./opt/rocksdb/ldb --db=/root/blockbook-db backup --backup_dir=/root/blockbook_backup/rocksdb.bk
   echo -e "| Starting blockbook service..."
   supervisorctl start blockbook > /dev/null 2>&1
@@ -165,6 +166,7 @@ if [[ "$1" == "db_restore" ]]; then
     exit
   fi
   echo -e "| Restoring the database..."
+  cd /
   ./opt/rocksdb/ldb --db=/root/blockbook-db restore --backup_dir=/root/blockbook_backup/rocksdb.bk
   echo -e "| Starting blockbook service..."
   supervisorctl start blockbook > /dev/null 2>&1
