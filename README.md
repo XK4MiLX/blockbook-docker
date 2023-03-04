@@ -31,7 +31,7 @@ bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/mas
   -------------------------------------------------------------------------------
   | Usage:
   | db_backup                              - create blockbook db backup
-  | db_restore (-archive)/(-remote <url>)  - restore blockbook db"
+  | db_restore (-archive)/(-remote <url>)  - restore blockbook db
   | db_gzip                                - archivize blockbook db
   | db_fix                                 - fix corrupted blockbook db
   | db_clean                               - wipe blockbook db
