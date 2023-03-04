@@ -42,6 +42,7 @@ bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/mas
   | log_clean                        - removing logs
   | logs <number>                    - show all logs
   --------------------------------------------------------------------
+  () - optional
 ```
 
 ### Environment Variables
