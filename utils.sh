@@ -24,9 +24,9 @@ function extract_daemon() {
 }
 
 if [[ "$1" == "" ]]; then
-  echo -e "-------------------------------------------------------------------------------"
+  echo -e "-----------------------------------------------------------------------------------"
   echo -e "| Blockbook Utils v1.0"
-  echo -e "-------------------------------------------------------------------------------"
+  echo -e "-----------------------------------------------------------------------------------"
   echo -e "| Usage:"
   echo -e "| db_backup                              - create blockbook db backup"
   echo -e "| db_restore (-archive)/(-remote <url>)  - restore blockbook db"
@@ -37,9 +37,11 @@ if [[ "$1" == "" ]]; then
   echo -e "| backend_backup                         - create backend backup archive"
   echo -e "| backend_restore (-remote <url>)        - restore backend from backup archive"
   echo -e "| backend_clean                          - wipe backend directory"
+  echo -e "| backup_share (<port>)                  - share backup archive directory via http"
+  echo -e "| backup_archive                         - create backup archive directory"
   echo -e "| log_clean                              - removing logs"
   echo -e "| logs <number>                          - show all logs"
-  echo -e "------------------------------------------------------------------------------"
+  echo -e "----------------------------------------------------------------------------------"
   exit
 fi
 
@@ -298,8 +300,8 @@ if [[ "$1" == "backup_archive" ]]; then
   exit
 fi
 
-if [[ "$1" == "http_archive" ]]; then
-  echo -e "| BLOCKBOOK ARCHIVE HTTP SERVER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+if [[ "$1" == "backup_share" ]]; then
+  echo -e "| BLOCKBOOK BACKUP HTTP SERVER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
   if [[ -d /root/backup_archive ]]; then
     echo -e "| STARTING HTTP SERVER...."
