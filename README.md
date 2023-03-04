@@ -39,7 +39,7 @@ bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/mas
   | backend_backup                         - create backend backup archive
   | backend_restore (-remote <url>)        - restore backend from backup archive
   | backend_clean                          - wipe backend directory
-  | http_archive (<port>)                  - share backup directory via http
+  | backup_share (<port>)                  - share backup directory via http
   | log_clean                              - removing logs
   | logs <number>                          - show all logs
   ------------------------------------------------------------------------------
