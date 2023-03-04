@@ -28,17 +28,17 @@ if [[ "$1" == "" ]]; then
   echo -e "| Blockbook Utils v1.0"
   echo -e "---------------------------------------------------------------------"
   echo -e "| Usage:"
-  echo -e "| db_backup                  - create blockbook db backup"
-  echo -e "| db_restore -archive        - restore blockbook db"
-  echo -e "| db_gzip                    - archivize blockbook db"
-  echo -e "| db_fix                     - fix corrupted blockbook db"
-  echo -e "| db_clean                   - wipe blockbook db"
-  echo -e "| update_daemon <url>        - update daemon binary"
-  echo -e "| backend_backup             - create backend backup archive"
-  echo -e "| backend_restore            - restore backend from backup archive"
-  echo -e "| backend_clean              - wipe backend directory"
-  echo -e "| log_clean                  - removing logs"
-  echo -e "| logs <number>              - show all logs"
+  echo -e "| db_backup                        - create blockbook db backup"
+  echo -e "| db_restore (-archive)            - restore blockbook db"
+  echo -e "| db_gzip                          - archivize blockbook db"
+  echo -e "| db_fix                           - fix corrupted blockbook db"
+  echo -e "| db_clean                         - wipe blockbook db"
+  echo -e "| update_daemon <url>              - update daemon binary"
+  echo -e "| backend_backup                   - create backend backup archive"
+  echo -e "| backend_restore (-remote <url>)  - restore backend from backup archive"
+  echo -e "| backend_clean                    - wipe backend directory"
+  echo -e "| log_clean                        - removing logs"
+  echo -e "| logs <number>                    - show all logs"
   echo -e "--------------------------------------------------------------------"
   exit
 fi
@@ -220,11 +220,25 @@ fi
 if [[ "$1" == "backend_restore" ]]; then
   echo -e "| BLOCKBOOK BACKEND RESTORE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
-  echo -e "| Checking backup file..."
-  if [[ ! -f /root/backend-$COIN-backup.tar.gz ]]; then
-    echo -e "| Backup file not exist, operation aborted..."
-    echo -e "--------------------------------------------------"
+  
+  if [[ "$2" == "-remote" && "$3" != "" ]]; then
+   if [[ -f /root/backend-$COIN-backup.tar.gz ]]; then
+     rm -rf /root/backend-$COIN-backup.tar.gz
+   fi
+   cd /root
+   wget -q --show-progress -c -t 5 $3 -O backend-$COIN-backup.tar.gz
+   if [[ $? -ne 0 ]]; then
+    echo -e "| Download archive backup failed, operation aborted..."
+    rm -rf /root/backend-$COIN-backup.tar.gz
     exit
+   fi
+  else
+   echo -e "| Checking backup file..."
+   if [[ ! -f /root/backend-$COIN-backup.tar.gz ]]; then
+     echo -e "| Backup file not exist, operation aborted..."
+     echo -e "--------------------------------------------------"
+     exit
+   fi
   fi
   cd /root/$CONFIG_DIR
   echo -e "| Stopping daemon service..."
