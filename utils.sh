@@ -153,8 +153,6 @@ if [[ "$1" == "db_restore" ]]; then
   exit
 fi
 
-
-
 if [[ "$1" == "db_clean" ]]; then
   echo -e "| BLOCKBOOK DB CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
