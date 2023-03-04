@@ -226,6 +226,7 @@ if [[ "$1" == "backend_restore" ]]; then
      rm -rf /root/backend-$COIN-backup.tar.gz
    fi
    cd /root
+   echo -e "| Downloading file: $3"
    wget -q --show-progress -c -t 5 $3 -O backend-$COIN-backup.tar.gz
    if [[ $? -ne 0 ]]; then
     echo -e "| Download archive backup failed, operation aborted..."
