@@ -304,19 +304,21 @@ if [[ "$1" == "backup_share" ]]; then
   echo -e "| BLOCKBOOK BACKUP HTTP SERVER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
   if [[ -d /root/backup_archive ]]; then
-    echo -e "| STARTING HTTP SERVER...."
+    echo -n "| "
     PORT=$2
-    PORT=${PORT:-BLOCKBOOK_PORT}
+    PORT=${PORT:-$BLOCKBOOK_PORT}
     if [[ "$PORT" == "$BLOCKBOOK_PORT" ]]; then
       supervisorctl stop blockbook > /dev/null 2>&1
     fi
-    python -m http.server $PORT
+    cd /root/backup_archive
+    python3 -m http.server $PORT
   else
     echo -e "Backup directory not exist, operation aborted..."
   fi
   echo -e "--------------------------------------------------"
   exit
 fi
+
 
 if [[ "$1" == "backend_clean" ]]; then
   echo -e "| BACKEND CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
