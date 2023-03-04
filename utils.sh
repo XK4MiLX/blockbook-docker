@@ -34,6 +34,8 @@ if [[ "$1" == "" ]]; then
   echo -e "| db_fix                     - fix corrupted blockbook db"
   echo -e "| db_clean                   - wipe blockbook db"
   echo -e "| update_daemon <url>        - update daemon binary"
+  echo -e "| backend_backup             - create backend backup archive"
+  echo -e "| backend_restore            - restore backend from backup archive"
   echo -e "| backend_clean              - wipe backend directory"
   echo -e "| log_clean                  - removing logs"
   echo -e "| logs <number>              - show all logs"
