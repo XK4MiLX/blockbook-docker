@@ -195,6 +195,50 @@ if [[ "$1" == "update_daemon" ]]; then
   exit
 fi
 
+if [[ "$1" == "backend_backup" ]]; then
+  echo -e "| BLOCKBOOK BACKEND BACKUP v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  echo -e "| Checking backup directory..."
+  if [[ -f /root/backend-$COIN-backup.tar.gz ]]; then
+    rm -rf  /root/backend-$COIN-backup.tar.gz
+  fi
+  cd /root/$CONFIG_DIR
+  tar_file_pack "backend" "/root/backend-$COIN-backup.tar.gz"
+  if [[ -f /root/backend-$COIN-backup.tar.gz ]]; then
+   echo -e "| Backup archive created, path: /root/backend-$COIN-backup.tar.gz"
+  else
+   echo -e "| Backup not created, operation failed..."
+  fi
+  echo -e "--------------------------------------------------"
+  exit
+fi
+
+if [[ "$1" == "backend_restore" ]]; then
+  echo -e "| BLOCKBOOK BACKEND RESTORE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "--------------------------------------------------"
+  echo -e "| Checking backup file..."
+  if [[ ! -f /root/backend-$COIN-backup.tar.gz ]]; then
+    echo -e "| Backup file not exist, operation aborted..."
+    echo -e "--------------------------------------------------"
+    exit
+  fi
+  cd /root/$CONFIG_DIR
+  echo -e "| Stopping daemon service..."
+  supervisorctl stop daemon > /dev/null 2>&1
+  echo -e "| Cleaning backend datadir..."
+  rm -rf /root/$CONFIG_DIR/backend
+  tar_file_unpack "/root/backend-$COIN-backup.tar.gz" "/root/$CONFIG_DIR"
+  if [[ df /root/$CONFIG_DIR/backend ]]; then
+   echo -e "| Restore finished, source: /root/backend-$COIN-backup.tar.gz"
+  else
+   echo -e "| Restore failed..."
+  fi
+  echo -e "| Starting daemon service..."
+  supervisorctl stop daemon > /dev/null 2>&1
+  echo -e "--------------------------------------------------"
+  exit
+fi
+
 if [[ "$1" == "backend_clean" ]]; then
   echo -e "| BACKEND CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
