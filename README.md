@@ -36,6 +36,8 @@ bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/mas
 | db_fix                     - fix corrupted blockbook db
 | db_clean                   - wipe blockbook db
 | update_daemon <url>        - update daemon binary
+| backend_backup             - create backend backup archive
+| backend_restore            - restore backend from backup archive
 | backend_clean              - wipe backend directory
 | log_clean                  - removing logs
 | logs <number>              - show all logs
