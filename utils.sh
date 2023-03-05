@@ -315,6 +315,26 @@ if [[ "$1" == "backup_share" ]]; then
   exit
 fi
 
+if [[ "$1" == "archive_clean" ]]; then
+  echo -e "| BLOCKBOOK BACKUP ARCHIVE CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "------------------------------------------------------------"
+  echo -e "| Checking directory..."
+  if [[ -d /root/backup_archive ]]; then
+    cd /root/backup_archive
+    FILE_LIST=($(ls -p /root/backup_archive))
+    LENGTH=${#FILE_LIST[@]}
+    for (( j=0; j<${LENGTH}; j++ ));
+    do
+      echo -e "| File: /root/backup_archive/${FILE_LIST[j]} was removed!"
+      rm -rf ./${FILE_LIST[j]}
+    done
+  echo -e "| Removed $LENGTH files"
+  else
+     echo -e "| Backup archive directory not exist, operation aborted!"
+  fi
+  echo -e "------------------------------------------------------------"
+  exit
+fi
 
 if [[ "$1" == "backend_clean" ]]; then
   echo -e "| BACKEND CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
