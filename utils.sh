@@ -37,7 +37,7 @@ if [[ "$1" == "" ]]; then
   echo -e "| backend_backup                         - create backend backup archive"
   echo -e "| backend_restore (-remote <url>)        - restore backend from backup archive"
   echo -e "| backend_clean                          - wipe backend directory"
-  echo -e "| backup_share (<port>)                  - share backup archive directory via http"
+  echo -e "| backup_share                           - share backup archive directory via http"
   echo -e "| backup_archive                         - create backup archive directory"
   echo -e "| log_clean                              - removing logs"
   echo -e "| logs <number>                          - show all logs"
