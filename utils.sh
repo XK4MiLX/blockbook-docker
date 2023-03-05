@@ -198,6 +198,7 @@ if [[ "$1" == "update_daemon" ]]; then
     echo -e "--------------------------------------------------"
     exit
   fi
+  echo "$(jq -r --arg key "daemon_url" --arg value "$DAEMON_URL" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
   echo -e "| Stopping daemon service..."
   supervisorctl stop daemon > /dev/null 2>&1
   if [[ "$BINARY_NAME" == "" ]]; then
