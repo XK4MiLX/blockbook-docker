@@ -55,15 +55,15 @@ if [[ "$1" == "logs" ]]; then
   echo -e "-----------------------------------------------------------------------------------------------"
   echo -e "| BLOCKBOOK LOGS CHECKER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "-----------------------------------------------------------------------------------------------"
-  echo -e "| CHECKING LOGS GENERETED BY BUILD.SH"
+  echo -e "| CHECKING BUILD LOGS..."
   echo -e "----------------------------------------------------------------------------------[START BUILD]"
   supervisorctl tail build
   echo -e "------------------------------------------------------------------------------------[END BUILD]"
-  echo -e "| CHECKING LOGS GENERETED BY DAEMON.SH"
+  echo -e "| CHECKING DAEMON LOGS..."
   echo -e "---------------------------------------------------------------------------------[START DAEMON]"
   supervisorctl tail daemon
   echo -e "-----------------------------------------------------------------------------------[END DAEMON]"
-  echo -e "| CHECKING LOGS GENERETED BY BLOCKBOOK.SH"
+  echo -e "| CHECKING BLOCKBOOK LOGS..."
   echo -e "------------------------------------------------------------------------------[START BLOCKBOOK]"
   supervisorctl tail blockbook
   echo -e "--------------------------------------------------------------------------------[END BLOCKBOOK]"
