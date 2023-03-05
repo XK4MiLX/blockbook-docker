@@ -39,8 +39,8 @@ if [[ "$1" == "" ]]; then
   echo -e "| backend_clean                          - wipe backend directory"
   echo -e "| backup_share                           - share backup archive directory via http"
   echo -e "| backup_archive                         - create backup archive directory"
-  echo -e "| archive_clean                          - clean backup archive directory"
-  echo -e "| log_clean                              - removing logs"
+  echo -e "| archive_clean                          - remove backup archive directory files"
+  echo -e "| log_clean                              - remove logs"
   echo -e "| logs <number>                          - show all logs"
   echo -e "----------------------------------------------------------------------------------"
   exit
