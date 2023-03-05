@@ -218,7 +218,9 @@ if [[ -f /root/daemon_config.json ]]; then
   if [[ "$BINARY_NAME" == "" ]]; then
     BINARY_NAME=$(jq -r .binary_name /root/daemon_config.json)
   fi
-  DAEMON_URL=$(jq -r .daemon_url /root/daemon_config.json)
+  if [[ $(jq -r .daemon_url /root/daemon_config.jso) != "null" && $(jq -r .daemon_url /root/daemon_config.jso) != "" ]]; then
+    DAEMON_URL=$(jq -r .daemon_url /root/daemon_config.json)
+  fi
 fi
 
 if [[ "$CONFIG" == "1" ]]; then
