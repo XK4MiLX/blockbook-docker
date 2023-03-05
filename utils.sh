@@ -57,15 +57,15 @@ if [[ "$1" == "logs" ]]; then
   echo -e "-----------------------------------------------------------------------------------------------"
   echo -e "| CHECKING BUILD LOGS..."
   echo -e "----------------------------------------------------------------------------------[START BUILD]"
-  supervisorctl tail build
+  supervisorctl tail build | tail -n${LINE}
   echo -e "------------------------------------------------------------------------------------[END BUILD]"
   echo -e "| CHECKING DAEMON LOGS..."
   echo -e "---------------------------------------------------------------------------------[START DAEMON]"
-  supervisorctl tail daemon
+  supervisorctl tail daemon | tail -n${LINE}
   echo -e "-----------------------------------------------------------------------------------[END DAEMON]"
   echo -e "| CHECKING BLOCKBOOK LOGS..."
   echo -e "------------------------------------------------------------------------------[START BLOCKBOOK]"
-  supervisorctl tail blockbook
+  supervisorctl tail blockbook | tail -n${LINE}
   echo -e "--------------------------------------------------------------------------------[END BLOCKBOOK]"
   if [[ -f /root/$CONFIG_DIR/backend/debug.log ]]; then
     echo -e "| File: /root/$CONFIG_DIR/backend/debug.log"
