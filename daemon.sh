@@ -1,12 +1,4 @@
 #!/usr/bin/env bash
-#color codes
-#RED='\033[1;31m'
-#$YELLOW='\033[1;33m'
-#BLUE="\\033[38;5;27m"
-#SEA="\\033[38;5;49m"
-#GREEN='\033[1;32m'
-#CYAN='\033[1;36m'
-#NC='\033[0m'
 server_offline="0"
 failed_counter="0"
 CONFIG_FILE=${CONFIG_FILE:-$COIN}
@@ -226,6 +218,7 @@ if [[ -f /root/daemon_config.json ]]; then
   if [[ "$BINARY_NAME" == "" ]]; then
     BINARY_NAME=$(jq -r .binary_name /root/daemon_config.json)
   fi
+  DAEMON_URL=$(jq -r .daemon_url /root/daemon_config.json)
 fi
 
 if [[ "$CONFIG" == "1" ]]; then
