@@ -41,7 +41,8 @@ bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/mas
   | backend_clean                          - wipe backend directory
   | backup_share                           - share backup archive directory via http
   | backup_archive                         - create backup archive directory
-  | log_clean                              - removing logs
+  | log_clean                              - remove logs
+  | archive_clean                          - remove backup archive directory files 
   | logs <number>                          - show all logs
   ------------------------------------------------------------------------------
   () - optional
