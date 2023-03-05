@@ -194,7 +194,7 @@ if [[ "$1" == "update_daemon" ]]; then
   echo -e "--------------------------------------------------"
   DAEMON_URL=$2
   if [[ "$DAEMON_URL" == "" ]]; then
-    echo -e "| Missing binary archive url..."
+    echo -e "| Missing binary url..."
     echo -e "--------------------------------------------------"
     exit
   fi
