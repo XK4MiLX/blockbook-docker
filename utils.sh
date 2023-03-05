@@ -305,13 +305,8 @@ if [[ "$1" == "backup_share" ]]; then
   echo -e "--------------------------------------------------"
   if [[ -d /root/backup_archive ]]; then
     echo -n "| "
-    PORT=$2
-    PORT=${PORT:-$BLOCKBOOK_PORT}
-    if [[ "$PORT" == "$BLOCKBOOK_PORT" ]]; then
-      supervisorctl stop blockbook > /dev/null 2>&1
-    fi
     cd /root/backup_archive
-    python3 -m http.server $PORT
+    python3 -m http.server 1337
   else
     echo -e "Backup directory not exist, operation aborted..."
   fi
