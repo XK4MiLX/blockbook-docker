@@ -17,6 +17,11 @@ function rocksdb_install(){
   echo "| Installing RocksDB [$ROCKSDB_VERSION]..."
   cd $HOME && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git > /dev/null 2>&1
   cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release > /dev/null 2>&1
+  if [[ -f $HOME/roksdb/librocksdb.a ]]; then
+   echo -e "| RocksDB BUILD [OK]..."
+  else
+   echo -e "| RocksDB BUILD [FAILED]..."
+  fi 
 }
 
 function blockbook_install() {
@@ -26,36 +31,41 @@ function blockbook_install() {
   echo -e "| Installing Blockbook [v$VERSION]..."
   echo -e "| RocksDB: $ROCKSDB_VERSION, GOLANG: $GOLANG_VERSION"
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL, BRANCH: $TAG"
-  echo -e "| PATH: $HOME/blockbook"
-  x=1
-  while [ $x -le 3 ]
-  do
-    #####  
-    cd $HOME && git clone $BLOCKBOOKGIT_URL
-    cd $HOME/blockbook 
-    git checkout "$TAG" > /dev/null 2>&1
-    go mod download 
-    BUILDTIME=$(date --iso-8601=seconds)
-    GITCOMMIT=$(git describe --always --dirty)
-    LDFLAGS="-X github.com/trezor/blockbook/common.version=${VERSION} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}"
-    go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
-    #####
-    echo -e "| Duration: $((($(date +%s)-$start_build)/60)) min. $((($(date +%s)-$start_build) % 60)) sec."
-    if [[ -f $HOME/blockbook/blockbook ]]; then
-      echo -e "| Blockbook build [OK]..."
-      break
-    else
-      echo -e "| Blockbook build [FAILED]..."
-      rm -rf $HOME/blockbook
-      rm -rf $HOME/rocksdb
-    fi 
-    x=$(( $x + 1 ))
-  done
+  echo -e "| PATH: $HOME/blockbook" 
+  cd $HOME && git clone $BLOCKBOOKGIT_URL
+  cd $HOME/blockbook 
+  git checkout "$TAG" > /dev/null 2>&1
+  go mod download 
+  BUILDTIME=$(date --iso-8601=seconds)
+  GITCOMMIT=$(git describe --always --dirty)
+  LDFLAGS="-X github.com/trezor/blockbook/common.version=${VERSION} -X github.com/trezor/blockbook/common.gitcommit=${GITCOMMIT} -X github.com/trezor/blockbook/common.buildtime=${BUILDTIME}"
+  go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
 }
 echo -e "| BLOCKBOOK LUNCHER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "-----------------------------------------------------"
-rocksdb_install
-blockbook_install
+
+x=1
+while [ $x -le 4 ]
+do
+  rocksdb_install
+  blockbook_install
+  x=$(( $x + 1 ))
+  echo -e "| Duration: $((($(date +%s)-$start_build)/60)) min. $((($(date +%s)-$start_build) % 60)) sec."
+  if [[ -f $HOME/blockbook/blockbook ]]; then
+    echo -e "| Blockbook BUILD [OK]..."
+    break
+  else
+    echo -e "| Blockbook BUILD [FAILED]..."
+    rm -rf $HOME/blockbook
+    rm -rf $HOME/rocksdb
+  fi 
+done
+
+if [[ ! -f $HOME/blockbook/blockbook ]]; then
+  echo -e "-----------------------------------------------------"
+  exit
+fi
+
 if [[ ! -f /root/blockchaincfg.json ]]; then
   if [[ ! -d /root/$CONFIG_DIR ]]; then
     echo -e "| Creating config directory..."
