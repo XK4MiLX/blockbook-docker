@@ -14,7 +14,8 @@ function rocksdb_install(){
   if [[ -d $HOME/rocksdb ]]; then
     return
   fi
-  echo "| Installing RocksDB [$ROCKSDB_VERSION]..."
+  echo -e "| Installing RocksDB [$ROCKSDB_VERSION]..."
+  echo -e "| PATH: $HOME/rocksdb"
   cd $HOME && git clone -b $ROCKSDB_VERSION --depth 1 https://github.com/facebook/rocksdb.git > /dev/null 2>&1
   cd $HOME/rocksdb && CFLAGS=-fPIC CXXFLAGS='-fPIC -Wno-error=deprecated-copy -Wno-error=pessimizing-move -Wno-error=class-memaccess' PORTABLE=1 make -j 4 release > /dev/null 2>&1
   if [[ -f $HOME/rocksdb/librocksdb.a ]]; then
@@ -29,7 +30,6 @@ function blockbook_install() {
    return
   fi
   echo -e "| Installing Blockbook [v$VERSION]..."
-  echo -e "| RocksDB: $ROCKSDB_VERSION, GOLANG: $GOLANG_VERSION"
   echo -e "| GITHUB URL: $BLOCKBOOKGIT_URL, BRANCH: $TAG"
   echo -e "| PATH: $HOME/blockbook" 
   cd $HOME && git clone $BLOCKBOOKGIT_URL
@@ -50,7 +50,6 @@ do
   rocksdb_install
   blockbook_install
   x=$(( $x + 1 ))
-  echo -e "| Duration: $((($(date +%s)-$start_build)/60)) min. $((($(date +%s)-$start_build) % 60)) sec."
   if [[ -f $HOME/blockbook/blockbook ]]; then
     echo -e "| Blockbook BUILD [OK]..."
     break
@@ -59,6 +58,7 @@ do
     rm -rf $HOME/blockbook
     rm -rf $HOME/rocksdb
   fi 
+  echo -e "| Duration: $((($(date +%s)-$start_build)/60)) min. $((($(date +%s)-$start_build) % 60)) sec."
 done
 
 if [[ ! -f $HOME/blockbook/blockbook ]]; then
