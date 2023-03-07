@@ -81,9 +81,9 @@ function get_ip() {
 }
 
 if [[ "$1" == "" ]]; then
-  echo -e "-----------------------------------------------------------------------"
+  echo -e "-----------------------------------------------------------------------------"
   echo -e "| Blockbook Docker Manager v2.0"
-  echo -e "-----------------------------------------------------------------------"
+  echo -e "-----------------------------------------------------------------------------"
   echo -e "| Usage:"
   echo -e "| status <coin_name>               - show blockbook docker status"
   echo -e "| list <url>                       - show coin list"
@@ -93,13 +93,13 @@ if [[ "$1" == "" ]]; then
   echo -e "| <coin_name> <-e variable>        - generate docker run commandline"
   echo -e "| clean <coin_name>                - removing blockbook"
   echo -e "| softdeploy <coin_name>           - updating image with date"
-  echo -e "-----------------------------------------------------------------------"
+  echo -e "-----------------------------------------------------------------------------"
   echo -e "| FluxOS Blockbook Checker v1.0"
-  echo -e "-----------------------------------------------------------------------"
+  echo -e "-----------------------------------------------------------------------------"
   echo -e "| Usage:"
-  echo -e "| fluxos list"
-  echo -e "| fluxos <coin_name>"
-  echo -e "-----------------------------------------------------------------------"
+  echo -e "| fluxos list                       - list running blockbooks on fluxos"
+  echo -e "| fluxos <coin_name>                - show information about coin blockbook"
+  echo -e "-----------------------------------------------------------------------------"
   exit
 fi
 
