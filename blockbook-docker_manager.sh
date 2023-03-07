@@ -97,6 +97,63 @@ echo -e "-----------------------------------------------------------------------
 exit
 fi
 
+if [[ "$1" == "fluxos" ]]; then
+ echo -e "-------------------------------------------------------"
+ echo -e "| FLUXOS BLOCKBOOK CHECKER v1.0"
+ echo -e "-------------------------------------------------------"
+ if [[ "$2" == "" ]]; then
+  echo -e "| Usage:
+  echo -e "| fluxos list"
+  echo -e "| fluxos <coin_name>"
+  echo -e "-------------------------------------------------------"
+  exit
+ fi
+ if [[ "$2" == "list" ]]; then
+   echo -e "| Blockbook running on FluxOS"
+   echo -e "-------------------------------------------------------"
+   $(curl -sSL https://api.runonflux.io/apps/globalappsspecifications | jq . | grep -oP "(?<=blockbook)[a-z]+" | uniq)
+   echo -e "-------------------------------------------------------"
+   exit
+ fi
+ echo -e "| COIN: $1"
+ echo -e "-------------------------------------------------------"
+ DOMAIN_CHECK=$(curl -sSL -m 10 https://blockbook$1.app.runonflux.io/api 2>/dev/null | jq -r .backend.blocks 2>/dev/null)
+ if [[ "$DOMAIN_CHECK" == "" ]]; then
+   D_STATUS="[FAILED]"
+ else
+   D_STATUS="[OK]"
+ fi
+ echo -e "| DOMAIN: blockbook$1.app.runonflux.io"
+ echo -e "| STATUS: $D_STATUS"
+ echo -e "-------------------------------------------------------"
+ PORT=$(curl -SsL -m 10 https://api.runonflux.io/apps/appspecifications/blockbook$1 2>/dev/null | jq .data.compose[].ports[0] 2>/dev/null)
+ IP_LIST=($(curl -SsL -m 10 https://api.runonflux.io/apps/location/blockbook$1 2>/dev/null | jq -r .data[].ip 2>/dev/null))
+ LENGTH=${#IP_LIST[@]}
+ for (( j=0; j<${LENGTH}; j++ ));
+ do
+   IP=${IP_LIST[j]}
+   IP_CUT="${IP%:*}"
+   RESPONSE=$(curl -sSL -m 5 http://${IP_CUT}:${PORT}/api 2>/dev/null | jq . 2>/dev/null)
+   CHECK=$(jq -r .backend.blocks 2>/dev/null <<< $RESPONSE)
+   LAST_UPDATE=$(jq -r .blockbook.lastBlockTime 2>/dev/null <<< $RESPONSE)
+   if [[ "$CHECK" != "" ]]; then
+     if [[ "$CHECK" == "null" ]]; then
+       CHECK="Synchronizing"
+     fi
+     first_date=$(date -d "$(date)" "+%s")
+     second_date=$(date -d "$LAST_UPDATE" "+%s")
+     s=$(( ($first_date - $second_date)/(1) ))
+     echo -e "| http://${IP_CUT}:${PORT} Status: [OK], Height: $CHECK, LastUpdate: $(date -d@$s -u +%H:%M:%S) ago."
+   else
+     echo -e "| http://${IP_CUT}:${PORT} Status: [FAILED]"
+   fi
+ done
+ if [[ "$LENGTH" == "0" ]]; then
+  echo -e "| Blockbook not found..."
+ fi
+ echo -e "-------------------------------------------------------"
+fi
+
 if [[ "$1" == "update" ]]; then
   docker pull xk4milx/blockbook-docker
   exit
@@ -188,3 +245,4 @@ else
   echo -e "| docker run -d --name fluxosblockbook-${1} -e COIN=${1} $BINARY_NAME -e BLOCKBOOK_PORT=${BLOCKBOOKPORT} $flage $POSTINST $EXTRAFLAGS -p ${OUT_PORT}:${BLOCKBOOKPORT} -p $((OUT_PORT-1)):1337 -v /home/$USER/fluxosblockbook_${1}:/root xk4milx/blockbook-docker" | awk '$1=$1'
   echo -e "----------------------------------------------------------------------------------------"
 fi
+
