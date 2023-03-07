@@ -81,20 +81,20 @@ function get_ip() {
 }
 
 if [[ "$1" == "" ]]; then
-echo -e "-----------------------------------------------------------------------"
-echo -e "| Blockbook Docker Manager v2.0"
-echo -e "-----------------------------------------------------------------------"
-echo -e "| Usage:"
-echo -e "| status <coin_name>               - show blockbook docker status"
-echo -e "| list <url>                       - show coin list"
-echo -e "| update                           - update blockbook docker image"
-echo -e "| exec <coin_name>                 - login to docker image"
-echo -e "| create <coin_name> <-e variable> - create docker blockbook"
-echo -e "| <coin_name> <-e variable>        - generate docker run commandline"
-echo -e "| clean <coin_name>                - removing blockbook"
-echo -e "| softdeploy <coin_name>           - updating image with date"
-echo -e "-----------------------------------------------------------------------"
-exit
+  echo -e "-----------------------------------------------------------------------"
+  echo -e "| Blockbook Docker Manager v2.0"
+  echo -e "-----------------------------------------------------------------------"
+  echo -e "| Usage:"
+  echo -e "| status <coin_name>               - show blockbook docker status"
+  echo -e "| list <url>                       - show coin list"
+  echo -e "| update                           - update blockbook docker image"
+  echo -e "| exec <coin_name>                 - login to docker image"
+  echo -e "| create <coin_name> <-e variable> - create docker blockbook"
+  echo -e "| <coin_name> <-e variable>        - generate docker run commandline"
+  echo -e "| clean <coin_name>                - removing blockbook"
+  echo -e "| softdeploy <coin_name>           - updating image with date"
+  echo -e "-----------------------------------------------------------------------"
+  exit
 fi
 
 if [[ "$1" == "fluxos" ]]; then
@@ -111,7 +111,7 @@ if [[ "$1" == "fluxos" ]]; then
  if [[ "$2" == "list" ]]; then
    echo -e "| Blockbook running on FluxOS"
    echo -e "-------------------------------------------------------"
-   echo $(curl -sSL https://api.runonflux.io/apps/globalappsspecifications | jq . | grep -oP "(?<=blockbook)[a-z]+" | uniq)
+   echo -e "| $(curl -sSL https://api.runonflux.io/apps/globalappsspecifications | jq . | grep -oP "(?<=blockbook)[a-z]+" | uniq)"
    echo -e "-------------------------------------------------------"
    exit
  fi
