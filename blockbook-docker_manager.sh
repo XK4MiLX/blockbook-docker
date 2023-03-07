@@ -115,7 +115,7 @@ if [[ "$1" == "fluxos" ]]; then
    echo -e "-------------------------------------------------------"
    exit
  fi
- echo -e "| COIN: $1"
+ echo -e "| COIN: $2"
  echo -e "-------------------------------------------------------"
  DOMAIN_CHECK=$(curl -sSL -m 10 https://blockbook$1.app.runonflux.io/api 2>/dev/null | jq -r .backend.blocks 2>/dev/null)
  if [[ "$DOMAIN_CHECK" == "" ]]; then
@@ -123,11 +123,11 @@ if [[ "$1" == "fluxos" ]]; then
  else
    D_STATUS="[OK]"
  fi
- echo -e "| DOMAIN: blockbook$1.app.runonflux.io"
+ echo -e "| DOMAIN: blockbook$2.app.runonflux.io"
  echo -e "| STATUS: $D_STATUS"
  echo -e "-------------------------------------------------------"
- PORT=$(curl -SsL -m 10 https://api.runonflux.io/apps/appspecifications/blockbook$1 2>/dev/null | jq .data.compose[].ports[0] 2>/dev/null)
- IP_LIST=($(curl -SsL -m 10 https://api.runonflux.io/apps/location/blockbook$1 2>/dev/null | jq -r .data[].ip 2>/dev/null))
+ PORT=$(curl -SsL -m 10 https://api.runonflux.io/apps/appspecifications/blockbook$2 2>/dev/null | jq .data.compose[].ports[0] 2>/dev/null)
+ IP_LIST=($(curl -SsL -m 10 https://api.runonflux.io/apps/location/blockbook$2 2>/dev/null | jq -r .data[].ip 2>/dev/null))
  LENGTH=${#IP_LIST[@]}
  for (( j=0; j<${LENGTH}; j++ ));
  do
@@ -152,6 +152,7 @@ if [[ "$1" == "fluxos" ]]; then
   echo -e "| Blockbook not found..."
  fi
  echo -e "-------------------------------------------------------"
+ exit
 fi
 
 if [[ "$1" == "update" ]]; then
