@@ -99,7 +99,7 @@ fi
 
 if [[ "$1" == "fluxos" ]]; then
  echo -e "-------------------------------------------------------"
- echo -e "| FLUXOS BLOCKBOOK CHECKER v1.0"
+ echo -e "| FluxOS Blockbook Checker v1.0"
  echo -e "-------------------------------------------------------"
  if [[ "$2" == "" ]]; then
   echo -e "| Usage:"
@@ -117,7 +117,7 @@ if [[ "$1" == "fluxos" ]]; then
  fi
  echo -e "| COIN: $2"
  echo -e "-------------------------------------------------------"
- DOMAIN_CHECK=$(curl -sSL -m 10 https://blockbook$1.app.runonflux.io/api 2>/dev/null | jq -r .backend.blocks 2>/dev/null)
+ DOMAIN_CHECK=$(curl -sSL -m 10 https://blockbook$2.app.runonflux.io/api 2>/dev/null | jq -r .backend.blocks 2>/dev/null)
  if [[ "$DOMAIN_CHECK" == "" ]]; then
    D_STATUS="[FAILED]"
  else
