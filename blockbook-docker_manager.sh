@@ -102,7 +102,7 @@ if [[ "$1" == "fluxos" ]]; then
  echo -e "| FLUXOS BLOCKBOOK CHECKER v1.0"
  echo -e "-------------------------------------------------------"
  if [[ "$2" == "" ]]; then
-  echo -e "| Usage:
+  echo -e "| Usage:"
   echo -e "| fluxos list"
   echo -e "| fluxos <coin_name>"
   echo -e "-------------------------------------------------------"
