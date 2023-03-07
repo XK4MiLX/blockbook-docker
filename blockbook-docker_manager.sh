@@ -111,7 +111,7 @@ if [[ "$1" == "fluxos" ]]; then
  if [[ "$2" == "list" ]]; then
    echo -e "| Blockbook running on FluxOS"
    echo -e "-------------------------------------------------------"
-   $(curl -sSL https://api.runonflux.io/apps/globalappsspecifications | jq . | grep -oP "(?<=blockbook)[a-z]+" | uniq)
+   echo $(curl -sSL https://api.runonflux.io/apps/globalappsspecifications | jq . | grep -oP "(?<=blockbook)[a-z]+" | uniq)
    echo -e "-------------------------------------------------------"
    exit
  fi
