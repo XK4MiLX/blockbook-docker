@@ -94,29 +94,35 @@ if [[ "$1" == "" ]]; then
   echo -e "| clean <coin_name>                - removing blockbook"
   echo -e "| softdeploy <coin_name>           - updating image with date"
   echo -e "-----------------------------------------------------------------------"
+  echo -e "| FluxOS Blockbook Checker v1.0"
+  echo -e "-----------------------------------------------------------------------"
+  echo -e "| Usage:"
+  echo -e "| fluxos list"
+  echo -e "| fluxos <coin_name>"
+  echo -e "-----------------------------------------------------------------------"
   exit
 fi
 
 if [[ "$1" == "fluxos" ]]; then
- echo -e "-------------------------------------------------------"
+ echo -e "--------------------------------------------------------------"
  echo -e "| FluxOS Blockbook Checker v1.0"
- echo -e "-------------------------------------------------------"
+ echo -e "--------------------------------------------------------------"
  if [[ "$2" == "" ]]; then
   echo -e "| Usage:"
   echo -e "| fluxos list"
   echo -e "| fluxos <coin_name>"
-  echo -e "-------------------------------------------------------"
+  echo -e "--------------------------------------------------------------"
   exit
  fi
  if [[ "$2" == "list" ]]; then
    echo -e "| Blockbook running on FluxOS"
-   echo -e "-------------------------------------------------------"
+   echo -e "--------------------------------------------------------------"
    echo -e "| $(curl -sSL https://api.runonflux.io/apps/globalappsspecifications | jq . | grep -oP "(?<=blockbook)[a-z]+" | uniq)"
-   echo -e "-------------------------------------------------------"
+   echo -e "--------------------------------------------------------------"
    exit
  fi
  echo -e "| COIN: $2"
- echo -e "-------------------------------------------------------"
+ echo -e "--------------------------------------------------------------"
  DOMAIN_CHECK=$(curl -sSL -m 10 https://blockbook$2.app.runonflux.io/api 2>/dev/null | jq -r .backend.blocks 2>/dev/null)
  if [[ "$DOMAIN_CHECK" == "" ]]; then
    D_STATUS="[FAILED]"
@@ -125,7 +131,7 @@ if [[ "$1" == "fluxos" ]]; then
  fi
  echo -e "| DOMAIN: blockbook$2.app.runonflux.io"
  echo -e "| STATUS: $D_STATUS"
- echo -e "-------------------------------------------------------"
+ echo -e "--------------------------------------------------------------"
  PORT=$(curl -SsL -m 10 https://api.runonflux.io/apps/appspecifications/blockbook$2 2>/dev/null | jq .data.compose[].ports[0] 2>/dev/null)
  IP_LIST=($(curl -SsL -m 10 https://api.runonflux.io/apps/location/blockbook$2 2>/dev/null | jq -r .data[].ip 2>/dev/null))
  LENGTH=${#IP_LIST[@]}
@@ -151,7 +157,7 @@ if [[ "$1" == "fluxos" ]]; then
  if [[ "$LENGTH" == "0" ]]; then
   echo -e "| Blockbook not found..."
  fi
- echo -e "-------------------------------------------------------"
+ echo -e "--------------------------------------------------------------"
  exit
 fi
 
