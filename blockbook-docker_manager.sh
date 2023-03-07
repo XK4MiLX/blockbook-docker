@@ -146,7 +146,7 @@ if [[ "$1" == "fluxos" ]]; then
      if [[ "$CHECK" == "null" ]]; then
        CHECK="Synchronizing"
      fi
-     first_date=$(date -d "$(date)" "+%s")
+     first_date=$(date -d "$(LC_TIME=C date)" "+%s")
      second_date=$(date -d "$LAST_UPDATE" "+%s")
      s=$(( ($first_date - $second_date)/(1) ))
      echo -e "| http://${IP_CUT}:${PORT} Status: [OK], Height: $CHECK, LastUpdate: $(date -d@$s -u +%H:%M:%S) ago."
