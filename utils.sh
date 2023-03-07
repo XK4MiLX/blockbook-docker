@@ -161,6 +161,7 @@ if [[ "$1" == "db_restore" ]]; then
     fi
     rm -rf /root/blockbook_backup
     tar_file_unpack "/root/blockbook-$COIN-db-backup.tar.gz" "/root"
+    rm -rf /root/blockbook-$COIN-db-backup.tar.gz
   fi
 
   if [[ ! -d /root/blockbook_backup/rocksdb.bk ]]; then
@@ -171,6 +172,9 @@ if [[ "$1" == "db_restore" ]]; then
   echo -e "| Restoring the database..."
   cd /
   ./opt/rocksdb/ldb --db=/root/blockbook-db restore --backup_dir=/root/blockbook_backup/rocksdb.bk
+  if [[ "$4" == "clean" ]]; then
+    rm -rf /root/blockbook_backup
+  fi
   echo -e "| Starting blockbook service..."
   supervisorctl start blockbook > /dev/null 2>&1
   echo -e "--------------------------------------------------"
@@ -279,6 +283,7 @@ if [[ "$1" == "backend_restore" ]]; then
    echo -e "| Restore failed..."
    mkdir -p /root/$CONFIG_DIR/backend
   fi
+  rm -rf /root/backend-$COIN-backup.tar.gz
   echo -e "| Starting daemon service..."
   supervisorctl start daemon > /dev/null 2>&1
   echo -e "--------------------------------------------------"
