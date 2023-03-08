@@ -149,9 +149,9 @@ if [[ "$1" == "fluxos" ]]; then
      first_date=$(date -d "$(LC_TIME=C date)" "+%s")
      second_date=$(date -d "$LAST_UPDATE" "+%s")
      s=$(( ($first_date - $second_date)/(1) ))
-     echo -e "| http://${IP_CUT}:${PORT} Status: [OK], Height: $CHECK, LastUpdate: $(date -d@$s -u +%H:%M:%S) ago."
+     echo -e "| Node: $IP, Apps: http://${IP_CUT}:${PORT} Status: [OK], Height: $CHECK, LastUpdate: $(date -d@$s -u +%H:%M:%S) ago."
    else
-     echo -e "| http://${IP_CUT}:${PORT} Status: [FAILED]"
+     echo -e "| Node: $IP, Apps: http://${IP_CUT}:${PORT} Status: [FAILED]"
    fi
  done
  if [[ "$LENGTH" == "0" ]]; then
