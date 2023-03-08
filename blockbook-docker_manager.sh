@@ -142,6 +142,7 @@ if [[ "$1" == "fluxos" ]]; then
    RESPONSE=$(curl -sSL -m 5 http://${IP_CUT}:${PORT}/api 2>/dev/null | jq . 2>/dev/null)
    CHECK=$(jq -r .backend.blocks 2>/dev/null <<< $RESPONSE)
    BLOCKBOOK=$(jq -r .blockbook.bestHeight 2>/dev/null <<< $RESPONSE)
+   IsSync=$(jq -r .blockbook.inSync 2>/dev/null <<< $RESPONSE)
    LAST_UPDATE=$(jq -r .blockbook.lastBlockTime 2>/dev/null <<< $RESPONSE)
    if [[ "$CHECK" != "" ]]; then
      if [[ "$CHECK" == "null" ]]; then
@@ -150,7 +151,7 @@ if [[ "$1" == "fluxos" ]]; then
      first_date=$(date -d "$(LC_TIME=C date)" "+%s")
      second_date=$(date -d "$LAST_UPDATE" "+%s")
      s=$(( ($first_date - $second_date)/(1) ))
-     echo -e "| Node: $IP, Apps: http://${IP_CUT}:${PORT} Status: [OK], Height: $CHECK/$BLOCKBOOK, LastUpdate: $(date -d@$s -u +%H:%M:%S) ago."
+     echo -e "| Node: $IP, Apps: http://${IP_CUT}:${PORT} Status: [OK], Height D/B: [$CHECK/$BLOCKBOOK], IsSync: $IsSync, LastUpdate: $(date -d@$s -u +%H:%M:%S) ago."
    else
      echo -e "| Node: $IP, Apps: http://${IP_CUT}:${PORT} Status: [FAILED]"
    fi
