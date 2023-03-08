@@ -104,18 +104,18 @@ if [[ "$1" == "" ]]; then
 fi
 
 if [[ "$1" == "fluxos" ]]; then
- echo -e "--------------------------------------------------------------"
+ echo -e "-------------------------------------------------------------------"
  echo -e "| FluxOS Blockbook Checker v1.0"
- echo -e "--------------------------------------------------------------"
+ echo -e "-------------------------------------------------------------------"
  if [[ "$2" == "" ]]; then
   echo -e "| Usage:"
-  echo -e "| fluxos list"
-  echo -e "| fluxos <coin_name>"
-  echo -e "--------------------------------------------------------------"
+  echo -e "| fluxos list             - list running blockbooks on fluxos"
+  echo -e "| fluxos <coin_name>      - show information about coin blockbook"
+  echo -e "-------------------------------------------------------------------"
   exit
  fi
  if [[ "$2" == "list" ]]; then
-   echo -e "| Blockbook running on FluxOS"
+   echo -e "| Blockbooks running on FluxOS"
    echo -e "--------------------------------------------------------------"
    echo -e "$(curl -sSL https://api.runonflux.io/apps/globalappsspecifications | jq . | grep -oP "(?<=blockbook)[a-z]+" | uniq)"
    echo -e "--------------------------------------------------------------"
