@@ -44,10 +44,9 @@ function blockbook_install() {
 }
 
 function setup() {
-
+  echo -e "| BLOCKBOOK LUNCHER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "-----------------------------------------------------"
   if [[ -d $HOME/blockbook ]]; then
-    echo -e "| BLOCKBOOK LUNCHER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
-    echo -e "-----------------------------------------------------"
     echo -e "| Installed GOLANG [$GOLANG_VERSION]..."
     echo -e "| PATH: $HOME/go"
     echo -e "| Installed RocksDB [$ROCKSDB_VERSION]..."
@@ -55,16 +54,13 @@ function setup() {
     echo -e "| Installed Blockbook [v$VERSION]..."
     echo -e "| PATH: $HOME/blockbook"
   else
-    echo -e "| BLOCKBOOK LUNCHER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
-    echo -e "-----------------------------------------------------"
     echo -e "| Installed GOLANG [$GOLANG_VERSION]..."
     echo -e "| PATH: $HOME/go"
-
     x=1
     while [ $x -le 4 ]
     do
       rocksdb_install
-      if [[ -f $HOME/rocksdb/librocksdb.a ]]; then
+      if [[ ! -f $HOME/rocksdb/librocksdb.a ]]; then
         continue
       fi
       blockbook_install
