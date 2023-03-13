@@ -172,9 +172,8 @@ if [[ "$1" == "db_restore" ]]; then
   echo -e "| Restoring the database..."
   cd /
   ./opt/rocksdb/ldb --db=/root/blockbook-db restore --backup_dir=/root/blockbook_backup/rocksdb.bk
-  if [[ "$4" == "clean" ]]; then
-    rm -rf /root/blockbook_backup
-  fi
+  echo -e "| Removing blockbook_backup directory..."
+  rm -rf /root/blockbook_backup
   echo -e "| Starting blockbook service..."
   supervisorctl start blockbook > /dev/null 2>&1
   echo -e "--------------------------------------------------"
