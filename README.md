@@ -5,9 +5,9 @@
 bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/master/blockbook-docker_manager.sh)
 ```
 ```
------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 | Blockbook Docker Manager v2.0
------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 | Usage:
 | status <coin_name>               - show blockbook docker status
 | list <url>                       - show coin list
@@ -17,7 +17,13 @@ bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/mas
 | <coin_name> <-e variable>        - generate docker run commandline
 | clean <coin_name>                - removing blockbook
 | softdeploy <coin_name>           - updating image with date
------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+| FluxOS Blockbook Checker v1.0
+-----------------------------------------------------------------------------
+| Usage:
+| fluxos list                       - list running blockbooks on fluxos
+| fluxos <coin_name>                - show information about coin blockbook
+-----------------------------------------------------------------------------
 ```
 ### Deploy container
 ```
