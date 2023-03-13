@@ -138,11 +138,13 @@ if [[ "$1" == "fluxos" ]]; then
  IP_LIST=($(jq -r .data[].ip 2>/dev/null <<< $IP_SOURCE))
  PORT_LIST=($(jq -r .data[].ip <<< $IP_SOURCE | awk -F ':[^0-9]*' '{if ($0=$2) print $0-1; else print 16126}')
  LENGTH=${#IP_LIST[@]}
+ 
  if [[ "$LENGTH" == "0" ]]; then
    echo -e "| Apps location list is empty, operation aborted..."
    echo -e "--------------------------------------------------------------"
    exit
  fi
+ 
  for (( j=0; j<${LENGTH}; j++ ));
  do
    IP=${IP_LIST[j]}
