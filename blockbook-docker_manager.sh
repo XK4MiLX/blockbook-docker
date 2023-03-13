@@ -136,8 +136,12 @@ if [[ "$1" == "fluxos" ]]; then
  PORT=$(curl -SsL -m 10 https://api.runonflux.io/apps/appspecifications/blockbook$2 2>/dev/null | jq .data.compose[].ports[0] 2>/dev/null)
  IP_SOURCE=$(curl -SsL -m 10 https://api.runonflux.io/apps/location/blockbook$2 2>/dev/null)
  IP_LIST=($(jq -r .data[].ip 2>/dev/null <<< $IP_SOURCE))
- PORT_LIST=($(jq -r .data[].ip 2>/dev/null | awk -F':[^0-9]*' '{if ($0=$2) print $0-1; else print 16126}' <<< $IP_SOURCE))
+ PORT_LIST=($(jq -r .data[].ip <<< $IP_SOURCE | awk -F ':[^0-9]*' '{if ($0=$2) print $0-1; else print 16126}')
  LENGTH=${#IP_LIST[@]}
+ if [[ "$LENGTH" == 0 ]]; then
+   echo -e "| Apps location list is empty, operation aborted..."
+   echo -e "--------------------------------------------------------------"
+ fi
  for (( j=0; j<${LENGTH}; j++ ));
  do
    IP=${IP_LIST[j]}
