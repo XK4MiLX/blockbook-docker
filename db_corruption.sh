@@ -8,6 +8,8 @@ if [[ -f /root/blockbook.log ]]; then
     echo -e "| RocksDB Corruption detected!..."
     echo -e "| Stopping blockbook service..."
     supervisorctl stop blockbook > /dev/null 2>&1
+    echo -e "| Removing old log file..."
+    rm -rf /root/blockbook.log
     echo -e "| Repair the database..."
     ./opt/blockbook/blockbook -repair -datadir=/root/blockbook-db
     echo -e "| Starting blockbook service..."
