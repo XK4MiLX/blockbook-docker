@@ -74,7 +74,6 @@ if [[ "$1" == "logs" ]]; then
   echo -e "--------------------------------------------------------------------------------[END CORRUPTION]"
   
   
-  
   if [[ -f /root/$CONFIG_DIR/backend/debug.log ]]; then
     echo -e "| File: /root/$CONFIG_DIR/backend/debug.log"
     echo -e "-----------------------------------------------------------------------------------------------"
