@@ -91,7 +91,7 @@ if [[ "$1" == "logs" ]]; then
   if [[ -f /root/$CONFIG_DIR/backend/$COIN.log ]]; then
     echo -e "| File: /root/$CONFIG_DIR/backend/$COIN.log"
     echo -e "-----------------------------------------------------------------------------------------------"
-    cat /root/blockbook.log | tail -n${LINE}
+    cat /root/$CONFIG_DIR/backend/$COIN.log | tail -n${LINE}
     echo -e "------------------------------------------------------------------------------------------[END]"
   fi
   echo -e "| HEALTH CHECKING ..."
