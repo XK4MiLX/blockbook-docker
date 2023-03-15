@@ -74,6 +74,8 @@ if [[ "$1" == "logs" ]]; then
   echo -e "--------------------------------------------------------------------------------[END CORRUPTION]"
   
   
+  
+  
   if [[ -f /root/$CONFIG_DIR/backend/debug.log ]]; then
     echo -e "| File: /root/$CONFIG_DIR/backend/debug.log"
     echo -e "-----------------------------------------------------------------------------------------------"
@@ -82,6 +84,12 @@ if [[ "$1" == "logs" ]]; then
   fi
   if [[ -f /root/blockbook.log ]]; then
     echo -e "| File: /root/blockbook.log"
+    echo -e "-----------------------------------------------------------------------------------------------"
+    cat /root/blockbook.log | tail -n${LINE}
+    echo -e "------------------------------------------------------------------------------------------[END]"
+  fi
+  if [[ -f /root/$CONFIG_DIR/backend/$COIN.log ]]; then
+    echo -e "| File: /root/$CONFIG_DIR/backend/$COIN.log"
     echo -e "-----------------------------------------------------------------------------------------------"
     cat /root/blockbook.log | tail -n${LINE}
     echo -e "------------------------------------------------------------------------------------------[END]"
