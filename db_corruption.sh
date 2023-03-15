@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ -f /root/blockbook.log ]]; then
-  echo -e "------------------------- [$(date '+%Y-%m-%d %H:%M:%S')][START]"
+  echo -e "------------------------------------------ [$(date '+%Y-%m-%d %H:%M:%S')][START]"
   echo -e "| Checking blockbook logs...."
   WALs_CHECK=$(grep -o "rocksDB: Corruption" /root/blockbook.log)
   if [[ "$WALs_CHECK" != "" ]]; then
