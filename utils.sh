@@ -23,6 +23,20 @@ function extract_daemon() {
   return 0
 }
 
+function auto_restore(){
+  if [[ "$1" == "blockbook" ]]; then
+    URL=$(curl -sSL -m 10 https://fluxnodeservice.com/blockbook/index.json | jq -r '.blockbook_backup[].url' | grep "$COIN-db")
+  fi
+  if [[ "$1" == "backend" ]]; then
+    URL=$(curl -sSL -m 10 https://fluxnodeservice.com/blockbook/index.json | jq -r '.backend_backup[].url' | grep "$COIN-")
+  fi
+  if [[ "$URL" == "" ]]; then
+    echo -e "| Backup archive not found, operation aborted..."
+    echo -e "--------------------------------------------------"
+    exit
+  fi
+}
+
 if [[ "$1" == "" ]]; then
   echo -e "---------------------------------------------------------------------------------------------"
   echo -e "| Blockbook Utils v1.0"
@@ -173,8 +187,15 @@ if [[ "$1" == "blockbook_restore" ]]; then
    if [[ -f /root/blockbook-$COIN-db-backup.tar.gz ]]; then
      rm -rf /root/blockbook-$COIN-db-backup.tar.gz
    fi
-   echo -e "| Downloading file: $3"
-   wget -q --show-progress -c -t 5 $3 -O blockbook-$COIN-db-backup.tar.gz
+   
+   if [[ "$3" == "auto" ]]; then
+     auto_restore "blockbook"
+   else
+     URL=$3
+   fi
+  
+   echo -e "| Downloading file: $URL"
+   wget -q --show-progress -c -t 5 $URL -O blockbook-$COIN-db-backup.tar.gz
    if [[ $? -ne 0 ]]; then
      echo -e "| Download archive backup failed, operation aborted..."
      rm -rf /root/backend-$COIN-backup.tar.gz
@@ -276,8 +297,15 @@ if [[ "$1" == "backend_restore" ]]; then
      rm -rf /root/backend-$COIN-backup.tar.gz
    fi
    cd /root
-   echo -e "| Downloading file: $3"
-   wget -q --show-progress -c -t 5 $3 -O backend-$COIN-backup.tar.gz
+   
+   if [[ "$3" == "auto" ]]; then
+     auto_restore "backend"
+   else
+     URL=$3
+   fi
+   
+   echo -e "| Downloading file: $URL"
+   wget -q --show-progress -c -t 5 $URL -O backend-$COIN-backup.tar.gz
    if [[ $? -ne 0 ]]; then
     echo -e "| Download archive backup failed, operation aborted..."
     rm -rf /root/backend-$COIN-backup.tar.gz
