@@ -140,7 +140,6 @@ if [[ "$1" == "blockbook_backup" ]]; then
   fi
   cd /
   ./opt/rocksdb/ldb --db=/root/blockbook-db backup --backup_dir=/root/blockbook_backup/rocksdb.bk
-  echo -e "--------------------------------------------------"
   echo -e "| Checking backup directory..."
   if [[ -d /root/blockbook_backup/rocksdb.bk ]]; then
     cd /root
