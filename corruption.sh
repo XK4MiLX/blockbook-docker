@@ -40,7 +40,7 @@ if [[ -f /root/$CONFIG_DIR/backend/$COIN.log ]]; then
     supervisorctl stop daemon > /dev/null 2>&1
     echo -e "| Removing backend directory contents..."
     rm -rf /root/$CONFIG_DIR/backend/*
-    echo -e "| Starting blockbook service..."
+    echo -e "| Starting backend service..."
     supervisorctl start daemon > /dev/null 2>&1
   else
     echo -e "| Corruption NOT detected, all looks fine ;)"
