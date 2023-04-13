@@ -12,12 +12,12 @@ function tar_file_unpack()
     pv $1 | tar -zx -C $2
 }
 
-function extract_daemon() {
+function extract_backend() {
   if [[ ! -d /tmp/backend ]]; then
     echo -e "| Creating directory..."
     mkdir -p /tmp/backend
   fi
-  echo -e "| Unpacking daemon bin archive file..."
+  echo -e "| Unpacking backend bin archive file..."
   strip_lvl=$(bsdtar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
   bsdtar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/} > /dev/null 2>&1 || return 1
   return 0
@@ -39,7 +39,7 @@ function auto_restore(){
 
 if [[ "$1" == "" ]]; then
   echo -e "---------------------------------------------------------------------------------------------"
-  echo -e "| Blockbook Utils v1.0"
+  echo -e "| Blockbook Utils v1.1"
   echo -e "---------------------------------------------------------------------------------------------"
   echo -e "| Usage:"
   echo -e "| blockbook_backup                              - create blockbook database backup"
@@ -47,13 +47,13 @@ if [[ "$1" == "" ]]; then
   #echo -e "| blockbook_gzip                                - gzip blockbook database"
   echo -e "| blockbook_fix                                 - fix corrupted blockbook database"
   echo -e "| blockbook_clean                               - remove blockbook database"
-  echo -e "| update_daemon <url>                           - update daemon binary"
+  echo -e "| backend_update <url>                          - update backend binary"
   echo -e "| backend_backup                                - create backend backup archive"
   echo -e "| backend_restore (-remote <url>)               - restore backend from backup archive"
   echo -e "| backend_clean                                 - remove backend directory content"
   echo -e "| backup_share                                  - share backup archive directory via http"
   echo -e "| backup_archive                                - create backup archive directory"
-  echo -e "| archive_clean                                 - remove backup archive directory content"
+  echo -e "| backup_clean                                  - remove backup archive directory content"
   echo -e "| log_clean                                     - remove logs"
   echo -e "| logs <number>                                 - show all logs"
   echo -e "-------------------------------------------------------------------------------------------"
@@ -74,17 +74,17 @@ if [[ "$1" == "logs" ]]; then
   echo -e "----------------------------------------------------------------------------------[START BUILD]"
   supervisorctl tail build | tail -n${LINE}
   echo -e "------------------------------------------------------------------------------------[END BUILD]"
-  echo -e "| CHECKING DAEMON LOGS..."
+  echo -e "| CHECKING BACKEND LOGS..."
   echo -e "---------------------------------------------------------------------------------[START DAEMON]"
-  supervisorctl tail daemon | tail -n${LINE}
+  supervisorctl tail backend | tail -n${LINE}
   echo -e "-----------------------------------------------------------------------------------[END DAEMON]"
   echo -e "| CHECKING BLOCKBOOK LOGS..."
   echo -e "------------------------------------------------------------------------------[START BLOCKBOOK]"
   supervisorctl tail blockbook | tail -n${LINE}
   echo -e "--------------------------------------------------------------------------------[END BLOCKBOOK]"
-  echo -e "| CHECKING DB CORRUPTION LOGS..."
+  echo -e "| CHECKING CORRUPTION LOGS..."
   echo -e "------------------------------------------------------------------------------[START CORRUPTION]"
-  supervisorctl tail db_corruption | tail -n${LINE}
+  supervisorctl tail corruption | tail -n${LINE}
   echo -e "--------------------------------------------------------------------------------[END CORRUPTION]"
   
   if [[ -f /root/$CONFIG_DIR/backend/debug.log ]]; then
@@ -236,8 +236,8 @@ if [[ "$1" == "blockbook_clean" ]]; then
   exit
 fi
 
-if [[ "$1" == "update_daemon" ]]; then
-  echo -e "| DAEMON UPDATE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+if [[ "$1" == "backend_update" ]]; then
+  echo -e "| BACKEND UPDATE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
   DAEMON_URL=$2
   if [[ "$DAEMON_URL" == "" ]]; then
@@ -245,36 +245,36 @@ if [[ "$1" == "update_daemon" ]]; then
     echo -e "--------------------------------------------------"
     exit
   fi
-  echo "$(jq -r --arg key "daemon_url" --arg value "$DAEMON_URL" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
-  echo -e "| Stopping daemon service..."
-  supervisorctl stop daemon > /dev/null 2>&1
+  echo "$(jq -r --arg key "daemon_url" --arg value "$DAEMON_URL" '.[$key]=$value' /root/backend_config.json)" > /root/backend_config.json
+  echo -e "| Stopping backend service..."
+  supervisorctl stop backend > /dev/null 2>&1
   if [[ "$BINARY_NAME" == "" ]]; then
-    BINARY_NAME=$(jq -r .binary_name /root/daemon_config.json)
+    BINARY_NAME=$(jq -r .binary_name /root/backend_config.json)
   fi
-  echo -e "| Removing daemon binary..."
+  echo -e "| Removing backend binary..."
   rm -rf /usr/local/bin/$BINARY_NAME
   echo -e "| BINARY URL: $DAEMON_URL"
   cd /tmp
   wget -q --show-progress -c -t 5 $DAEMON_URL
-  extract_daemon
-  echo -e "| Installing daemon..."
+  extract_backend
+  echo -e "| Installing backend..."
   install -m 0755 -o root -g root -t /usr/local/bin backend/*
   rm -rf /tmp/*
-  echo -e "| Starting daemon service..."
-  supervisorctl start daemon > /dev/null 2>&1
+  echo -e "| Starting backend service..."
+  supervisorctl start backend > /dev/null 2>&1
   echo -e "--------------------------------------------------"
   exit
 fi
 
 if [[ "$1" == "backend_backup" ]]; then
-  echo -e "| BLOCKBOOK BACKEND BACKUP v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "| BACKEND BACKUP v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
   echo -e "| Checking backup file..."
   if [[ -f /root/backend-$COIN-backup.tar.gz ]]; then
     rm -rf  /root/backend-$COIN-backup.tar.gz
   fi
-  echo -e "| Stopping daemon service..."
-  supervisorctl stop daemon > /dev/null 2>&1
+  echo -e "| Stopping backend service..."
+  supervisorctl stop backend > /dev/null 2>&1
   cd /root/$CONFIG_DIR
   tar_file_pack "backend" "/root/backend-$COIN-backup.tar.gz"
   if [[ -f /root/backend-$COIN-backup.tar.gz ]]; then
@@ -282,14 +282,14 @@ if [[ "$1" == "backend_backup" ]]; then
   else
    echo -e "| Backup not created, operation failed..."
   fi
-  echo -e "| Starting daemon service..."
-  supervisorctl start daemon > /dev/null 2>&1
+  echo -e "| Starting backend service..."
+  supervisorctl start backend > /dev/null 2>&1
   echo -e "--------------------------------------------------"
   exit
 fi
 
 if [[ "$1" == "backend_restore" ]]; then
-  echo -e "| BLOCKBOOK BACKEND RESTORE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "| BACKEND RESTORE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
   
   if [[ "$2" == "-remote" && "$3" != "" ]]; then
@@ -321,8 +321,8 @@ if [[ "$1" == "backend_restore" ]]; then
    fi
   fi
   cd /root/$CONFIG_DIR
-  echo -e "| Stopping daemon service..."
-  supervisorctl stop daemon > /dev/null 2>&1
+  echo -e "| Stopping backend service..."
+  supervisorctl stop backend > /dev/null 2>&1
   echo -e "| Cleaning backend datadir..."
   rm -rf /root/$CONFIG_DIR/backend
   tar_file_unpack "/root/backend-$COIN-backup.tar.gz" "/root/$CONFIG_DIR"
@@ -333,14 +333,14 @@ if [[ "$1" == "backend_restore" ]]; then
    mkdir -p /root/$CONFIG_DIR/backend
   fi
   rm -rf /root/backend-$COIN-backup.tar.gz
-  echo -e "| Starting daemon service..."
-  supervisorctl start daemon > /dev/null 2>&1
+  echo -e "| Starting backend service..."
+  supervisorctl start backend > /dev/null 2>&1
   echo -e "--------------------------------------------------"
   exit
 fi
 
 if [[ "$1" == "backup_archive" ]]; then
-  echo -e "| BLOCKBOOK BACKUP ARCHIVE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "| BACKUP ARCHIVE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
   timestamp=$(date +%s)
   mkdir -p /root/backup_archive > /dev/null 2>&1
@@ -357,7 +357,7 @@ if [[ "$1" == "backup_archive" ]]; then
 fi
 
 if [[ "$1" == "backup_share" ]]; then
-  echo -e "| BLOCKBOOK BACKUP HTTP SERVER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+  echo -e "| BACKUP SHARE v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
   if [[ -d /root/backup_archive ]]; then
     echo -n "| "
@@ -370,8 +370,8 @@ if [[ "$1" == "backup_share" ]]; then
   exit
 fi
 
-if [[ "$1" == "archive_clean" ]]; then
-  echo -e "| BLOCKBOOK BACKUP ARCHIVE CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+if [[ "$1" == "backup_clean" ]]; then
+  echo -e "| BACKUP CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "------------------------------------------------------------"
   echo -e "| Checking directory..."
   if [[ -d /root/backup_archive ]]; then
@@ -394,12 +394,12 @@ fi
 if [[ "$1" == "backend_clean" ]]; then
   echo -e "| BACKEND CLEANER v2.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
   echo -e "--------------------------------------------------"
-  echo -e "| Stopping daemon service..."
-  supervisorctl stop daemon > /dev/null 2>&1
+  echo -e "| Stopping backend service..."
+  supervisorctl stop backend > /dev/null 2>&1
   echo -e "| Cleaning backend datadir..."
   rm -rf /root/$CONFIG_DIR/backend/*
-  echo -e "| Starting daemon service..."
-  supervisorctl start daemon > /dev/null 2>&1
+  echo -e "| Starting backend service..."
+  supervisorctl start backend > /dev/null 2>&1
   echo -e "--------------------------------------------------"
   exit
 fi
