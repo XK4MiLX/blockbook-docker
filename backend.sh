@@ -26,7 +26,7 @@ if [[ "$DAEMON_CONFIG" != "AUTO" ]]; then
  $RPC_PASSWORD_KEY=$RPC_PASS
 EOF
  else
-   echo -e "| Awaiting for daemon config generate by blockbook..."
+   echo -e "| Awaiting for backend config generate by blockbook..."
    while true; do
      if [[ -f /root/$CONFIG_DIR/$CONFIG_FILE.conf ]]; then
        config_clean
@@ -71,7 +71,7 @@ function parse_template(){
  echo -e "| RUN CMD: $(jq -r .$2 /root/$3.json)"
 }
 
-function extract_daemon() {
+function extract_backend() {
   if [[ ! -d /tmp/backend ]]; then
     echo -e "| Creating directory..."
     mkdir -p /tmp/backend
@@ -93,7 +93,7 @@ function extract_daemon() {
     fi
     rm -rf /tmp/backend/*
   fi
-  echo -e "| ${CYAN}Unpacking daemon bin archive file...${NC}"
+  echo -e "| ${CYAN}Unpacking backend archive file...${NC}"
   strip_lvl=$(bsdtar -tvf ${DAEMON_URL##*/} | grep ${BINARY_NAME}$ | awk '{ printf "%s\n", $9 }' | awk -F\/ '{print NF-1}')
   bsdtar --exclude="share" --exclude="lib" --exclude="include" -C backend --strip $strip_lvl -xf ${DAEMON_URL##*/} > /dev/null 2>&1 || return 1
   return 0
@@ -193,7 +193,7 @@ function cdn_speedtest() {
 }
 
 stop_script() {
-  echo -e "| Stopping daemon (EXIT)..."
+  echo -e "| Stopping backend (EXIT)..."
   if [[ "$CLI_NAME" != "" ]]; then
     timeout 10 ${CLI_NAME} -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASS} stop > /dev/null 2>&1
     timeout 10 ${CLI_NAME} -conf /root/$CONFIG_DIR/$CONFIG_FILE stop > /dev/null 2>&1
@@ -207,7 +207,7 @@ stop_script() {
 trap stop_script SIGINT SIGTERM
 
 if [[ "$DAEMON" == "1" ]]; then
-echo -e "| DAEMON LUNCHER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
+echo -e "| BACKEND LUNCHER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "---------------------------------------------------------------------------"
 
 if [[ -f /root/backend_config.json ]]; then
@@ -264,7 +264,7 @@ if [[ "$BOOTSTRAP" == "1" && ! -f /root/BOOTSTRAP_LOCKED ]]; then
  fi
 
 if [[ "$BINARY_NAME" != "" ]]; then
-  echo -e "| Stopping daemon (START)..."
+  echo -e "| Stopping backend (START)..."
   if [[ "$CLI_NAME" != "" ]]; then
     timeout 10 ${CLI_NAME} -rpcuser=${RPC_USER} -rpcpassword=${RPC_PASS} stop > /dev/null 2>&1
     timeout 10 ${CLI_NAME} -conf=/root/$CONFIG_DIR/$CONFIG_FILE  stop > /dev/null 2>&1
@@ -273,7 +273,7 @@ if [[ "$BINARY_NAME" != "" ]]; then
 fi
 
 if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
-  echo -e "| Downloading daemon ($COIN)..."
+  echo -e "| Downloading backend for $COIN..."
   cd /tmp
   mkdir backend
    echo -e "| Fetching Blockbook config for $COIN..."
@@ -320,28 +320,28 @@ EOF
     BINARY_NAME=$(jq -r .backend.exec_command_template 2>/dev/null <<< "$BLOCKBOOKCONFIG")
     BINARY_NAME=($(sed "s|/bin/sh -c '{{.Env.BackendInstallPath}}/{{.Coin.Alias}}/|""|" <<< $BINARY_NAME))
     BINARY_NAME=${BINARY_NAME##*/}
-    if [[ ! -f /root/daemon_config.json ]]; then
-      echo "{}" > /root/daemon_config.json
-      echo "$(jq -r --arg key "binary_name" --arg value "$BINARY_NAME" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
-      echo "$(jq -r --arg key "daemon_url" --arg value "$DAEMON_URL" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
+    if [[ ! -f /root/backend_config.json ]]; then
+      echo "{}" > /root/backend_config.json
+      echo "$(jq -r --arg key "binary_name" --arg value "$BINARY_NAME" '.[$key]=$value' /root/backend_config.json)" > /root/backend_config.json
+      echo "$(jq -r --arg key "daemon_url" --arg value "$DAEMON_URL" '.[$key]=$value' /root/backend_config.json)" > /root/backend_config.json
     fi
   fi
-  if [[ $(jq -r .cmd /root/daemon_config.json 2>/dev/null) == "null" && "$CONFIG" == "AUTO" ]]; then
-    ################ PARSE DAEMON EXEC TEMPLATE ######################
-    parse_template "$BLOCKBOOKCONFIG" "cmd" "daemon_config" "blockbook"
+  if [[ $(jq -r .cmd /root/backend_config.json 2>/dev/null) == "null" && "$CONFIG" == "AUTO" ]]; then
+    ################ PARSE BACKEND EXEC TEMPLATE ######################
+    parse_template "$BLOCKBOOKCONFIG" "cmd" "backend_config" "blockbook"
     ##################################################################
   fi
 
   if [[ ! -f /usr/local/bin/$BINARY_NAME ]]; then
     echo -e "| BINARY URL: $DAEMON_URL"
     wget -q --show-progress -c -t 5 $DAEMON_URL
-    extract_daemon
-    echo -e "| Installing daemon ($COIN)..."
+    extract_backend
+    echo -e "| Installing backend for $COIN..."
     install -m 0755 -o root -g root -t /usr/local/bin backend/*
     rm -rf /tmp/*
     if [[ "$CLI_NAME" == "" ]]; then
-      if [[ ! -f /root/daemon_config.json ]]; then
-        echo "{}" > /root/daemon_config.json
+      if [[ ! -f /root/backend_config.json ]]; then
+        echo "{}" > /root/backend_config.json
       fi
       cli_search
     fi
@@ -359,11 +359,11 @@ sleep 5
 #fi
 
 if [[ "$CONFIG" == "0" || "$CONFIG" == "" ]]; then
-  echo -e "| Starting $COIN daemon (Config: DISABLED)..."
+  echo -e "| Starting $COIN backend (Config: DISABLED)..."
   ${BINARY_NAME} ${CLIFLAGS}
 fi
 if [[ "$CONFIG" == "1" ]]; then
-  echo -e "| Starting $COIN daemon (Config: ENABLED)..."
+  echo -e "| Starting $COIN backend (Config: ENABLED)..."
   ${BINARY_NAME} -datadir="/root/${CONFIG_DIR}" -conf="/root/${CONFIG_DIR}/${CONFIG_FILE}.conf"
 fi
 if [[ "$CONFIG" == "AUTO" ]]; then
@@ -375,7 +375,7 @@ if [[ "$CONFIG" == "AUTO" ]]; then
      echo -e "$EXTRACONFIG" >> /root/$CONFIG_DIR/$CONFIG_FILE.conf
    fi
  fi
-  echo -e "| Starting $COIN daemon (Config: AUTO)..."
+  echo -e "| Starting $COIN backend (Config: AUTO)..."
   if [[ ! -d /root/$CONFIG_DIR/backend ]]; then
     mkdir -p /root/$CONFIG_DIR/backend > /dev/null 2>&1
   fi
@@ -394,11 +394,11 @@ if [[ "$CONFIG" == "AUTO" ]]; then
        fi
      fi
    fi
-   bash -c "$(jq -r .cmd /root/daemon_config.json)"
+   bash -c "$(jq -r .cmd /root/backend_config.json)"
 fi
 echo -e "---------------------------------------------------------------------------"
 else
-  echo -e "| DAEMON LUNCHER [DISABLED]..."
+  echo -e "| BACKEND LUNCHER [DISABLED]..."
   echo -e "---------------------------------------------------------------------------"
   exit
 fi
