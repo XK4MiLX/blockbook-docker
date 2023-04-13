@@ -106,7 +106,7 @@ function cli_search(){
     CLI_PATH=$(find /usr/local/bin/ -type f -iname "*-cli" | tail -n1)
     if [[ "$CLI_PATH" != "" ]]; then
       CLI_NAME="${CLI_PATH##*/}"
-      echo "$(jq -r --arg key "cli_name" --arg value "$CLI_NAME" '.[$key]=$value' /root/daemon_config.json)" > /root/daemon_config.json
+      echo "$(jq -r --arg key "cli_name" --arg value "$CLI_NAME" '.[$key]=$value' /root/backend_config.json)" > /root/backend_config.json
     fi
   fi
 }
@@ -210,16 +210,16 @@ if [[ "$DAEMON" == "1" ]]; then
 echo -e "| DAEMON LUNCHER v1.0 [$(date '+%Y-%m-%d %H:%M:%S')]"
 echo -e "---------------------------------------------------------------------------"
 
-if [[ -f /root/daemon_config.json ]]; then
-  echo -e "| Loading daemon_config.json..."
+if [[ -f /root/backend_config.json ]]; then
+  echo -e "| Loading backend_config.json..."
   if [[ "$CLI_NAME" == "" ]]; then
-    CLI_NAME=$(jq -r .cli_name /root/daemon_config.json)
+    CLI_NAME=$(jq -r .cli_name /root/backend_config.json)
   fi
   if [[ "$BINARY_NAME" == "" ]]; then
-    BINARY_NAME=$(jq -r .binary_name /root/daemon_config.json)
+    BINARY_NAME=$(jq -r .binary_name /root/backend_config.json)
   fi
-  if [[ $(jq -r .daemon_url /root/daemon_config.jso) != "null" && $(jq -r .daemon_url /root/daemon_config.jso) != "" ]]; then
-    DAEMON_URL=$(jq -r .daemon_url /root/daemon_config.json)
+  if [[ $(jq -r .daemon_url /root/backend_config.jso) != "null" && $(jq -r .daemon_url /root/backend_config.jso) != "" ]]; then
+    DAEMON_URL=$(jq -r .daemon_url /root/backend_config.json)
   fi
 fi
 
