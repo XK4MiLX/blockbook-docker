@@ -54,14 +54,14 @@ RUN echo -n "GOPATH: " && echo $GOPATH
 #go build -tags rocksdb_6_16 -ldflags="-s -w ${LDFLAGS}"
 
 COPY build.sh /build.sh
-COPY daemon.sh /daemon.sh
+COPY backend.sh /backend.sh
 COPY blockbook.sh /blockbook.sh
 COPY check-health.sh /check-health.sh
 COPY consensus.sh /consensus.sh
 COPY utils.sh /utils.sh
 COPY corruption.sh /corruption.sh
 
-RUN chmod 755 /blockbook.sh /daemon.sh /build.sh /check-health.sh /consensus.sh /utils.sh /corruption.sh
+RUN chmod 755 /blockbook.sh /backend.sh /build.sh /check-health.sh /consensus.sh /utils.sh /corruption.sh
 RUN mkdir -p /var/log/supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 VOLUME /root
