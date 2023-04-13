@@ -40,14 +40,14 @@ bash -i <(curl -s https://raw.githubusercontent.com/XK4MiLX/blockbook-docker/mas
   | blockbook_restore (-archive)/(-remote <url>)  - restore blockbook database
   | blockbook_fix                                 - fix corrupted blockbook database
   | blockbook_clean                               - wipe blockbook database
-  | update_daemon <url>                           - update daemon binary
+  | backend_update <url>                          - update daemon binary
   | backend_backup                                - create backend backup archive
   | backend_restore (-remote <url>)               - restore backend from backup archive
   | backend_clean                                 - wipe backend directory
   | backup_share                                  - share backup archive directory via http
   | backup_archive                                - create backup archive directory
+  | backup_clean                                  - remove backup archive directory content 
   | log_clean                                     - remove logs
-  | archive_clean                                 - remove backup archive directory content 
   | logs <number>                                 - show all logs
   ------------------------------------------------------------------------------------
   () - optional
