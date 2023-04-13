@@ -35,13 +35,13 @@ if [[ -f /root/$CONFIG_DIR/backend/debug.log ]]; then
   echo -e "| Checking backend logs...."
   corruption=$(grep -ao "Corrupted block database detected" /root/$CONFIG_DIR/backend/debug.log)
   if [[ "$corruption" != "" ]]; then
-    echo -e "| Backend Corruption detected!..."
+    echo -e "| Backend corruption detected!..."
     echo -e "| Stopping backend service..."
-    supervisorctl stop daemon > /dev/null 2>&1
+    supervisorctl stop backend > /dev/null 2>&1
     echo -e "| Removing backend directory contents..."
     rm -rf /root/$CONFIG_DIR/backend/*
     echo -e "| Starting backend service..."
-    supervisorctl start daemon > /dev/null 2>&1
+    supervisorctl start backend > /dev/null 2>&1
   else
     echo -e "| Corruption NOT detected, all looks fine ;)"
   fi
