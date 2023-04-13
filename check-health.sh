@@ -12,9 +12,9 @@
    if [[ $headers != "" && $headers != "null" ]]; then
      progress1=$(awk 'BEGIN {total=ARGV[1] / ARGV[2]; printf("%.2f", total*100)}' $bloks $headers)
      progress2=$(awk 'BEGIN {total=ARGV[1] / ARGV[2]; printf("%.2f", total*100)}' $blockbook $headers)
-     msg="Blockbook = [OK], Daemon = [OK], Daemon Sync: ${progress1}%, Blockbook Sync: ${progress2}%, Backend Size: $DAEMON_SIZE, Blockbook Size: $BLOCKBOOK_SIZE"
+     msg="Blockbook = [OK], Backend = [OK], Backend Sync: ${progress1}%, Blockbook Sync: ${progress2}%, Backend Size: $DAEMON_SIZE, Blockbook Size: $BLOCKBOOK_SIZE"
    else
-     msg="Blockbook = [OK], Daemon = [OK], Daemon Height: ${bloks}, Blockbook Height: ${blockbook}, Backend Size: $DAEMON_SIZE, Blockbook Size: $BLOCKBOOK_SIZE"
+     msg="Blockbook = [OK], Backend = [OK], Backend Height: ${bloks}, Blockbook Height: ${blockbook}, Backend Size: $DAEMON_SIZE, Blockbook Size: $BLOCKBOOK_SIZE"
    fi
    echo -e "${msg}"
    exit
@@ -22,12 +22,12 @@
    msg="Blockbook = [FAILED]"
  fi
  if [[ "$CLI_NAME" == "" ]]; then
-   if [[ -f /root/daemon_config.json ]]; then
-     CLI_NAME=$(jq -r .cli_name /root/daemon_config.json)
+   if [[ -f /root/backend_config.json ]]; then
+     CLI_NAME=$(jq -r .cli_name /root/backend_config.json)
    fi
  fi
  if [[ "$CLI_NAME" == "" ]]; then
-   msg="$msg, Daemon = [HEALCHECK DISABLED]"
+   msg="$msg, BACKEND = [HEALCHECK DISABLED]"
    echo -e "$msg"
    exit 1
  fi
