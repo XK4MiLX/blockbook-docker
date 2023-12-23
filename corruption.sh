@@ -20,8 +20,10 @@ if [[ -f /root/blockbook.log ]]; then
     supervisorctl stop blockbook > /dev/null 2>&1
     echo -e "| Removing old log file..."
     rm -rf /root/blockbook.log
-    echo -e "| Repair the database..."
-    ./opt/blockbook/blockbook -repair -datadir=/root/blockbook-db
+    # echo -e "| Repair the database..."
+    # ./opt/blockbook/blockbook -repair -datadir=/root/blockbook-db
+    echo -e "| Removing blockbook directory..."
+    rm -rf /root/$CONFIG_DIR/backend/*
     echo -e "| Starting blockbook service..."
     supervisorctl start blockbook > /dev/null 2>&1
   else
